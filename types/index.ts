@@ -134,11 +134,17 @@ export interface Transaction {
   id: string
   vendorId: string
   vendorName?: string
-  plan: "premium"
+  vendorEmail?: string
+  vendor?: {
+    name: string
+    businessName: string
+    email: string
+  }
+  plan: "premium" | string
   amount: number
   currency: string
-  stripeSessionId?: string
-  stripeSubscriptionId?: string
+  stripeSessionId?: string | null
+  stripeSubscriptionId?: string | null
   status: TransactionStatus
   createdAt: string
 }
@@ -181,3 +187,53 @@ export interface NavItem {
   icon?: string
   badge?: string | number
 }
+
+// Admin Types
+export interface AdminStats {
+  totalUsers: number
+  totalVendors: number
+  totalCustomers: number
+  totalServices: number
+  pendingServices: number
+  totalTransactions: number
+}
+
+export interface AdminUser {
+  id: string
+  name: string
+  email: string
+  image?: string
+  role: UserRole
+  isBlocked: boolean
+  businessName?: string
+  subscriptionPlan?: "free" | "premium"
+  subscriptionExpiresAt?: string | null
+  createdAt?: string
+  serviceCount?: number
+  bookingCount?: number
+}
+
+export interface AdminUsersResponse {
+  success: boolean
+  total: number
+  page: number
+  limit: number
+  users: AdminUser[]
+}
+
+export interface AdminServicesResponse {
+  success: boolean
+  total: number
+  page: number
+  limit: number
+  services: Service[]
+}
+
+export interface AdminTransactionsResponse {
+  success: boolean
+  total: number
+  page: number
+  limit: number
+  transactions: Transaction[]
+}
+

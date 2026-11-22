@@ -12,6 +12,11 @@ import {
   CreateServiceInput,
   UpdateServiceInput,
   ServicesResponse,
+  AdminStats,
+  AdminUser,
+  AdminUsersResponse,
+  AdminServicesResponse,
+  AdminTransactionsResponse,
 } from "@/types"
 import { toast } from "sonner"
 
@@ -427,3 +432,134 @@ export async function cancelSubscription(): Promise<{
     method: "POST",
   })
 }
+
+// ---------------------------------------------------------------------------
+// Admin Dashboard & Moderation API
+// ---------------------------------------------------------------------------
+
+// Fetches platform overview metrics for admin dashboard
+export async function getAdminStats(): Promise<AdminStats> {
+  const res = await apiFetch<{ success: boolean; stats: AdminStats }>(
+    "/admin/stats"
+  )
+  return res.stats
+}
+
+// Lists platform users with search, role filter, and pagination
+export async function getAdminUsers(params: {
+  search?: string
+  role?: string
+  page?: number
+  limit?: number
+} = {}): Promise<AdminUsersResponse> {
+  const query = new URLSearchParams()
+  if (params.search) query.set("search", params.search)
+  if (params.role && params.role !== "all") query.set("role", params.role)
+  if (params.page) query.set("page", String(params.page))
+  if (params.limit) query.set("limit", String(params.limit))
+
+  const qs = query.toString() ? `?${query.toString()}` : ""
+  return await apiFetch<AdminUsersResponse>(`/admin/users${qs}`)
+}
+
+// Fetches user details with activity counts (serviceCount, bookingCount)
+export async function getAdminUser(id: string): Promise<AdminUser> {
+  const res = await apiFetch<{ success: boolean; user: AdminUser }>(
+    `/admin/users/${id}`
+  )
+  return res.user
+}
+
+// Blocks a user and invalidates their active sessions
+export async function blockUser(
+  id: string
+): Promise<{ success: boolean; message: string; user: AdminUser }> {
+  return await apiFetch<{ success: boolean; message: string; user: AdminUser }>(
+    `/admin/users/${id}/block`,
+    {
+      method: "PATCH",
+    }
+  )
+}
+
+// Unblocks a previously blocked user
+export async function unblockUser(
+  id: string
+): Promise<{ success: boolean; message: string; user: AdminUser }> {
+  return await apiFetch<{ success: boolean; message: string; user: AdminUser }>(
+    `/admin/users/${id}/unblock`,
+    {
+      method: "PATCH",
+    }
+  )
+}
+
+// Lists all platform services with search, status, category, and pagination
+export async function getAdminServices(params: {
+  search?: string
+  status?: string
+  category?: string
+  page?: number
+  limit?: number
+} = {}): Promise<AdminServicesResponse> {
+  const query = new URLSearchParams()
+  if (params.search) query.set("search", params.search)
+  if (params.status && params.status !== "all") query.set("status", params.status)
+  if (params.category && params.category !== "all") query.set("category", params.category)
+  if (params.page) query.set("page", String(params.page))
+  if (params.limit) query.set("limit", String(params.limit))
+
+  const qs = query.toString() ? `?${query.toString()}` : ""
+  return await apiFetch<AdminServicesResponse>(`/admin/services${qs}`)
+}
+
+// Fetches a single service with full metadata and vendor contact details
+export async function getAdminService(id: string): Promise<Service> {
+  const res = await apiFetch<{ success: boolean; service: Service }>(
+    `/admin/services/${id}`
+  )
+  return res.service
+}
+
+// Moderates service status ("approved", "rejected", "pending")
+export async function updateServiceStatus(
+  id: string,
+  status: "approved" | "rejected" | "pending"
+): Promise<{ success: boolean; message: string; service: Service }> {
+  return await apiFetch<{
+    success: boolean
+    message: string
+    service: Service
+  }>(`/admin/services/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  })
+}
+
+// Permanently deletes an inappropriate service
+export async function deleteAdminService(
+  id: string
+): Promise<{ success: boolean; message: string }> {
+  return await apiFetch<{ success: boolean; message: string }>(
+    `/admin/services/${id}`,
+    {
+      method: "DELETE",
+    }
+  )
+}
+
+// Lists platform billing transactions (strictly READ ONLY - no edit endpoints)
+export async function getAdminTransactions(params: {
+  status?: string
+  page?: number
+  limit?: number
+} = {}): Promise<AdminTransactionsResponse> {
+  const query = new URLSearchParams()
+  if (params.status && params.status !== "all") query.set("status", params.status)
+  if (params.page) query.set("page", String(params.page))
+  if (params.limit) query.set("limit", String(params.limit))
+
+  const qs = query.toString() ? `?${query.toString()}` : ""
+  return await apiFetch<AdminTransactionsResponse>(`/admin/transactions${qs}`)
+}
+
