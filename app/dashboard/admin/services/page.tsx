@@ -1061,8 +1061,8 @@ function AdminServicesContent() {
                 </div>
 
                 <DialogFooter className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    {detailsData.status === "pending" && (
+                  <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                    {detailsData.status === "pending" ? (
                       <>
                         <Button
                           variant="outline"
@@ -1086,7 +1086,63 @@ function AdminServicesContent() {
                           Approve
                         </Button>
                       </>
+                    ) : (
+                      <>
+                        {detailsData.status !== "approved" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const target = detailsData
+                              setStatusTarget({ service: target, status: "approved" })
+                            }}
+                            className="rounded-full text-xs text-emerald-700 border-emerald-300 hover:bg-emerald-50"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                            Approve
+                          </Button>
+                        )}
+                        {detailsData.status !== "rejected" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const target = detailsData
+                              setStatusTarget({ service: target, status: "rejected" })
+                            }}
+                            className="rounded-full text-xs text-destructive border-destructive/30 hover:bg-destructive/10"
+                          >
+                            <XCircle className="w-3.5 h-3.5 mr-1" />
+                            Reject
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const target = detailsData
+                            setStatusTarget({ service: target, status: "pending" })
+                          }}
+                          className="rounded-full text-xs text-amber-700 border-amber-300 hover:bg-amber-50"
+                        >
+                          <Clock className="w-3.5 h-3.5 mr-1" />
+                          Mark Pending
+                        </Button>
+                      </>
                     )}
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const target = detailsData
+                        setDeleteTarget(target)
+                      }}
+                      className="rounded-full text-xs text-destructive hover:bg-destructive/10 ml-auto sm:ml-2"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 mr-1" />
+                      Delete
+                    </Button>
                   </div>
 
                   <Button
