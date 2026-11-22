@@ -4,7 +4,7 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   message?: string
@@ -12,7 +12,7 @@ export interface ApiResponse<T = any> {
 }
 
 // Helper to make fetch requests with standard headers
-export async function apiFetch<T>(
+export async function apiFetch<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
@@ -41,13 +41,16 @@ export async function apiFetch<T>(
 
     return {
       success: true,
-      data: data?.data ?? data,
+      data: (data?.data ?? data) as T,
       message: data?.message,
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to connect to the server"
+
     return {
       success: false,
-      message: error?.message || "Failed to connect to the server",
+      message: errorMessage,
     }
   }
 }

@@ -32,6 +32,7 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
     <Card className="group overflow-hidden rounded-2xl border border-border/70 bg-card card-hover-lift shadow-xs flex flex-col h-full">
       {/* Photo Header */}
       <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-muted">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={primaryImage}
           alt={service.serviceName}
