@@ -1,3 +1,4 @@
+import * as React from "react"
 import type { Metadata } from "next"
 import { Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
@@ -33,7 +34,9 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
-        <SiteLayout>{children}</SiteLayout>
+        <React.Suspense fallback={<div className="min-h-screen bg-background" />}>
+          <SiteLayout>{children}</SiteLayout>
+        </React.Suspense>
         <Toaster position="top-right" richColors />
       </body>
     </html>
