@@ -12,9 +12,10 @@ import {
   ChevronRight,
   AlertCircle,
   Lock,
+  RefreshCw,
 } from "lucide-react"
 import { Service } from "@/types"
-import { getServiceById } from "@/lib/api"
+import { getServiceById, ApiError } from "@/lib/api"
 import { useAuth } from "@/lib/auth-context"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -38,7 +39,9 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
 
   const [service, setService] = React.useState<Service | null>(null)
   const [loading, setLoading] = React.useState<boolean>(true)
-  const [error, setError] = React.useState<boolean>(false)
+  const [errorType, setErrorType] = React.useState<"not-found" | "server-error" | null>(null)
+  const [errorMessage, setErrorMessage] = React.useState<string>("")
+  const [refreshTrigger, setRefreshTrigger] = React.useState<number>(0)
 
   // 1. Enforce Authentication Access Rule: Redirect unauthenticated users
   React.useEffect(() => {
@@ -47,22 +50,50 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
     }
   }, [user, authLoading, id, router])
 
-  // 2. Fetch Service Details
+  // 2. Fetch Service Details from real API
   React.useEffect(() => {
+    let active = true
+
     getServiceById(id)
       .then((data) => {
-        if (!data) {
-          setError(true)
-        } else {
-          setService(data)
+        if (active) {
+          if (!data) {
+            setErrorType("not-found")
+          } else {
+            setService(data)
+            setErrorType(null)
+          }
         }
       })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
-  }, [id])
+      .catch((err: unknown) => {
+        if (active) {
+          if (err instanceof ApiError && (err.status === 400 || err.status === 404)) {
+            setErrorType("not-found")
+          } else {
+            setErrorType("server-error")
+            setErrorMessage(
+              err instanceof Error ? err.message : "Failed to load service details."
+            )
+          }
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [id, refreshTrigger])
+
+  const handleRetry = () => {
+    setLoading(true)
+    setErrorType(null)
+    setRefreshTrigger((prev) => prev + 1)
+  }
 
   // Auth Loading Skeleton (prevents flash of content)
-  if (authLoading || (!user && !error)) {
+  if (authLoading || (!user && !errorType)) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-6xl space-y-8">
         <Skeleton className="h-6 w-48" />
@@ -80,8 +111,8 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
     )
   }
 
-  // 3. Error / Invalid ID State
-  if (error || (!loading && !service)) {
+  // 3. Error: 400 or 404 Service Not Found State
+  if (errorType === "not-found") {
     return (
       <div className="container mx-auto px-4 py-20 max-w-lg text-center space-y-6">
         <div className="w-16 h-16 rounded-full bg-destructive/10 text-destructive mx-auto flex items-center justify-center">
@@ -106,6 +137,38 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
     )
   }
 
+  // 4. Error: Network / Server Error with Retry State
+  if (errorType === "server-error") {
+    return (
+      <div className="container mx-auto px-4 py-20 max-w-md text-center space-y-6">
+        <div className="w-16 h-16 rounded-full bg-destructive/10 text-destructive mx-auto flex items-center justify-center">
+          <AlertCircle className="w-8 h-8" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="font-serif text-2xl font-bold text-foreground">
+            Unable to Load Service
+          </h1>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {errorMessage || "We encountered an issue fetching this wedding package from the server."}
+          </p>
+        </div>
+        <div className="flex justify-center gap-3">
+          <Button variant="default" onClick={handleRetry} className="rounded-full px-6">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Retry
+          </Button>
+          <Link
+            href="/services"
+            className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-5")}
+          >
+            Back to Catalog
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // 5. Loading Skeleton
   if (loading || !service) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-6xl space-y-6">
@@ -123,16 +186,22 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
   const isAdmin = user?.role === "admin"
   const isCustomer = user?.role === "customer"
   const isOwnService = isVendor && user?.id === service.vendorId
-  const isVendorPremium = service.vendorId === "vend-1" || service.vendorName?.includes("Julian")
+  const isVendorPremium = Boolean(service.vendor?.isPremium || service.isPremium)
 
-  const vendorInitials = service.vendorName
-    ? service.vendorName
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : "WP"
+  const displayName =
+    service.vendor?.businessName ||
+    service.vendor?.name ||
+    service.vendorName ||
+    "WedPlan Partner"
+
+  const displayAvatar = service.vendor?.image || service.vendorImage
+
+  const vendorInitials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
 
   return (
     <div className="container mx-auto px-4 py-8 sm:py-12 max-w-6xl space-y-8">
@@ -197,7 +266,7 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
             <div className="p-5 rounded-2xl bg-card border border-border/80 shadow-xs flex items-center justify-between gap-4">
               <div className="flex items-center gap-3.5">
                 <Avatar className="w-12 h-12 border border-border">
-                  <AvatarImage src={service.vendorImage} alt={service.vendorName} />
+                  <AvatarImage src={displayAvatar} alt={displayName} />
                   <AvatarFallback className="bg-blush text-primary font-semibold">
                     {vendorInitials}
                   </AvatarFallback>
@@ -205,7 +274,7 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-serif font-bold text-base text-foreground">
-                      {service.vendorName}
+                      {displayName}
                     </h3>
                     {isVendorPremium && <PremiumBadge size="sm" />}
                   </div>
