@@ -1,40 +1,40 @@
-import Link from "next/link"
+import * as React from "react"
+import { Suspense } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Heart } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { SignInForm } from "./sign-in-form"
 
 export default function SignInPage() {
   return (
-    <div className="container mx-auto px-4 py-20 flex items-center justify-center">
+    <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-[calc(100vh-16rem)]">
       <Card className="w-full max-w-md border-border/80 shadow-xs">
         <CardHeader className="text-center space-y-2">
           <div className="mx-auto w-10 h-10 rounded-full bg-blush flex items-center justify-center text-primary">
             <Heart className="w-5 h-5 fill-current" />
           </div>
-          <CardTitle className="font-serif text-2xl font-bold">Welcome to WedPlan</CardTitle>
+          <CardTitle className="font-serif text-2xl font-bold">
+            Welcome to WedPlan
+          </CardTitle>
           <CardDescription>
             Sign in to access your wedding dashboard or vendor portfolio.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 text-center">
-          <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-xl">
-            Authentication with Better Auth and role verification will be hooked up in Phase 2.
-          </p>
-          <div className="space-y-2 pt-2">
-            <Link
-              href="/design-preview"
-              className={cn(buttonVariants({ variant: "default" }), "w-full rounded-full")}
-            >
-              Explore Design Preview Switcher
-            </Link>
-            <div className="text-xs text-muted-foreground pt-2">
-              Don&apos;t have an account?{" "}
-              <Link href="/sign-up" className="text-primary font-medium hover:underline">
-                Sign Up
-              </Link>
-            </div>
-          </div>
+        <CardContent>
+          <Suspense
+            fallback={
+              <div className="h-48 flex items-center justify-center text-muted-foreground text-xs">
+                Loading sign-in...
+              </div>
+            }
+          >
+            <SignInForm />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
