@@ -1,40 +1,34 @@
-import Link from "next/link"
+import * as React from "react"
+import { Suspense } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Heart } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { SignUpForm } from "./sign-up-form"
 
 export default function SignUpPage() {
   return (
-    <div className="container mx-auto px-4 py-20 flex items-center justify-center">
-      <Card className="w-full max-w-md border-border/80 shadow-xs">
+    <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[calc(100vh-16rem)]">
+      <Card className="w-full max-w-lg border-border/80 shadow-xs">
         <CardHeader className="text-center space-y-2">
           <div className="mx-auto w-10 h-10 rounded-full bg-blush flex items-center justify-center text-primary">
             <Heart className="w-5 h-5 fill-current" />
           </div>
-          <CardTitle className="font-serif text-2xl font-bold">Create Your WedPlan Account</CardTitle>
+          <CardTitle className="font-serif text-2xl font-bold">
+            Create Your WedPlan Account
+          </CardTitle>
           <CardDescription>
-            Join as a Couple planning a wedding or as a Verified Vendor.
+            Join as a couple planning a wedding or as a professional vendor.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 text-center">
-          <p className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-xl">
-            Account registration with Better Auth, Google OAuth, and ImgBB avatar upload will be hooked up in Phase 2.
-          </p>
-          <div className="space-y-2 pt-2">
-            <Link
-              href="/design-preview"
-              className={cn(buttonVariants({ variant: "default" }), "w-full rounded-full")}
-            >
-              Test Roles in Design Preview
-            </Link>
-            <div className="text-xs text-muted-foreground pt-2">
-              Already have an account?{" "}
-              <Link href="/sign-in" className="text-primary font-medium hover:underline">
-                Sign In
-              </Link>
-            </div>
-          </div>
+        <CardContent>
+          <Suspense
+            fallback={
+              <div className="h-64 flex items-center justify-center text-muted-foreground text-xs">
+                Loading registration form...
+              </div>
+            }
+          >
+            <SignUpForm />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
