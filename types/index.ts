@@ -39,6 +39,7 @@ export interface VendorPreview {
   name: string
   businessName: string
   image: string
+  email?: string
   isPremium?: boolean
 }
 
