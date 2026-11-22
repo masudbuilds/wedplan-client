@@ -43,29 +43,23 @@ const STORAGE_KEY = "wedplan_demo_user"
 const AuthContext = React.createContext<AuthContextType>({
   user: null,
   role: null,
-  isLoading: true,
+  isLoading: false,
   loginAs: () => {},
   logout: () => {},
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<User | null>(null)
-  const [isLoading, setIsLoading] = React.useState<boolean>(true)
-
-  // Load persisted demo session on client mount
-  React.useEffect(() => {
+  // Read persisted user directly on mount via lazy initializer
+  const [user, setUser] = React.useState<User | null>(() => {
+    if (typeof window === "undefined") return null
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        const parsed = JSON.parse(saved) as User
-        setUser(parsed)
-      }
+      return saved ? (JSON.parse(saved) as User) : null
     } catch {
-      // Ignore storage errors
-    } finally {
-      setIsLoading(false)
+      return null
     }
-  }, [])
+  })
+  const [isLoading] = React.useState<boolean>(false)
 
   const loginAs = (role: UserRole) => {
     const selectedUser = MOCK_USERS[role]

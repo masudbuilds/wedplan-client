@@ -31,6 +31,7 @@ function ServicesPageContent() {
   const [services, setServices] = React.useState<Service[]>([])
   const [loading, setLoading] = React.useState<boolean>(true)
   const [error, setError] = React.useState<string | null>(null)
+  const [refreshTrigger, setRefreshTrigger] = React.useState<number>(0)
 
   // Sync state to URL query string so reloads preserve all active filters
   const updateQueryParams = (
@@ -49,54 +50,61 @@ function ServicesPageContent() {
     router.replace(query ? `/services?${query}` : "/services", { scroll: false })
   }
 
-  // Fetch filtered and sorted services
-  const loadServices = React.useCallback(
-    async (cat: string, q: string, loc: string, srt: string) => {
-      setLoading(true)
-      setError(null)
-      try {
-        const data = await getServices({
-          category: cat,
-          search: q,
-          location: loc,
-          sort: srt,
-        })
-        setServices(data)
-      } catch {
-        setError("Failed to load wedding services. Please check your connection and try again.")
-      } finally {
-        setLoading(false)
-      }
-    },
-    []
-  )
-
-  // React to filter changes
+  // Fetch services when filters or refreshTrigger change
   React.useEffect(() => {
-    loadServices(category, search, location, sort)
-  }, [category, search, location, sort, loadServices])
+    let active = true
+
+    getServices({
+      category,
+      search,
+      location,
+      sort,
+    })
+      .then((data) => {
+        if (active) {
+          setServices(data)
+          setError(null)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setError("Failed to load wedding services. Please check your connection and try again.")
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [category, search, location, sort, refreshTrigger])
 
   const handleCategoryChange = (val: string) => {
+    setLoading(true)
     setCategory(val)
     updateQueryParams(val, search, location, sort)
   }
 
   const handleSearchChange = (val: string) => {
+    setLoading(true)
     setSearch(val)
     updateQueryParams(category, val, location, sort)
   }
 
   const handleLocationChange = (val: string) => {
+    setLoading(true)
     setLocation(val)
     updateQueryParams(category, search, val, sort)
   }
 
   const handleSortChange = (val: string) => {
+    setLoading(true)
     setSort(val)
     updateQueryParams(category, search, location, val)
   }
 
   const handleClearFilters = () => {
+    setLoading(true)
     setCategory("all")
     setSearch("")
     setLocation("all")
@@ -152,7 +160,10 @@ function ServicesPageContent() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => loadServices(category, search, location, sort)}
+            onClick={() => {
+              setLoading(true)
+              setRefreshTrigger((prev) => prev + 1)
+            }}
             className="rounded-full"
           >
             <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
