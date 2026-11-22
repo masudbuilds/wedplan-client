@@ -1,8 +1,10 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -38,56 +40,62 @@ import { CheckCircle, AlertTriangle, Info } from "lucide-react"
 
 // Interactive Auth Role Bar
 export function AuthSwitcher() {
-  const { user, loginAs, logout } = useAuth()
+  const { user, logout } = useAuth()
 
   return (
     <Card className="border-primary/20 bg-blush/30 shadow-xs mb-10">
       <CardContent className="p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="space-y-0.5 text-center md:text-left">
           <p className="text-xs font-semibold uppercase tracking-wider text-primary">
-            Interactive Navbar State Switcher
+            Better Auth Session Status
           </p>
           <p className="text-sm text-foreground">
-            Current status:{" "}
+            Current session:{" "}
             <span className="font-bold capitalize">
               {user ? `${user.role} (${user.name})` : "Logged Out (Guest)"}
             </span>
           </p>
+          {user?.businessName && (
+            <p className="text-xs text-muted-foreground">
+              Business: {user.businessName}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2 justify-center">
-          <Button
-            size="sm"
-            variant={!user ? "default" : "outline"}
-            onClick={logout}
-            className="rounded-full text-xs"
-          >
-            Guest (Logged Out)
-          </Button>
-          <Button
-            size="sm"
-            variant={user?.role === "customer" ? "default" : "outline"}
-            onClick={() => loginAs("customer")}
-            className="rounded-full text-xs"
-          >
-            Customer
-          </Button>
-          <Button
-            size="sm"
-            variant={user?.role === "vendor" ? "default" : "outline"}
-            onClick={() => loginAs("vendor")}
-            className="rounded-full text-xs"
-          >
-            Vendor (Premium)
-          </Button>
-          <Button
-            size="sm"
-            variant={user?.role === "admin" ? "default" : "outline"}
-            onClick={() => loginAs("admin")}
-            className="rounded-full text-xs"
-          >
-            Admin
-          </Button>
+          {user ? (
+            <>
+              <Link
+                href={`/dashboard/${user.role}`}
+                className={cn(buttonVariants({ variant: "default", size: "sm" }), "rounded-full text-xs")}
+              >
+                Go to {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Dashboard
+              </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={logout}
+                className="rounded-full text-xs"
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/sign-in"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-full text-xs")}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/sign-up"
+                className={cn(buttonVariants({ variant: "default", size: "sm" }), "rounded-full text-xs")}
+              >
+                Create Account
+              </Link>
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

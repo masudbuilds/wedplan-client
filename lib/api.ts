@@ -22,9 +22,22 @@ export async function apiFetch<T = unknown>(
 ): Promise<ApiResponse<T>> {
   const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
+  }
+
+  // Automatically attach JWT token for client-side API requests if available
+  if (typeof window !== "undefined" && !headers["Authorization"]) {
+    try {
+      const { authClient } = await import("@/lib/auth-client")
+      const { data } = await authClient.token()
+      if (data?.token) {
+        headers["Authorization"] = `Bearer ${data.token}`
+      }
+    } catch {
+      // Proceed without token if not logged in
+    }
   }
 
   try {

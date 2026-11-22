@@ -1,83 +1,50 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { User, UserRole } from "@/types"
+import { authClient, useSession, signOut } from "@/lib/auth-client"
 
 interface AuthContextType {
   user: User | null
   role: UserRole | null
   isLoading: boolean
-  loginAs: (role: UserRole) => void
-  logout: () => void
+  logout: () => Promise<void>
 }
-
-// Sample users for local design testing and preview
-export const MOCK_USERS: Record<UserRole, User> = {
-  customer: {
-    id: "cust-1",
-    name: "Eleanor Vance",
-    email: "eleanor@example.com",
-    role: "customer",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-  },
-  vendor: {
-    id: "vend-1",
-    name: "Julian & Co. Photography",
-    email: "julian@weddings.com",
-    role: "vendor",
-    businessName: "Julian & Co. Photography",
-    subscriptionPlan: "premium",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-  },
-  admin: {
-    id: "adm-1",
-    name: "WedPlan Admin",
-    email: "admin@wedplan.com",
-    role: "admin",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
-  },
-}
-
-const STORAGE_KEY = "wedplan_demo_user"
 
 const AuthContext = React.createContext<AuthContextType>({
   user: null,
   role: null,
-  isLoading: false,
-  loginAs: () => {},
-  logout: () => {},
+  isLoading: true,
+  logout: async () => {},
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Read persisted user directly on mount via lazy initializer
-  const [user, setUser] = React.useState<User | null>(() => {
-    if (typeof window === "undefined") return null
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      return saved ? (JSON.parse(saved) as User) : null
-    } catch {
-      return null
-    }
-  })
-  const [isLoading] = React.useState<boolean>(false)
+  const router = useRouter()
+  const { data: session, isPending } = useSession()
 
-  const loginAs = (role: UserRole) => {
-    const selectedUser = MOCK_USERS[role]
-    setUser(selectedUser)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedUser))
-    } catch {
-      // Ignore storage errors
-    }
-  }
+  // Map Better Auth session to WedPlan User interface
+  const user: User | null = React.useMemo(() => {
+    if (!session?.user) return null
 
-  const logout = () => {
-    setUser(null)
-    try {
-      localStorage.removeItem(STORAGE_KEY)
-    } catch {
-      // Ignore storage errors
+    const rawUser = session.user as any
+    return {
+      id: rawUser.id,
+      name: rawUser.name,
+      email: rawUser.email,
+      image: rawUser.image || undefined,
+      role: (rawUser.role as UserRole) || "customer",
+      isBlocked: Boolean(rawUser.isBlocked),
+      businessName: rawUser.businessName,
+      subscriptionPlan: rawUser.subscriptionPlan || "free",
+      subscriptionExpiresAt: rawUser.subscriptionExpiresAt,
+      createdAt: rawUser.createdAt,
     }
+  }, [session])
+
+  const logout = async () => {
+    await signOut()
+    router.push("/")
   }
 
   return (
@@ -85,8 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         user,
         role: user?.role || null,
-        isLoading,
-        loginAs,
+        isLoading: isPending,
         logout,
       }}
     >
