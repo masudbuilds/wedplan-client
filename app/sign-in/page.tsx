@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { Heart } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export default function SignInPage() {
   return (
@@ -21,9 +22,12 @@ export default function SignInPage() {
             Authentication with Better Auth and role verification will be hooked up in Phase 2.
           </p>
           <div className="space-y-2 pt-2">
-            <Button asChild className="w-full rounded-full">
-              <Link href="/design-preview">Explore Design Preview Switcher</Link>
-            </Button>
+            <Link
+              href="/design-preview"
+              className={cn(buttonVariants({ variant: "default" }), "w-full rounded-full")}
+            >
+              Explore Design Preview Switcher
+            </Link>
             <div className="text-xs text-muted-foreground pt-2">
               Don&apos;t have an account?{" "}
               <Link href="/sign-up" className="text-primary font-medium hover:underline">

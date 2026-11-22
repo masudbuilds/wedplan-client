@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { Service } from "@/types"
 import { getFeaturedServices } from "@/lib/api"
 import { SectionHeading } from "@/components/section-heading"

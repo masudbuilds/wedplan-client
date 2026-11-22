@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { Heart } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export default function SignUpPage() {
   return (
@@ -21,9 +22,12 @@ export default function SignUpPage() {
             Account registration with Better Auth, Google OAuth, and ImgBB avatar upload will be hooked up in Phase 2.
           </p>
           <div className="space-y-2 pt-2">
-            <Button asChild className="w-full rounded-full">
-              <Link href="/design-preview">Test Roles in Design Preview</Link>
-            </Button>
+            <Link
+              href="/design-preview"
+              className={cn(buttonVariants({ variant: "default" }), "w-full rounded-full")}
+            >
+              Test Roles in Design Preview
+            </Link>
             <div className="text-xs text-muted-foreground pt-2">
               Already have an account?{" "}
               <Link href="/sign-in" className="text-primary font-medium hover:underline">

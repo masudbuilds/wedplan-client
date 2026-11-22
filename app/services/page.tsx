@@ -1,7 +1,8 @@
 import Link from "next/link"
 import { ArrowLeft, Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { SectionHeading } from "@/components/section-heading"
+import { cn } from "@/lib/utils"
 
 export default function ServicesPage() {
   return (
@@ -18,15 +19,19 @@ export default function ServicesPage() {
       />
 
       <div className="flex justify-center gap-3 pt-4">
-        <Button asChild variant="outline" className="rounded-full">
-          <Link href="/">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Link>
-        </Button>
-        <Button asChild className="rounded-full">
-          <Link href="/design-preview">View Design Preview</Link>
-        </Button>
+        <Link
+          href="/"
+          className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Link>
+        <Link
+          href="/design-preview"
+          className={cn(buttonVariants({ variant: "default" }), "rounded-full")}
+        >
+          View Design Preview
+        </Link>
       </div>
     </div>
   )
