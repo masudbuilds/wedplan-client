@@ -15,14 +15,13 @@ import {
   RefreshCw,
   MessageSquare,
   Mail,
-  User as UserIcon,
 } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { RoleGuard } from "@/components/dashboard/role-guard"
 import { getVendorBookings, updateBookingStatus, ApiError } from "@/lib/api"
 import { Booking, BookingStatus } from "@/types"
 import { VENDOR_NAV_ITEMS } from "@/lib/vendor-nav"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"

@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Sparkles,
   Loader2,
-  Crown,
   ArrowRight,
   Clock,
   RefreshCw,
@@ -28,19 +27,19 @@ function PaymentSuccessContent() {
   const { refreshUser } = useAuth()
 
   // State: "polling" | "success" | "timeout" | "error"
-  const [pollState, setPollState] = React.useState<"polling" | "success" | "timeout" | "error">("polling")
+  const [pollState, setPollState] = React.useState<"polling" | "success" | "timeout" | "error">(
+    sessionId ? "polling" : "error"
+  )
   const [sessionData, setSessionData] = React.useState<SessionStatusResponse | null>(null)
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(
+    sessionId ? null : "No Stripe checkout session ID was provided."
+  )
   const [pollAttempts, setPollAttempts] = React.useState(0)
 
   const maxAttempts = 15 // 15 attempts * 2s = 30 seconds
 
   React.useEffect(() => {
-    if (!sessionId) {
-      setPollState("error")
-      setErrorMessage("No Stripe checkout session ID was provided.")
-      return
-    }
+    if (!sessionId) return
 
     let isMounted = true
     let timerId: NodeJS.Timeout | null = null

@@ -2,8 +2,8 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { XCircle, ArrowRight, RotateCcw, ShieldCheck } from "lucide-react"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { XCircle, RotateCcw, ShieldCheck } from "lucide-react"
+import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 

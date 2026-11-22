@@ -3,7 +3,6 @@
 import * as React from "react"
 import { toast } from "sonner"
 import { UploadCloud, Loader2, X, Image as ImageIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface MultiImageUploadProps {

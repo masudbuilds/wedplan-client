@@ -1,22 +1,18 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { toast } from "sonner"
 import {
   Crown,
   Check,
   Sparkles,
   Receipt,
-  CreditCard,
   AlertCircle,
   RefreshCw,
   Loader2,
-  Calendar,
   XCircle,
   CheckCircle2,
   Clock,
-  ArrowRight,
 } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { RoleGuard } from "@/components/dashboard/role-guard"
@@ -29,7 +25,7 @@ import {
 } from "@/lib/api"
 import { VendorSubscription, Transaction } from "@/types"
 import { VENDOR_NAV_ITEMS } from "@/lib/vendor-nav"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import {
