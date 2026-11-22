@@ -6,6 +6,7 @@ import { User, UserRole } from "@/types"
 interface AuthContextType {
   user: User | null
   role: UserRole | null
+  isLoading: boolean
   loginAs: (role: UserRole) => void
   logout: () => void
 }
@@ -37,23 +38,52 @@ export const MOCK_USERS: Record<UserRole, User> = {
   },
 }
 
+const STORAGE_KEY = "wedplan_demo_user"
+
 const AuthContext = React.createContext<AuthContextType>({
   user: null,
   role: null,
+  isLoading: true,
   loginAs: () => {},
   logout: () => {},
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Default to null (logged out) or test session
   const [user, setUser] = React.useState<User | null>(null)
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
+
+  // Load persisted demo session on client mount
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved) as User
+        setUser(parsed)
+      }
+    } catch {
+      // Ignore storage errors
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   const loginAs = (role: UserRole) => {
-    setUser(MOCK_USERS[role])
+    const selectedUser = MOCK_USERS[role]
+    setUser(selectedUser)
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedUser))
+    } catch {
+      // Ignore storage errors
+    }
   }
 
   const logout = () => {
     setUser(null)
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch {
+      // Ignore storage errors
+    }
   }
 
   return (
@@ -61,6 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         user,
         role: user?.role || null,
+        isLoading,
         loginAs,
         logout,
       }}

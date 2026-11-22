@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { MapPin } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -6,6 +8,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PremiumBadge } from "@/components/premium-badge"
 import { Service } from "@/types"
+import { useAuth } from "@/lib/auth-context"
 import { cn } from "@/lib/utils"
 
 interface ServiceCardProps {
@@ -15,6 +18,8 @@ interface ServiceCardProps {
 
 // Photo-first service card with pricing, vendor badge, and details CTA
 export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
+  const { user } = useAuth()
+
   const primaryImage =
     service.images?.[0] ||
     "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
@@ -27,6 +32,11 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
         .toUpperCase()
         .slice(0, 2)
     : "WP"
+
+  // PDF Access Rule: Unauthenticated users are redirected to Sign In with return redirect
+  const detailsHref = user
+    ? `/services/${service.id}`
+    : `/sign-in?redirect=${encodeURIComponent(`/services/${service.id}`)}`
 
   return (
     <Card className="group overflow-hidden rounded-2xl border border-border/70 bg-card card-hover-lift shadow-xs flex flex-col h-full">
@@ -83,7 +93,7 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
           </div>
 
           <Link
-            href={`/services/${service.id}`}
+            href={detailsHref}
             className={cn(
               buttonVariants({ variant: "outline", size: "sm" }),
               "rounded-full text-xs hover:bg-primary hover:text-white hover:border-primary shrink-0"
