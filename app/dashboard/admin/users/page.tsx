@@ -209,6 +209,21 @@ function AdminUsersContent() {
     if (!blockTarget) return
 
     const { user: target, action } = blockTarget
+
+    // Safety checks against blocking self or fellow admins
+    if (action === "block") {
+      if (target.id === currentUser?.id) {
+        toast.error("Administrators cannot block their own account.")
+        setBlockTarget(null)
+        return
+      }
+      if (target.role === "admin") {
+        toast.error("Administrator accounts cannot be blocked.")
+        setBlockTarget(null)
+        return
+      }
+    }
+
     setActionLoading(true)
 
     try {
@@ -844,23 +859,39 @@ function AdminUsersContent() {
               <DialogDescription className="text-xs text-muted-foreground pt-1 leading-relaxed">
                 {blockTarget?.action === "block" ? (
                   <>
-                    Are you sure you want to block{" "}
-                    <strong className="text-foreground">
-                      {blockTarget.user.name || blockTarget.user.email}
-                    </strong>
-                    ? This user will immediately be logged out of all active sessions and prevented from signing in or creating bookings.
+                    Are you sure you want to block this user account?
+                    This user will immediately be logged out of all active sessions and prevented from signing in or creating bookings.
                   </>
                 ) : (
                   <>
-                    Are you sure you want to unblock{" "}
-                    <strong className="text-foreground">
-                      {blockTarget?.user.name || blockTarget?.user.email}
-                    </strong>
-                    ? They will regain access to log in and use their account normally.
+                    Are you sure you want to unblock this user account?
+                    They will regain access to log in and use their account normally.
                   </>
                 )}
               </DialogDescription>
             </DialogHeader>
+
+            {blockTarget?.user && (
+              <div className="p-3 my-1 rounded-xl bg-muted/40 border border-border/70 flex items-center gap-3">
+                <Avatar className="w-10 h-10 border border-border shrink-0">
+                  <AvatarImage src={blockTarget.user.image} />
+                  <AvatarFallback className="bg-blush text-primary text-xs font-semibold">
+                    {blockTarget.user.name.slice(0, 2).toUpperCase() || "WP"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-xs text-foreground truncate">
+                      {blockTarget.user.name}
+                    </p>
+                    {renderRoleBadge(blockTarget.user.role)}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground truncate">
+                    {blockTarget.user.email}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <DialogFooter className="gap-2 pt-3">
               <Button
