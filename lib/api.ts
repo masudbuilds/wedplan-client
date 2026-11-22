@@ -1,25 +1,33 @@
-// WedPlan API Client
-// Centralized data access layer for services, bookings, and auth
-// Replace mock data returns with real fetch calls when backend is connected
+// WedPlan Centralized API Client
+// Handles public service listings, booking requests, customer statistics, and JWT authentication
 
-import { Service, ServiceCategory, Booking } from "@/types"
-import { MOCK_SERVICES, MOCK_CATEGORIES, MOCK_BOOKINGS } from "@/lib/mock-data"
+import {
+  Service,
+  ServiceCategory,
+  Booking,
+  CustomerStats,
+  ServicesResponse,
+} from "@/types"
+import { toast } from "sonner"
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
 
-export interface ApiResponse<T = unknown> {
-  success: boolean
-  data?: T
-  message?: string
-  error?: string
+// Custom API Error carrying HTTP status code and server error message
+export class ApiError extends Error {
+  status: number
+  constructor(status: number, message: string) {
+    super(message)
+    this.name = "ApiError"
+    this.status = status
+  }
 }
 
-// Generic fetch wrapper with standard headers
+// Single fetch wrapper: automatically attaches JWT Bearer token for authenticated calls
 export async function apiFetch<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<ApiResponse<T>> {
+): Promise<T> {
   const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`
 
   const headers: Record<string, string> = {
@@ -27,7 +35,7 @@ export async function apiFetch<T = unknown>(
     ...(options.headers as Record<string, string>),
   }
 
-  // Automatically attach JWT token for client-side API requests if available
+  // Client-side: Automatically retrieve & attach JWT token if available
   if (typeof window !== "undefined" && !headers["Authorization"]) {
     try {
       const { authClient } = await import("@/lib/auth-client")
@@ -36,182 +44,216 @@ export async function apiFetch<T = unknown>(
         headers["Authorization"] = `Bearer ${data.token}`
       }
     } catch {
-      // Proceed without token if not logged in
+      // Proceed without token if not signed in
     }
   }
 
+  let res: Response
   try {
-    const res = await fetch(url, {
+    res = await fetch(url, {
       ...options,
       headers,
     })
+  } catch (error: unknown) {
+    const msg =
+      error instanceof Error ? error.message : "Failed to connect to the server."
+    throw new ApiError(0, msg)
+  }
 
-    const data = await res.json().catch(() => null)
+  const data = await res.json().catch(() => null)
 
-    if (!res.ok) {
-      return {
-        success: false,
-        message: data?.message || "An unexpected error occurred",
-        error: data?.error,
+  if (!res.ok) {
+    const message =
+      data?.message || data?.error || `Request failed with status ${res.status}`
+
+    // 401 Unauthorized: Redirect to sign-in with current path as redirect query
+    if (res.status === 401 && typeof window !== "undefined") {
+      const currentPath = window.location.pathname + window.location.search
+      if (!window.location.pathname.startsWith("/sign-in")) {
+        window.location.href = `/sign-in?redirect=${encodeURIComponent(currentPath)}`
       }
     }
 
-    return {
-      success: true,
-      data: (data?.data ?? data) as T,
-      message: data?.message,
+    // 403 Forbidden with suspended/blocked message: Force sign-out and alert user
+    if (
+      res.status === 403 &&
+      typeof window !== "undefined" &&
+      typeof message === "string" &&
+      (message.toLowerCase().includes("block") ||
+        message.toLowerCase().includes("suspend"))
+    ) {
+      toast.error(message)
+      try {
+        const { authClient } = await import("@/lib/auth-client")
+        await authClient.signOut()
+        window.location.href = "/sign-in"
+      } catch {
+        // Ignore
+      }
     }
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Failed to connect to the server"
 
-    return {
-      success: false,
-      message: errorMessage,
-    }
+    throw new ApiError(res.status, message)
   }
+
+  return data as T
 }
 
 // ---------------------------------------------------------------------------
-// Service Data Fetching (Mocked for now, easily swappable with backend API)
+// Public Services & Categories API
 // ---------------------------------------------------------------------------
 
-// Fetches 6 approved and active services for the homepage
+// Fetches 6 approved and active featured services for the home page
 export async function getFeaturedServices(): Promise<Service[]> {
-  await new Promise((resolve) => setTimeout(resolve, 150))
-  return MOCK_SERVICES.filter(
-    (service) => service.status === "approved" && service.isAvailable !== false
-  ).slice(0, 6)
+  const res = await apiFetch<{ success: boolean; services: Service[] }>(
+    "/services/featured"
+  )
+  return res.services || []
 }
 
-// Fetches all available service categories
+// Fetches the 6 wedding categories from the server
 export async function getCategories(): Promise<ServiceCategory[]> {
-  return MOCK_CATEGORIES
+  const res = await apiFetch<{
+    success: boolean
+    categories: ServiceCategory[]
+  }>("/categories")
+  return res.categories || []
 }
 
 export interface GetServicesFilters {
   search?: string
   category?: string
   location?: string
-  sort?: string // "default" | "price-asc" | "price-desc"
+  sort?: string // "default" | "price-asc" | "price-desc" | "price_asc" | "price_desc"
+  page?: number
+  limit?: number
 }
 
-// Fetches approved & active services with search, category, location, and price sorting
+// Fetches services with search, category, location, price sort, and pagination
 export async function getServices(
   filters: GetServicesFilters = {}
-): Promise<Service[]> {
-  // Simulate network latency
-  await new Promise((resolve) => setTimeout(resolve, 250))
+): Promise<ServicesResponse> {
+  const params = new URLSearchParams()
 
-  // Only approved and active services are visible publicly
-  let results = MOCK_SERVICES.filter(
-    (item) => item.status === "approved" && item.isAvailable !== false
-  )
-
-  // 1. Filter by Category
-  if (filters.category && filters.category !== "all") {
-    const targetCat = filters.category.toLowerCase().trim()
-    results = results.filter(
-      (item) => item.category.toLowerCase().trim() === targetCat
-    )
+  if (filters.search && filters.search.trim()) {
+    params.set("search", filters.search.trim())
+  }
+  if (
+    filters.category &&
+    filters.category.trim() &&
+    filters.category.toLowerCase() !== "all"
+  ) {
+    params.set("category", filters.category.trim())
+  }
+  if (
+    filters.location &&
+    filters.location.trim() &&
+    filters.location.toLowerCase() !== "all"
+  ) {
+    params.set("location", filters.location.trim())
   }
 
-  // 2. Filter by Search Query (Service Name, Description, or Vendor)
-  if (filters.search && filters.search.trim() !== "") {
-    const q = filters.search.toLowerCase().trim()
-    results = results.filter(
-      (item) =>
-        item.serviceName.toLowerCase().includes(q) ||
-        item.description.toLowerCase().includes(q) ||
-        (item.vendorName && item.vendorName.toLowerCase().includes(q))
-    )
+  if (filters.sort === "price-asc" || filters.sort === "price_asc") {
+    params.set("sort", "price_asc")
+  } else if (filters.sort === "price-desc" || filters.sort === "price_desc") {
+    params.set("sort", "price_desc")
   }
 
-  // 3. Filter by Location
-  if (filters.location && filters.location !== "all" && filters.location.trim() !== "") {
-    const loc = filters.location.toLowerCase().trim()
-    results = results.filter((item) =>
-      item.location.toLowerCase().includes(loc)
-    )
+  if (filters.page && filters.page > 1) {
+    params.set("page", String(filters.page))
+  }
+  if (filters.limit) {
+    params.set("limit", String(filters.limit))
   }
 
-  // 4. Sort by Price
-  if (filters.sort === "price-asc") {
-    results = [...results].sort((a, b) => a.price - b.price)
-  } else if (filters.sort === "price-desc") {
-    results = [...results].sort((a, b) => b.price - a.price)
-  }
+  const query = params.toString() ? `?${params.toString()}` : ""
+  const res = await apiFetch<{
+    success: boolean
+    total: number
+    page: number
+    limit: number
+    services: Service[]
+  }>(`/services${query}`)
 
-  return results
+  return {
+    services: res.services || [],
+    total: res.total || 0,
+    page: res.page || 1,
+    limit: res.limit || 12,
+  }
 }
 
-// Fetches a single service by ID
-export async function getServiceById(id: string): Promise<Service | null> {
-  await new Promise((resolve) => setTimeout(resolve, 200))
-  const service = MOCK_SERVICES.find(
-    (item) => item.id === id && item.status === "approved"
+// Fetches a single approved & active service by ID
+export async function getServiceById(id: string): Promise<Service> {
+  const res = await apiFetch<{ success: boolean; service: Service }>(
+    `/services/${id}`
   )
-  return service || null
+  return res.service
 }
 
 // ---------------------------------------------------------------------------
-// Booking Submission (Mocked with rule checks)
+// Customer Bookings API
 // ---------------------------------------------------------------------------
 
 export interface CreateBookingInput {
   serviceId: string
-  serviceName: string
-  vendorId: string
-  customerId: string
-  customerName: string
-  customerEmail: string
   eventDate: string
   eventLocation: string
   message?: string
 }
 
+// Customer submits a booking inquiry
 export async function createBooking(
   input: CreateBookingInput
-): Promise<ApiResponse<Booking>> {
-  await new Promise((resolve) => setTimeout(resolve, 350))
+): Promise<Booking> {
+  const res = await apiFetch<{
+    success: boolean
+    message: string
+    booking: Booking
+  }>("/bookings", {
+    method: "POST",
+    body: JSON.stringify(input),
+  })
+  return res.booking
+}
 
-  // PDF Rule: Prevent duplicate active booking requests for the same service and event date
-  const isDuplicate = MOCK_BOOKINGS.some(
-    (b) =>
-      b.serviceId === input.serviceId &&
-      b.eventDate === input.eventDate &&
-      b.status !== "cancelled" &&
-      b.status !== "rejected"
+// Customer fetches their own booking history
+export async function getMyBookings(): Promise<Booking[]> {
+  const res = await apiFetch<{
+    success: boolean
+    count: number
+    bookings: Booking[]
+  }>("/bookings/my")
+  return res.bookings || []
+}
+
+// Fetches a single booking details (customer or vendor owner)
+export async function getBookingById(id: string): Promise<Booking> {
+  const res = await apiFetch<{ success: boolean; booking: Booking }>(
+    `/bookings/${id}`
   )
+  return res.booking
+}
 
-  if (isDuplicate) {
-    return {
-      success: false,
-      message:
-        "This service is already requested or booked for the selected event date. Please choose another date.",
+// Customer cancels a pending booking
+export async function cancelBooking(
+  id: string
+): Promise<{ success: boolean; message: string }> {
+  return await apiFetch<{ success: boolean; message: string }>(
+    `/bookings/${id}/cancel`,
+    {
+      method: "PATCH",
     }
-  }
+  )
+}
 
-  const newBooking: Booking = {
-    id: `book-${Date.now()}`,
-    serviceId: input.serviceId,
-    serviceName: input.serviceName,
-    vendorId: input.vendorId,
-    customerId: input.customerId,
-    customerName: input.customerName,
-    customerEmail: input.customerEmail,
-    eventDate: input.eventDate,
-    eventLocation: input.eventLocation,
-    message: input.message,
-    status: "pending",
-    createdAt: new Date().toISOString(),
-  }
+// ---------------------------------------------------------------------------
+// Customer Dashboard Statistics API
+// ---------------------------------------------------------------------------
 
-  MOCK_BOOKINGS.push(newBooking)
-
-  return {
-    success: true,
-    data: newBooking,
-    message: "Your booking request has been sent to the vendor!",
-  }
+// Fetches customer booking metrics
+export async function getCustomerStats(): Promise<CustomerStats> {
+  const res = await apiFetch<{ success: boolean; stats: CustomerStats }>(
+    "/customer/stats"
+  )
+  return res.stats
 }

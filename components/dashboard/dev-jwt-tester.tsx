@@ -74,14 +74,9 @@ function DevJwtTesterInner() {
 
     try {
       // apiFetch will automatically attach Authorization: Bearer <token>
-      const res = await apiFetch("/me")
-
-      if (res.error) {
-        setTestStatus(`Response: ${res.error} (Note: Express backend may not be running yet)`)
-      } else {
-        setTestStatus(`Success (200 OK): ${JSON.stringify(res.data)}`)
-        toast.success("Express backend verified JWT token successfully!")
-      }
+      const res = await apiFetch<Record<string, unknown>>("/me")
+      setTestStatus(`Success (200 OK): ${JSON.stringify(res)}`)
+      toast.success("Express backend verified JWT token successfully!")
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Connection failed"
       setTestStatus(`Backend offline or unreachable (${msg}). Ready for Express server.`)

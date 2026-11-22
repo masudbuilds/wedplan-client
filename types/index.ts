@@ -1,5 +1,5 @@
 // WedPlan Type Definitions
-// Derived directly from the WedPlan Assignment Specification
+// Derived directly from the WedPlan Assignment Specification and Server API Contract
 
 export type UserRole = "customer" | "vendor" | "admin"
 
@@ -24,13 +24,32 @@ export type ServiceCategory =
   | "Makeup & Styling"
   | "Wedding Fashion"
 
+export const SERVICE_CATEGORIES: ServiceCategory[] = [
+  "Photography & Videography",
+  "Wedding Venues",
+  "Decoration & Florist",
+  "Catering Services",
+  "Makeup & Styling",
+  "Wedding Fashion",
+]
+
 export type ServiceStatus = "pending" | "approved" | "rejected"
+
+export interface VendorPreview {
+  name: string
+  businessName: string
+  image: string
+  isPremium?: boolean
+}
 
 export interface Service {
   id: string
+  _id?: string
   vendorId: string
   vendorName?: string
   vendorImage?: string
+  vendor?: VendorPreview
+  isPremium?: boolean
   serviceName: string
   category: ServiceCategory
   description: string
@@ -38,6 +57,7 @@ export interface Service {
   location: string
   images: string[]
   status: ServiceStatus
+  isActive?: boolean
   isAvailable?: boolean
   createdAt: string
 }
@@ -46,9 +66,8 @@ export type BookingStatus = "pending" | "accepted" | "rejected" | "cancelled"
 
 export interface Booking {
   id: string
+  _id?: string
   serviceId: string
-  serviceName?: string
-  serviceImage?: string
   vendorId: string
   customerId: string
   customerName?: string
@@ -58,6 +77,43 @@ export interface Booking {
   message?: string
   status: BookingStatus
   createdAt: string
+  serviceName?: string
+  serviceImage?: string
+  vendor?: {
+    name: string
+    businessName: string
+    image: string
+  }
+  vendorName?: string
+  vendorImage?: string
+  service?: {
+    id?: string
+    serviceName: string
+    category?: string
+    price?: number
+    location?: string
+    images?: string[]
+  }
+  customer?: {
+    name: string
+    email: string
+    image?: string
+  }
+}
+
+export interface CustomerStats {
+  totalBookings: number
+  pending: number
+  accepted: number
+  rejected: number
+  cancelled: number
+}
+
+export interface ServicesResponse {
+  services: Service[]
+  total: number
+  page: number
+  limit: number
 }
 
 export type TransactionStatus = "pending" | "completed" | "failed"

@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { MOCK_CATEGORIES } from "@/lib/mock-data"
+import { SERVICE_CATEGORIES, ServiceCategory } from "@/types"
 
 const LOCATIONS = [
   "All Locations",
@@ -30,6 +30,7 @@ interface ServiceFilterBarProps {
   category: string
   location: string
   sort: string
+  categories?: ServiceCategory[]
   onSearchChange: (val: string) => void
   onCategoryChange: (val: string) => void
   onLocationChange: (val: string) => void
@@ -43,6 +44,7 @@ export function ServiceFilterBar({
   category,
   location,
   sort,
+  categories = SERVICE_CATEGORIES,
   onSearchChange,
   onCategoryChange,
   onLocationChange,
@@ -77,7 +79,7 @@ export function ServiceFilterBar({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              {MOCK_CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <SelectItem key={cat} value={cat}>
                   {cat}
                 </SelectItem>
