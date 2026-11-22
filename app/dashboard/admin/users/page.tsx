@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { toast } from "sonner"
 import {
@@ -9,7 +8,6 @@ import {
   Search,
   Filter,
   Eye,
-  ShieldAlert,
   ShieldCheck,
   Ban,
   CheckCircle2,
@@ -19,8 +17,6 @@ import {
   AlertCircle,
   RefreshCw,
   Mail,
-  Calendar,
-  Building,
   Sparkles,
   Lock,
 } from "lucide-react"
@@ -67,16 +63,13 @@ function AdminUsersContent() {
   const searchParams = useSearchParams()
   const { user: currentUser } = useAuth()
 
-  // Read URL query params
-  const initialSearch = searchParams.get("search") || ""
-  const initialRole = searchParams.get("role") || "all"
-  const initialPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
-
-  const [searchInput, setSearchInput] = React.useState(initialSearch)
-  const [roleFilter, setRoleFilter] = React.useState<string>(initialRole)
-  const [page, setPage] = React.useState<number>(initialPage)
+  // Directly derive filter and pagination parameters from URL
+  const currentSearch = searchParams.get("search") || ""
+  const roleFilter = searchParams.get("role") || "all"
+  const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
   const limit = 10
 
+  const [searchInput, setSearchInput] = React.useState(currentSearch)
   const [users, setUsers] = React.useState<AdminUser[]>([])
   const [total, setTotal] = React.useState<number>(0)
   const [loading, setLoading] = React.useState<boolean>(true)
@@ -95,6 +88,44 @@ function AdminUsersContent() {
   } | null>(null)
   const [actionLoading, setActionLoading] = React.useState<boolean>(false)
 
+  // Helper to sync state changes with URL query params
+  const updateQueryParams = React.useCallback(
+    (updates: {
+      search?: string
+      role?: string
+      page?: number
+    }) => {
+      const params = new URLSearchParams(searchParams.toString())
+
+      if (updates.search !== undefined) {
+        if (updates.search) {
+          params.set("search", updates.search)
+        } else {
+          params.delete("search")
+        }
+      }
+
+      if (updates.role !== undefined) {
+        if (updates.role && updates.role !== "all") {
+          params.set("role", updates.role)
+        } else {
+          params.delete("role")
+        }
+      }
+
+      if (updates.page !== undefined) {
+        if (updates.page > 1) {
+          params.set("page", String(updates.page))
+        } else {
+          params.delete("page")
+        }
+      }
+
+      router.replace(`${pathname}?${params.toString()}`)
+    },
+    [searchParams, pathname, router]
+  )
+
   // Debounced Search synchronization
   React.useEffect(() => {
     const handler = setTimeout(() => {
@@ -105,59 +136,16 @@ function AdminUsersContent() {
     }, 400)
 
     return () => clearTimeout(handler)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchInput])
-
-  // Helper to sync state changes with URL query params
-  const updateQueryParams = (updates: {
-    search?: string
-    role?: string
-    page?: number
-  }) => {
-    const params = new URLSearchParams(searchParams.toString())
-
-    if (updates.search !== undefined) {
-      if (updates.search) {
-        params.set("search", updates.search)
-      } else {
-        params.delete("search")
-      }
-    }
-
-    if (updates.role !== undefined) {
-      if (updates.role && updates.role !== "all") {
-        params.set("role", updates.role)
-      } else {
-        params.delete("role")
-      }
-    }
-
-    if (updates.page !== undefined) {
-      if (updates.page > 1) {
-        params.set("page", String(updates.page))
-      } else {
-        params.delete("page")
-      }
-    }
-
-    router.replace(`${pathname}?${params.toString()}`)
-  }
+  }, [searchInput, searchParams, updateQueryParams])
 
   // 1. Fetch Users on param or trigger change
   React.useEffect(() => {
     let active = true
 
-    const currentSearch = searchParams.get("search") || ""
-    const currentRole = searchParams.get("role") || "all"
-    const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
-
-    setPage(currentPage)
-    setRoleFilter(currentRole)
-
     getAdminUsers({
       search: currentSearch || undefined,
-      role: currentRole !== "all" ? currentRole : undefined,
-      page: currentPage,
+      role: roleFilter !== "all" ? roleFilter : undefined,
+      page,
       limit,
     })
       .then((res) => {
@@ -181,7 +169,7 @@ function AdminUsersContent() {
     return () => {
       active = false
     }
-  }, [searchParams, refreshTrigger])
+  }, [currentSearch, roleFilter, page, refreshTrigger])
 
   const handleRefresh = () => {
     setLoading(true)
@@ -322,7 +310,6 @@ function AdminUsersContent() {
                   value={roleFilter}
                   onValueChange={(val) => {
                     const selected = val || "all"
-                    setRoleFilter(selected)
                     updateQueryParams({ role: selected, page: 1 })
                   }}
                 >
@@ -343,7 +330,6 @@ function AdminUsersContent() {
                     size="sm"
                     onClick={() => {
                       setSearchInput("")
-                      setRoleFilter("all")
                       updateQueryParams({ search: "", role: "all", page: 1 })
                     }}
                     className="text-xs h-9 px-2 text-muted-foreground hover:text-foreground"
@@ -413,7 +399,6 @@ function AdminUsersContent() {
                     size="sm"
                     onClick={() => {
                       setSearchInput("")
-                      setRoleFilter("all")
                       updateQueryParams({ search: "", role: "all", page: 1 })
                     }}
                     className="rounded-full text-xs"

@@ -40,18 +40,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
-import { cn } from "@/lib/utils"
 
 function AdminTransactionsContent() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  const initialStatus = searchParams.get("status") || "all"
-  const initialPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
-
-  const [statusFilter, setStatusFilter] = React.useState<string>(initialStatus)
-  const [page, setPage] = React.useState<number>(initialPage)
+  const currentStatus = searchParams.get("status") || "all"
+  const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
   const limit = 10
 
   const [transactions, setTransactions] = React.useState<Transaction[]>([])
@@ -61,41 +57,38 @@ function AdminTransactionsContent() {
   const [refreshTrigger, setRefreshTrigger] = React.useState<number>(0)
 
   // Sync state changes with URL query parameters
-  const updateQueryParams = (updates: { status?: string; page?: number }) => {
-    const params = new URLSearchParams(searchParams.toString())
+  const updateQueryParams = React.useCallback(
+    (updates: { status?: string; page?: number }) => {
+      const params = new URLSearchParams(searchParams.toString())
 
-    if (updates.status !== undefined) {
-      if (updates.status && updates.status !== "all") {
-        params.set("status", updates.status)
-      } else {
-        params.delete("status")
+      if (updates.status !== undefined) {
+        if (updates.status && updates.status !== "all") {
+          params.set("status", updates.status)
+        } else {
+          params.delete("status")
+        }
       }
-    }
 
-    if (updates.page !== undefined) {
-      if (updates.page > 1) {
-        params.set("page", String(updates.page))
-      } else {
-        params.delete("page")
+      if (updates.page !== undefined) {
+        if (updates.page > 1) {
+          params.set("page", String(updates.page))
+        } else {
+          params.delete("page")
+        }
       }
-    }
 
-    router.replace(`${pathname}?${params.toString()}`)
-  }
+      router.replace(`${pathname}?${params.toString()}`)
+    },
+    [searchParams, pathname, router]
+  )
 
   // 1. Fetch Transactions on param change
   React.useEffect(() => {
     let active = true
 
-    const currentStatus = searchParams.get("status") || "all"
-    const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
-
-    setPage(currentPage)
-    setStatusFilter(currentStatus)
-
     getAdminTransactions({
       status: currentStatus !== "all" ? currentStatus : undefined,
-      page: currentPage,
+      page,
       limit,
     })
       .then((res) => {
@@ -121,7 +114,7 @@ function AdminTransactionsContent() {
     return () => {
       active = false
     }
-  }, [searchParams, refreshTrigger])
+  }, [currentStatus, page, refreshTrigger])
 
   const handleRefresh = () => {
     setLoading(true)
@@ -207,10 +200,9 @@ function AdminTransactionsContent() {
               <div className="flex items-center gap-2">
                 <Filter className="w-4 h-4 text-muted-foreground shrink-0 hidden sm:block" />
                 <Select
-                  value={statusFilter}
+                  value={currentStatus}
                   onValueChange={(val) => {
                     const selected = val || "all"
-                    setStatusFilter(selected)
                     updateQueryParams({ status: selected, page: 1 })
                   }}
                 >
@@ -225,12 +217,11 @@ function AdminTransactionsContent() {
                   </SelectContent>
                 </Select>
 
-                {statusFilter !== "all" && (
+                {currentStatus !== "all" && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => {
-                      setStatusFilter("all")
                       updateQueryParams({ status: "all", page: 1 })
                     }}
                     className="text-xs h-9 px-2 text-muted-foreground hover:text-foreground"
@@ -283,17 +274,16 @@ function AdminTransactionsContent() {
                 <div className="space-y-1">
                   <h3 className="font-serif text-lg font-bold">No Transactions Found</h3>
                   <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    {statusFilter !== "all"
-                      ? `No payment transactions match the "${statusFilter}" status filter.`
+                    {currentStatus !== "all"
+                      ? `No payment transactions match the "${currentStatus}" status filter.`
                       : "There are currently no billing transactions recorded on the platform."}
                   </p>
                 </div>
-                {statusFilter !== "all" && (
+                {currentStatus !== "all" && (
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      setStatusFilter("all")
                       updateQueryParams({ status: "all", page: 1 })
                     }}
                     className="rounded-full text-xs"

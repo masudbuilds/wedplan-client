@@ -1,13 +1,11 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { toast } from "sonner"
 import {
   Package,
   Search,
-  Filter,
   Eye,
   CheckCircle2,
   XCircle,
@@ -20,11 +18,7 @@ import {
   RefreshCw,
   Mail,
   MapPin,
-  Tag,
-  DollarSign,
-  Building,
   MoreHorizontal,
-  Sparkles,
 } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { RoleGuard } from "@/components/dashboard/role-guard"
@@ -35,13 +29,12 @@ import {
   deleteAdminService,
   ApiError,
 } from "@/lib/api"
-import { Service, SERVICE_CATEGORIES, ServiceCategory } from "@/types"
+import { Service, SERVICE_CATEGORIES } from "@/types"
 import { ADMIN_NAV_ITEMS } from "@/lib/admin-nav"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Table,
   TableBody,
@@ -82,18 +75,14 @@ function AdminServicesContent() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Read URL query params
-  const initialSearch = searchParams.get("search") || ""
-  const initialStatus = searchParams.get("status") || "all"
-  const initialCategory = searchParams.get("category") || "all"
-  const initialPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
-
-  const [searchInput, setSearchInput] = React.useState(initialSearch)
-  const [statusFilter, setStatusFilter] = React.useState<string>(initialStatus)
-  const [categoryFilter, setCategoryFilter] = React.useState<string>(initialCategory)
-  const [page, setPage] = React.useState<number>(initialPage)
+  // Derive URL query params
+  const currentSearch = searchParams.get("search") || ""
+  const statusFilter = searchParams.get("status") || "all"
+  const categoryFilter = searchParams.get("category") || "all"
+  const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
   const limit = 10
 
+  const [searchInput, setSearchInput] = React.useState(currentSearch)
   const [services, setServices] = React.useState<Service[]>([])
   const [total, setTotal] = React.useState<number>(0)
   const [loading, setLoading] = React.useState<boolean>(true)
@@ -116,6 +105,53 @@ function AdminServicesContent() {
   const [deleteTarget, setDeleteTarget] = React.useState<Service | null>(null)
   const [deleting, setDeleting] = React.useState<boolean>(false)
 
+  // Helper to sync state changes with URL query params
+  const updateQueryParams = React.useCallback(
+    (updates: {
+      search?: string
+      status?: string
+      category?: string
+      page?: number
+    }) => {
+      const params = new URLSearchParams(searchParams.toString())
+
+      if (updates.search !== undefined) {
+        if (updates.search) {
+          params.set("search", updates.search)
+        } else {
+          params.delete("search")
+        }
+      }
+
+      if (updates.status !== undefined) {
+        if (updates.status && updates.status !== "all") {
+          params.set("status", updates.status)
+        } else {
+          params.delete("status")
+        }
+      }
+
+      if (updates.category !== undefined) {
+        if (updates.category && updates.category !== "all") {
+          params.set("category", updates.category)
+        } else {
+          params.delete("category")
+        }
+      }
+
+      if (updates.page !== undefined) {
+        if (updates.page > 1) {
+          params.set("page", String(updates.page))
+        } else {
+          params.delete("page")
+        }
+      }
+
+      router.replace(`${pathname}?${params.toString()}`)
+    },
+    [searchParams, pathname, router]
+  )
+
   // Debounced Search Synchronization
   React.useEffect(() => {
     const handler = setTimeout(() => {
@@ -126,71 +162,17 @@ function AdminServicesContent() {
     }, 400)
 
     return () => clearTimeout(handler)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchInput])
-
-  // Helper to sync state changes with URL query params
-  const updateQueryParams = (updates: {
-    search?: string
-    status?: string
-    category?: string
-    page?: number
-  }) => {
-    const params = new URLSearchParams(searchParams.toString())
-
-    if (updates.search !== undefined) {
-      if (updates.search) {
-        params.set("search", updates.search)
-      } else {
-        params.delete("search")
-      }
-    }
-
-    if (updates.status !== undefined) {
-      if (updates.status && updates.status !== "all") {
-        params.set("status", updates.status)
-      } else {
-        params.delete("status")
-      }
-    }
-
-    if (updates.category !== undefined) {
-      if (updates.category && updates.category !== "all") {
-        params.set("category", updates.category)
-      } else {
-        params.delete("category")
-      }
-    }
-
-    if (updates.page !== undefined) {
-      if (updates.page > 1) {
-        params.set("page", String(updates.page))
-      } else {
-        params.delete("page")
-      }
-    }
-
-    router.replace(`${pathname}?${params.toString()}`)
-  }
+  }, [searchInput, searchParams, updateQueryParams])
 
   // 1. Fetch Services on query param or refresh trigger change
   React.useEffect(() => {
     let active = true
 
-    const currentSearch = searchParams.get("search") || ""
-    const currentStatus = searchParams.get("status") || "all"
-    const currentCategory = searchParams.get("category") || "all"
-    const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
-
-    setPage(currentPage)
-    setStatusFilter(currentStatus)
-    setCategoryFilter(currentCategory)
-
     getAdminServices({
       search: currentSearch || undefined,
-      status: currentStatus !== "all" ? currentStatus : undefined,
-      category: currentCategory !== "all" ? currentCategory : undefined,
-      page: currentPage,
+      status: statusFilter !== "all" ? statusFilter : undefined,
+      category: categoryFilter !== "all" ? categoryFilter : undefined,
+      page,
       limit,
     })
       .then((res) => {
@@ -214,7 +196,7 @@ function AdminServicesContent() {
     return () => {
       active = false
     }
-  }, [searchParams, refreshTrigger])
+  }, [currentSearch, statusFilter, categoryFilter, page, refreshTrigger])
 
   const handleRefresh = () => {
     setLoading(true)
@@ -366,7 +348,6 @@ function AdminServicesContent() {
                     value={statusFilter}
                     onValueChange={(val) => {
                       const selected = val || "all"
-                      setStatusFilter(selected)
                       updateQueryParams({ status: selected, page: 1 })
                     }}
                   >
@@ -388,7 +369,6 @@ function AdminServicesContent() {
                     value={categoryFilter}
                     onValueChange={(val) => {
                       const selected = val || "all"
-                      setCategoryFilter(selected)
                       updateQueryParams({ category: selected, page: 1 })
                     }}
                   >
@@ -413,8 +393,6 @@ function AdminServicesContent() {
                     size="sm"
                     onClick={() => {
                       setSearchInput("")
-                      setStatusFilter("all")
-                      setCategoryFilter("all")
                       updateQueryParams({
                         search: "",
                         status: "all",
@@ -489,8 +467,6 @@ function AdminServicesContent() {
                     size="sm"
                     onClick={() => {
                       setSearchInput("")
-                      setStatusFilter("all")
-                      setCategoryFilter("all")
                       updateQueryParams({
                         search: "",
                         status: "all",
@@ -519,6 +495,7 @@ function AdminServicesContent() {
                     <TableHead>Vendor</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Availability</TableHead>
+                    <TableHead>Created</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -612,6 +589,11 @@ function AdminServicesContent() {
                           >
                             {s.isActive ? "Active" : "Inactive"}
                           </span>
+                        </TableCell>
+
+                        {/* Created Date */}
+                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                          {formatDate(s.createdAt)}
                         </TableCell>
 
                         {/* Actions */}
@@ -803,7 +785,7 @@ function AdminServicesContent() {
 
                       <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs">
                         <span className="text-[11px] text-muted-foreground">
-                          {s.isActive ? "Live in catalog" : "Inactive / Hidden"}
+                          {formatDate(s.createdAt)} • {s.isActive ? "Live in catalog" : "Inactive / Hidden"}
                         </span>
 
                         <div className="flex items-center gap-1.5">
