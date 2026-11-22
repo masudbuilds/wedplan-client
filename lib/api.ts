@@ -1,11 +1,16 @@
 // WedPlan Centralized API Client
-// Handles public service listings, booking requests, customer statistics, and JWT authentication
+// Handles public service listings, bookings, vendor services/analytics, payments, and JWT authentication
 
 import {
   Service,
   ServiceCategory,
   Booking,
   CustomerStats,
+  VendorStats,
+  VendorSubscription,
+  SessionStatusResponse,
+  CreateServiceInput,
+  UpdateServiceInput,
   ServicesResponse,
 } from "@/types"
 import { toast } from "sonner"
@@ -258,4 +263,167 @@ export async function getCustomerStats(): Promise<CustomerStats> {
     "/customer/stats"
   )
   return res.stats
+}
+
+// ---------------------------------------------------------------------------
+// Vendor Services & Management API
+// ---------------------------------------------------------------------------
+
+// Fetches vendor dashboard statistics
+export async function getVendorStats(): Promise<VendorStats> {
+  const res = await apiFetch<{ success: boolean; stats: VendorStats }>(
+    "/vendor/stats"
+  )
+  return res.stats
+}
+
+// Fetches all services owned by the vendor (all statuses)
+export async function getVendorServices(): Promise<Service[]> {
+  const res = await apiFetch<{
+    success: boolean
+    count: number
+    services: Service[]
+  }>("/vendor/services")
+  return res.services || []
+}
+
+// Fetches a single service owned by the vendor
+export async function getVendorService(id: string): Promise<Service> {
+  const res = await apiFetch<{ success: boolean; service: Service }>(
+    `/vendor/services/${id}`
+  )
+  return res.service
+}
+
+// Creates a new vendor service
+export async function createService(
+  input: CreateServiceInput
+): Promise<Service> {
+  const res = await apiFetch<{
+    success: boolean
+    message: string
+    service: Service
+  }>("/vendor/services", {
+    method: "POST",
+    body: JSON.stringify(input),
+  })
+  return res.service
+}
+
+// Updates an existing vendor service
+export async function updateService(
+  id: string,
+  input: UpdateServiceInput
+): Promise<Service> {
+  const res = await apiFetch<{
+    success: boolean
+    message: string
+    service: Service
+  }>(`/vendor/services/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(input),
+  })
+  return res.service
+}
+
+// Toggles vendor service availability
+export async function setServiceAvailability(
+  id: string,
+  isActive: boolean
+): Promise<Service> {
+  const res = await apiFetch<{
+    success: boolean
+    message: string
+    service: Service
+  }>(`/vendor/services/${id}/availability`, {
+    method: "PATCH",
+    body: JSON.stringify({ isActive }),
+  })
+  return res.service
+}
+
+// Deletes a vendor service
+export async function deleteService(
+  id: string
+): Promise<{ success: boolean; message: string }> {
+  return await apiFetch<{ success: boolean; message: string }>(
+    `/vendor/services/${id}`,
+    {
+      method: "DELETE",
+    }
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Vendor Bookings API
+// ---------------------------------------------------------------------------
+
+// Fetches received bookings for the vendor
+export async function getVendorBookings(status?: string): Promise<Booking[]> {
+  const query = status && status !== "all" ? `?status=${encodeURIComponent(status)}` : ""
+  const res = await apiFetch<{
+    success: boolean
+    count: number
+    bookings: Booking[]
+  }>(`/vendor/bookings${query}`)
+  return res.bookings || []
+}
+
+// Updates booking status (accepted or rejected)
+export async function updateBookingStatus(
+  id: string,
+  status: "accepted" | "rejected"
+): Promise<{ success: boolean; message: string }> {
+  return await apiFetch<{ success: boolean; message: string }>(
+    `/vendor/bookings/${id}/status`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    }
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Vendor Subscription & Stripe Payments API
+// ---------------------------------------------------------------------------
+
+// Fetches vendor subscription status, expiry, and past transactions
+export async function getVendorSubscription(): Promise<VendorSubscription> {
+  return await apiFetch<VendorSubscription>("/vendor/subscription")
+}
+
+// Creates Stripe Checkout session for Premium upgrade
+export async function createCheckoutSession(): Promise<{ url: string }> {
+  return await apiFetch<{ success: boolean; url: string }>(
+    "/payments/create-checkout-session",
+    {
+      method: "POST",
+    }
+  )
+}
+
+// Queries payment session status during polling on success page
+export async function getSessionStatus(
+  sessionId: string
+): Promise<SessionStatusResponse> {
+  return await apiFetch<SessionStatusResponse>(
+    `/payments/session-status?session_id=${encodeURIComponent(sessionId)}`
+  )
+}
+
+// Schedules subscription cancellation at end of period
+export async function cancelSubscription(): Promise<{
+  success: boolean
+  message: string
+  subscriptionExpiresAt: string
+  cancelAtPeriodEnd: boolean
+}> {
+  return await apiFetch<{
+    success: boolean
+    message: string
+    subscriptionExpiresAt: string
+    cancelAtPeriodEnd: boolean
+  }>("/payments/cancel-subscription", {
+    method: "POST",
+  })
 }

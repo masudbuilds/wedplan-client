@@ -12,9 +12,10 @@ export function proxy(request: NextRequest) {
   const isDashboardRoute = pathname.startsWith("/dashboard")
   const isServiceDetailsRoute =
     pathname.startsWith("/services/") && pathname !== "/services"
+  const isPaymentRoute = pathname.startsWith("/payment")
 
   // If visiting protected routes without a session token, redirect to sign-in
-  if ((isDashboardRoute || isServiceDetailsRoute) && !sessionToken) {
+  if ((isDashboardRoute || isServiceDetailsRoute || isPaymentRoute) && !sessionToken) {
     const signInUrl = new URL("/sign-in", request.url)
     signInUrl.searchParams.set("redirect", pathname)
     return NextResponse.redirect(signInUrl)
@@ -24,5 +25,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/services/:path*"],
+  matcher: ["/dashboard/:path*", "/services/:path*", "/payment/:path*"],
 }

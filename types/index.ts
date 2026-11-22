@@ -60,6 +60,7 @@ export interface Service {
   isActive?: boolean
   isAvailable?: boolean
   createdAt: string
+  updatedAt?: string
 }
 
 export type BookingStatus = "pending" | "accepted" | "rejected" | "cancelled"
@@ -109,6 +110,16 @@ export interface CustomerStats {
   cancelled: number
 }
 
+export interface VendorStats {
+  totalServices: number
+  activeServices: number
+  pendingBookings: number
+  acceptedBookings: number
+  subscriptionPlan: "free" | "premium"
+  isPremium: boolean
+  subscriptionExpiresAt: string | null
+}
+
 export interface ServicesResponse {
   services: Service[]
   total: number
@@ -129,6 +140,38 @@ export interface Transaction {
   stripeSubscriptionId?: string
   status: TransactionStatus
   createdAt: string
+}
+
+export interface VendorSubscription {
+  plan: "free" | "premium"
+  isPremium: boolean
+  subscriptionExpiresAt: string | null
+  cancelAtPeriodEnd: boolean
+  transactions: Transaction[]
+}
+
+export interface SessionStatusResponse {
+  paymentStatus: string
+  isPremium: boolean
+  subscriptionExpiresAt: string | null
+}
+
+export interface CreateServiceInput {
+  serviceName: string
+  category: ServiceCategory
+  description: string
+  price: number
+  location: string
+  images: string[]
+}
+
+export interface UpdateServiceInput {
+  serviceName?: string
+  category?: ServiceCategory
+  description?: string
+  price?: number
+  location?: string
+  images?: string[]
 }
 
 export interface NavItem {
