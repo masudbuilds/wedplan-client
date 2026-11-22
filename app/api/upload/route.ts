@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB limit
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 
 export async function POST(req: NextRequest) {
@@ -15,18 +15,19 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 1. Validate MIME Type
+    // 1. Validate MIME Type (jpg, png, webp only)
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid file format. Only JPG, PNG, and WebP images are allowed.",
+          error:
+            "Invalid file format. Only JPG, PNG, and WebP images are allowed.",
         },
         { status: 400 }
       )
     }
 
-    // 2. Validate File Size
+    // 2. Validate File Size (up to 5MB)
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
         {
@@ -39,16 +40,30 @@ export async function POST(req: NextRequest) {
 
     const apiKey = process.env.IMGBB_API_KEY
 
-    // If no ImgBB API key is configured yet in local development, provide a fallback photo
+    // Missing API Key handling
     if (!apiKey || apiKey === "sample_imgbb_key") {
+      // In production, missing credentials must strictly return a 500 server error
+      if (process.env.NODE_ENV !== "development") {
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              "Image upload service is unconfigured. IMGBB_API_KEY is missing on the server.",
+          },
+          { status: 500 }
+        )
+      }
+
+      // Development-only fallback: allows testing registration and services locally before setting up an ImgBB key
       return NextResponse.json({
         success: true,
         url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
-        message: "Development fallback image returned (IMGBB_API_KEY not configured).",
+        message:
+          "Development fallback image returned (IMGBB_API_KEY not configured).",
       })
     }
 
-    // 3. Upload to ImgBB via FormData
+    // 3. Upload to ImgBB via multipart FormData
     const imgbbForm = new FormData()
     imgbbForm.append("image", file)
 
@@ -66,20 +81,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: result?.error?.message || "Failed to upload image to ImgBB hosting.",
+          error:
+            result?.error?.message ||
+            "Failed to upload image to ImgBB hosting service.",
         },
-        { status: 502 }
+        { status: 500 }
       )
     }
 
-    const imageUrl = result.data.display_url || result.data.url
+    const imageUrl = result.data?.display_url || result.data?.url
 
     return NextResponse.json({
       success: true,
       url: imageUrl,
     })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Image processing error."
+    const message =
+      err instanceof Error ? err.message : "Image processing error."
     return NextResponse.json(
       { success: false, error: message },
       { status: 500 }
