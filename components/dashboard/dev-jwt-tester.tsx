@@ -8,7 +8,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { authClient } from "@/lib/auth-client"
 import { apiFetch } from "@/lib/api"
 
+// Dev-only helper: Renders strictly in development environment
 export function DevJwtTester() {
+  if (process.env.NODE_ENV !== "development") {
+    return null
+  }
+
+  return <DevJwtTesterInner />
+}
+
+function DevJwtTesterInner() {
   const [token, setToken] = React.useState<string | null>(null)
   const [isTokenLoading, setIsTokenLoading] = React.useState(false)
   const [testStatus, setTestStatus] = React.useState<string | null>(null)
