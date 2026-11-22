@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { ShieldAlert, ArrowLeft, LayoutDashboard, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { useAuth } from "@/lib/auth-context"
 import { UserRole } from "@/types"
 

@@ -62,7 +62,15 @@ export function SignUpForm() {
     setIsLoading(true)
 
     try {
-      const res = await (authClient.signUp.email as any)({
+      type SignUpPayload = Parameters<typeof authClient.signUp.email>[0] & {
+        role?: string
+        businessName?: string
+      }
+      const signUpFn = authClient.signUp.email as (
+        data: SignUpPayload
+      ) => ReturnType<typeof authClient.signUp.email>
+
+      const res = await signUpFn({
         name: name.trim(),
         email: email.trim(),
         password,

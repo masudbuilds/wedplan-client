@@ -68,7 +68,8 @@ export function SignInForm() {
       toast.success("Signed in successfully! Welcome back.")
 
       // Role check from response or session
-      const userRole = (res.data?.user as any)?.role || "customer"
+      const userRecord = res.data?.user as Record<string, unknown> | undefined
+      const userRole = (userRecord?.role as string) || "customer"
       const targetUrl = getSafeRedirectUrl(userRole)
       router.push(targetUrl)
     } catch (err: unknown) {

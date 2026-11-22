@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { User, UserRole } from "@/types"
-import { authClient, useSession, signOut } from "@/lib/auth-client"
+import { useSession, signOut } from "@/lib/auth-client"
 
 interface AuthContextType {
   user: User | null
@@ -27,18 +27,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const user: User | null = React.useMemo(() => {
     if (!session?.user) return null
 
-    const rawUser = session.user as any
+    const rawUser = session.user as Record<string, unknown>
     return {
-      id: rawUser.id,
-      name: rawUser.name,
-      email: rawUser.email,
-      image: rawUser.image || undefined,
+      id: String(rawUser.id || ""),
+      name: String(rawUser.name || ""),
+      email: String(rawUser.email || ""),
+      image: rawUser.image ? String(rawUser.image) : undefined,
       role: (rawUser.role as UserRole) || "customer",
       isBlocked: Boolean(rawUser.isBlocked),
-      businessName: rawUser.businessName,
-      subscriptionPlan: rawUser.subscriptionPlan || "free",
-      subscriptionExpiresAt: rawUser.subscriptionExpiresAt,
-      createdAt: rawUser.createdAt,
+      businessName: rawUser.businessName ? String(rawUser.businessName) : undefined,
+      subscriptionPlan: (rawUser.subscriptionPlan as "free" | "premium") || "free",
+      subscriptionExpiresAt: rawUser.subscriptionExpiresAt
+        ? String(rawUser.subscriptionExpiresAt)
+        : undefined,
+      createdAt: rawUser.createdAt ? String(rawUser.createdAt) : undefined,
     }
   }, [session])
 

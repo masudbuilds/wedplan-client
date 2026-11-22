@@ -16,7 +16,7 @@ export function DevJwtTester() {
   const [copied, setCopied] = React.useState(false)
   const [isExpanded, setIsExpanded] = React.useState(false)
 
-  const fetchToken = async () => {
+  const fetchToken = React.useCallback(async () => {
     setIsTokenLoading(true)
     try {
       const res = await authClient.token()
@@ -30,10 +30,25 @@ export function DevJwtTester() {
     } finally {
       setIsTokenLoading(false)
     }
-  }
+  }, [])
 
   React.useEffect(() => {
-    fetchToken()
+    let isMounted = true
+    authClient
+      .token()
+      .then((res) => {
+        if (isMounted) {
+          setToken(res.data?.token || null)
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setToken(null)
+        }
+      })
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const copyToken = () => {

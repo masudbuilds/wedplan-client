@@ -81,8 +81,9 @@ export const auth = betterAuth({
         before: async (user, ctx) => {
           // Security Rule: Admin can NEVER be created through public registration.
           // Read requested role from context body if provided during sign up.
-          const reqBody = (ctx as any)?.body
-          const requestedRole = (user as any).role || reqBody?.role
+          const reqBody = (ctx as { body?: Record<string, unknown> })?.body
+          const userRec = user as Record<string, unknown>
+          const requestedRole = userRec.role || reqBody?.role
 
           // Only "vendor" and "customer" are valid; all else (including "admin") becomes "customer".
           const safeRole =
@@ -92,7 +93,9 @@ export const auth = betterAuth({
 
           const businessName =
             safeRole === "vendor"
-              ? reqBody?.businessName || (user as any).businessName || ""
+              ? (reqBody?.businessName as string) ||
+                (userRec.businessName as string) ||
+                ""
               : undefined
 
           return {
@@ -109,13 +112,11 @@ export const auth = betterAuth({
       update: {
         before: async (user) => {
           // Security Rule: Prevent updating role, isBlocked, or subscription via profile updates
-          const {
-            role,
-            isBlocked,
-            subscriptionPlan,
-            subscriptionExpiresAt,
-            ...safeData
-          } = user as any
+          const safeData = { ...(user as Record<string, unknown>) }
+          delete safeData.role
+          delete safeData.isBlocked
+          delete safeData.subscriptionPlan
+          delete safeData.subscriptionExpiresAt
 
           return {
             data: safeData,
