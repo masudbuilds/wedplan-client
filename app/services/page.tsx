@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { AlertCircle, RefreshCw } from "lucide-react"
+import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react"
 import { Service } from "@/types"
 import { getServices } from "@/lib/api"
 import { SectionHeading } from "@/components/section-heading"
@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/motion-wrapper"
 import { ServiceFilterBar } from "@/components/services/service-filter-bar"
 
+const ITEMS_PER_PAGE = 12
+
 function ServicesPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -22,94 +24,133 @@ function ServicesPageContent() {
   const initialSearch = searchParams.get("search") || ""
   const initialLocation = searchParams.get("location") || "all"
   const initialSort = searchParams.get("sort") || "default"
+  const initialPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10))
 
   const [category, setCategory] = React.useState<string>(initialCategory)
-  const [search, setSearch] = React.useState<string>(initialSearch)
+  const [searchInput, setSearchInput] = React.useState<string>(initialSearch)
+  const [debouncedSearch, setDebouncedSearch] = React.useState<string>(initialSearch)
   const [location, setLocation] = React.useState<string>(initialLocation)
   const [sort, setSort] = React.useState<string>(initialSort)
+  const [page, setPage] = React.useState<number>(initialPage)
 
   const [services, setServices] = React.useState<Service[]>([])
+  const [total, setTotal] = React.useState<number>(0)
   const [loading, setLoading] = React.useState<boolean>(true)
   const [error, setError] = React.useState<string | null>(null)
   const [refreshTrigger, setRefreshTrigger] = React.useState<number>(0)
 
-  // Sync state to URL query string so reloads preserve all active filters
-  const updateQueryParams = (
-    newCategory: string,
-    newSearch: string,
-    newLocation: string,
-    newSort: string
-  ) => {
-    const params = new URLSearchParams()
-    if (newCategory && newCategory !== "all") params.set("category", newCategory)
-    if (newSearch && newSearch.trim() !== "") params.set("search", newSearch.trim())
-    if (newLocation && newLocation !== "all") params.set("location", newLocation)
-    if (newSort && newSort !== "default") params.set("sort", newSort)
+  // 1. Debounce the search input by ~400ms
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+      setPage(1)
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
-    const query = params.toString()
-    router.replace(query ? `/services?${query}` : "/services", { scroll: false })
-  }
+  // 2. Sync filter state to URL query string
+  const updateQueryParams = React.useCallback(
+    (
+      newCategory: string,
+      newSearch: string,
+      newLocation: string,
+      newSort: string,
+      newPage: number
+    ) => {
+      const params = new URLSearchParams()
+      if (newCategory && newCategory !== "all") params.set("category", newCategory)
+      if (newSearch && newSearch.trim() !== "") params.set("search", newSearch.trim())
+      if (newLocation && newLocation !== "all") params.set("location", newLocation)
+      if (newSort && newSort !== "default") params.set("sort", newSort)
+      if (newPage > 1) params.set("page", String(newPage))
 
-  // Fetch services when filters or refreshTrigger change
+      const query = params.toString()
+      router.replace(query ? `/services?${query}` : "/services", { scroll: false })
+    },
+    [router]
+  )
+
+  // 3. Fetch services from real backend API when filters or page change
   React.useEffect(() => {
     let active = true
 
     getServices({
       category,
-      search,
+      search: debouncedSearch,
       location,
       sort,
+      page,
+      limit: ITEMS_PER_PAGE,
     })
       .then((data) => {
         if (active) {
-          setServices(data)
+          setServices(data.services)
+          setTotal(data.total)
           setError(null)
-          setLoading(false)
         }
       })
-      .catch(() => {
+      .catch((err) => {
         if (active) {
-          setError("Failed to load wedding services. Please check your connection and try again.")
-          setLoading(false)
+          const msg =
+            err instanceof Error
+              ? err.message
+              : "Failed to load wedding services. Please check connection."
+          setError(msg)
         }
+      })
+      .finally(() => {
+        if (active) setLoading(false)
       })
 
     return () => {
       active = false
     }
-  }, [category, search, location, sort, refreshTrigger])
+  }, [category, debouncedSearch, location, sort, page, refreshTrigger])
+
+  const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE))
 
   const handleCategoryChange = (val: string) => {
     setLoading(true)
     setCategory(val)
-    updateQueryParams(val, search, location, sort)
+    setPage(1)
+    updateQueryParams(val, debouncedSearch, location, sort, 1)
   }
 
   const handleSearchChange = (val: string) => {
-    setLoading(true)
-    setSearch(val)
-    updateQueryParams(category, val, location, sort)
+    setSearchInput(val)
   }
 
   const handleLocationChange = (val: string) => {
     setLoading(true)
     setLocation(val)
-    updateQueryParams(category, search, val, sort)
+    setPage(1)
+    updateQueryParams(category, debouncedSearch, val, sort, 1)
   }
 
   const handleSortChange = (val: string) => {
     setLoading(true)
     setSort(val)
-    updateQueryParams(category, search, location, val)
+    setPage(1)
+    updateQueryParams(category, debouncedSearch, location, val, 1)
+  }
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return
+    setLoading(true)
+    setPage(newPage)
+    updateQueryParams(category, debouncedSearch, location, sort, newPage)
+    window.scrollTo({ top: 120, behavior: "smooth" })
   }
 
   const handleClearFilters = () => {
     setLoading(true)
     setCategory("all")
-    setSearch("")
+    setSearchInput("")
+    setDebouncedSearch("")
     setLocation("all")
     setSort("default")
-    updateQueryParams("all", "", "all", "default")
+    setPage(1)
+    updateQueryParams("all", "", "all", "default", 1)
   }
 
   return (
@@ -126,7 +167,7 @@ function ServicesPageContent() {
       {/* 2. Responsive Filter Bar */}
       <FadeIn delay={0.1}>
         <ServiceFilterBar
-          search={search}
+          search={searchInput}
           category={category}
           location={location}
           sort={sort}
@@ -143,7 +184,7 @@ function ServicesPageContent() {
         <span>
           {loading
             ? "Searching services..."
-            : `Showing ${services.length} ${services.length === 1 ? "service" : "services"}`}
+            : `Showing ${services.length} of ${total} ${total === 1 ? "service" : "services"}`}
         </span>
         {category !== "all" && (
           <span className="font-medium text-foreground">
@@ -193,12 +234,49 @@ function ServicesPageContent() {
 
       {/* 7. Responsive Service Card Grid (1 col mobile, 2 col tablet, 3 col desktop) */}
       {!loading && !error && services.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, index) => (
-            <FadeIn key={service.id} delay={index * 0.05}>
-              <ServiceCard service={service} isVendorPremium={index % 2 === 0} />
-            </FadeIn>
-          ))}
+        <div className="space-y-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <FadeIn key={service.id} delay={index * 0.04}>
+                <ServiceCard
+                  service={service}
+                  isVendorPremium={service.vendor?.isPremium || service.isPremium}
+                />
+              </FadeIn>
+            ))}
+          </div>
+
+          {/* 8. Simple Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-border/70 pt-6 px-1">
+              <p className="text-xs text-muted-foreground">
+                Page <span className="font-semibold text-foreground">{page}</span> of{" "}
+                <span className="font-semibold text-foreground">{totalPages}</span>
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page <= 1 || loading}
+                  onClick={() => handlePageChange(page - 1)}
+                  className="rounded-full h-9 text-xs"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5 mr-1" />
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page >= totalPages || loading}
+                  onClick={() => handlePageChange(page + 1)}
+                  className="rounded-full h-9 text-xs"
+                >
+                  Next
+                  <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

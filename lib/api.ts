@@ -70,6 +70,7 @@ export async function apiFetch<T = unknown>(
     if (res.status === 401 && typeof window !== "undefined") {
       const currentPath = window.location.pathname + window.location.search
       if (!window.location.pathname.startsWith("/sign-in")) {
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
         window.location.href = `/sign-in?redirect=${encodeURIComponent(currentPath)}`
       }
     }
@@ -86,6 +87,7 @@ export async function apiFetch<T = unknown>(
       try {
         const { authClient } = await import("@/lib/auth-client")
         await authClient.signOut()
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
         window.location.href = "/sign-in"
       } catch {
         // Ignore
