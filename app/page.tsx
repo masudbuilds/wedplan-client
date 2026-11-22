@@ -1,6 +1,8 @@
 import { HeroSection } from "@/components/home/hero-section"
 import { FeaturedServicesSection } from "@/components/home/featured-services-section"
 import { CategoriesSection } from "@/components/home/categories-section"
+import { WhyChooseSection } from "@/components/home/why-choose-section"
+import { HowItWorksSection } from "@/components/home/how-it-works-section"
 
 export default function Home() {
   return (
@@ -13,6 +15,12 @@ export default function Home() {
 
       {/* 3. Wedding Service Categories (dynamic) */}
       <CategoriesSection />
+
+      {/* 4. Why Choose WedPlan? */}
+      <WhyChooseSection />
+
+      {/* 5. How WedPlan Works */}
+      <HowItWorksSection />
     </div>
   )
 }
