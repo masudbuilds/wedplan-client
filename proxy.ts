@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { getSessionCookie } from "better-auth/cookies"
 
 // Next.js 16 Proxy Convention for lightweight request interception
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Check for Better Auth session token cookie
-  const sessionToken =
-    request.cookies.get("better-auth.session_token")?.value ||
-    request.cookies.get("__Secure-better-auth.session_token")?.value
+  // Retrieve session cookie using Better Auth's helper (handles dev and __Secure- in production)
+  const sessionToken = getSessionCookie(request)
 
   const isDashboardRoute = pathname.startsWith("/dashboard")
   const isServiceDetailsRoute =
