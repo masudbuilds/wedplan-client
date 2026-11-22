@@ -149,10 +149,8 @@ export function DashboardShell({
             <span className="font-serif text-lg font-bold">WedPlan</span>
           </Link>
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="w-5 h-5" />
-              </Button>
+            <SheetTrigger render={<Button variant="ghost" size="icon" />}>
+              <Menu className="w-5 h-5" />
             </SheetTrigger>
             <SheetContent side="left" className="w-72 p-5 flex flex-col justify-between">
               <div className="space-y-6">

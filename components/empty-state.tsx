@@ -1,6 +1,7 @@
 import * as React from "react"
+import Link from "next/link"
 import { Inbox } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface EmptyStateProps {
@@ -47,9 +48,12 @@ export function EmptyState({
       {actionLabel && (
         <>
           {actionHref ? (
-            <Button asChild variant="default" className="rounded-full px-6">
-              <a href={actionHref}>{actionLabel}</a>
-            </Button>
+            <Link
+              href={actionHref}
+              className={cn(buttonVariants({ variant: "default" }), "rounded-full px-6")}
+            >
+              {actionLabel}
+            </Link>
           ) : (
             <Button
               onClick={onAction}

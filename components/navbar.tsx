@@ -2,9 +2,9 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Menu, Heart, LogOut, LayoutDashboard, User, Settings } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { usePathname, useRouter } from "next/navigation"
+import { Menu, Heart, LogOut, LayoutDashboard, Settings } from "lucide-react"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils"
 
 export function Navbar() {
   const pathname = usePathname()
+  const router = useRouter()
   const { user, role, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
@@ -84,15 +85,13 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 rounded-full p-0.5 focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer">
-                  <Avatar className="w-9 h-9 border border-border">
-                    <AvatarImage src={user.image} alt={user.name} />
-                    <AvatarFallback className="bg-blush text-primary text-xs font-semibold">
-                      {userInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
+              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full p-0.5 focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer">
+                <Avatar className="w-9 h-9 border border-border">
+                  <AvatarImage src={user.image} alt={user.name} />
+                  <AvatarFallback className="bg-blush text-primary text-xs font-semibold">
+                    {userInitials}
+                  </AvatarFallback>
+                </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 p-1 rounded-xl">
                 <DropdownMenuLabel className="font-normal px-2 py-1.5">
@@ -105,17 +104,19 @@ export function Navbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href={dashboardHref} className="cursor-pointer flex items-center gap-2">
-                    <LayoutDashboard className="w-4 h-4 text-muted-foreground" />
-                    <span>Dashboard</span>
-                  </Link>
+                <DropdownMenuItem
+                  onClick={() => router.push(dashboardHref)}
+                  className="cursor-pointer flex items-center gap-2"
+                >
+                  <LayoutDashboard className="w-4 h-4 text-muted-foreground" />
+                  <span>Dashboard</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/profile" className="cursor-pointer flex items-center gap-2">
-                    <Settings className="w-4 h-4 text-muted-foreground" />
-                    <span>Profile Settings</span>
-                  </Link>
+                <DropdownMenuItem
+                  onClick={() => router.push("/profile")}
+                  className="cursor-pointer flex items-center gap-2"
+                >
+                  <Settings className="w-4 h-4 text-muted-foreground" />
+                  <span>Profile Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -129,12 +130,24 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <>
-              <Button asChild variant="ghost" size="sm" className="rounded-full text-foreground hover:text-primary">
-                <Link href="/signin">Sign In</Link>
-              </Button>
-              <Button asChild size="sm" className="rounded-full px-4 shadow-xs">
-                <Link href="/signup">Sign Up</Link>
-              </Button>
+              <Link
+                href="/signin"
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "rounded-full text-foreground hover:text-primary"
+                )}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className={cn(
+                  buttonVariants({ size: "sm" }),
+                  "rounded-full px-4 shadow-xs"
+                )}
+              >
+                Sign Up
+              </Link>
             </>
           )}
         </div>
@@ -142,10 +155,8 @@ export function Navbar() {
         {/* Mobile Hamburger Sheet */}
         <div className="md:hidden flex items-center gap-2">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Menu className="w-5 h-5" />
-              </Button>
+            <SheetTrigger render={<Button variant="ghost" size="icon" className="rounded-full" />}>
+              <Menu className="w-5 h-5" />
             </SheetTrigger>
             <SheetContent side="right" className="w-72 sm:w-80 p-6 flex flex-col justify-between">
               <div className="space-y-6">
@@ -224,12 +235,20 @@ export function Navbar() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-2">
-                    <Button asChild variant="outline" size="sm" onClick={() => setMobileOpen(false)}>
-                      <Link href="/signin">Sign In</Link>
-                    </Button>
-                    <Button asChild size="sm" onClick={() => setMobileOpen(false)}>
-                      <Link href="/signup">Sign Up</Link>
-                    </Button>
+                    <Link
+                      href="/signin"
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(buttonVariants({ variant: "outline", size: "sm" }), "text-center")}
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/signup"
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(buttonVariants({ size: "sm" }), "text-center")}
+                    >
+                      Sign Up
+                    </Link>
                   </div>
                 )}
               </div>

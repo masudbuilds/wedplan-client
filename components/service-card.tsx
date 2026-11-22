@@ -2,10 +2,11 @@ import Link from "next/link"
 import { MapPin } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PremiumBadge } from "@/components/premium-badge"
 import { Service } from "@/types"
+import { cn } from "@/lib/utils"
 
 interface ServiceCardProps {
   service: Service
@@ -80,14 +81,15 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
             </span>
           </div>
 
-          <Button
-            asChild
-            size="sm"
-            variant="outline"
-            className="rounded-full text-xs hover:bg-primary hover:text-white hover:border-primary shrink-0"
+          <Link
+            href={`/services/${service.id}`}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "rounded-full text-xs hover:bg-primary hover:text-white hover:border-primary shrink-0"
+            )}
           >
-            <Link href={`/services/${service.id}`}>View Details</Link>
-          </Button>
+            View Details
+          </Link>
         </div>
       </CardContent>
     </Card>
