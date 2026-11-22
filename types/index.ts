@@ -73,6 +73,7 @@ export interface Booking {
   customerId: string
   customerName?: string
   customerEmail?: string
+  customerImage?: string
   eventDate: string
   eventLocation: string
   message?: string
