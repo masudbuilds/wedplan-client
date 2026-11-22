@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { PremiumBadge } from "@/components/premium-badge"
 import { useAuth } from "@/lib/auth-context"
 import { NavItem } from "@/types"
 import { cn } from "@/lib/utils"
@@ -113,16 +114,21 @@ export function DashboardShell({
         {/* Sidebar Footer User Info */}
         <div className="pt-4 border-t border-border space-y-3">
           <div className="flex items-center gap-2.5">
-            <Avatar className="w-9 h-9 border border-border">
+            <Avatar className="w-9 h-9 border border-border shrink-0">
               <AvatarImage src={user?.image} />
               <AvatarFallback className="bg-blush text-primary text-xs">
                 {user?.name?.slice(0, 2).toUpperCase() || "WP"}
               </AvatarFallback>
             </Avatar>
-            <div className="truncate">
-              <p className="text-xs font-semibold text-foreground truncate">
-                {user?.name || "Guest User"}
-              </p>
+            <div className="truncate min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 truncate">
+                <p className="text-xs font-semibold text-foreground truncate">
+                  {user?.businessName || user?.name || "Guest User"}
+                </p>
+                {user?.role === "vendor" && user?.subscriptionPlan === "premium" && (
+                  <PremiumBadge size="sm" label="PRO" className="shrink-0 text-[10px] px-1.5 py-0" />
+                )}
+              </div>
               <p className="text-[11px] text-muted-foreground capitalize">
                 {user?.role || "Preview Mode"}
               </p>
