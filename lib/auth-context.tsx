@@ -35,6 +35,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           name: String(raw.name || ""),
           image: raw.image ? String(raw.image) : undefined,
           businessName: raw.businessName ? String(raw.businessName) : undefined,
+          subscriptionPlan: (raw.subscriptionPlan as "free" | "premium") || undefined,
+          subscriptionExpiresAt: raw.subscriptionExpiresAt ? String(raw.subscriptionExpiresAt) : undefined,
         })
       }
     } catch {
@@ -65,10 +67,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           : rawUser.businessName
           ? String(rawUser.businessName)
           : undefined,
-      subscriptionPlan: (rawUser.subscriptionPlan as "free" | "premium") || "free",
-      subscriptionExpiresAt: rawUser.subscriptionExpiresAt
-        ? String(rawUser.subscriptionExpiresAt)
-        : undefined,
+      subscriptionPlan:
+        extraUser?.subscriptionPlan !== undefined
+          ? extraUser.subscriptionPlan
+          : (rawUser.subscriptionPlan as "free" | "premium") || "free",
+      subscriptionExpiresAt:
+        extraUser?.subscriptionExpiresAt !== undefined
+          ? extraUser.subscriptionExpiresAt
+          : rawUser.subscriptionExpiresAt
+          ? String(rawUser.subscriptionExpiresAt)
+          : undefined,
       createdAt: rawUser.createdAt ? String(rawUser.createdAt) : undefined,
     }
   }, [session, extraUser])
