@@ -89,7 +89,7 @@ export function SignInForm() {
       <div className="space-y-3">
         <GoogleButton
           label="Sign in with Google"
-          callbackURL={redirectParam || "/dashboard"}
+          callbackURL={getSafeRedirectUrl()}
         />
         <div className="relative flex items-center justify-center text-xs text-muted-foreground">
           <div className="w-full border-t border-border" />

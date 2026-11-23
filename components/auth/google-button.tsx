@@ -20,9 +20,18 @@ export function GoogleButton({
   const handleGoogleSignIn = async () => {
     setLoading(true)
     try {
+      // Open-redirect guard: ensure relative URL starting with single slash
+      const safeCallback =
+        callbackURL &&
+        callbackURL.startsWith("/") &&
+        !callbackURL.startsWith("//") &&
+        !callbackURL.includes("://")
+          ? callbackURL
+          : "/dashboard"
+
       await authClient.signIn.social({
         provider: "google",
-        callbackURL,
+        callbackURL: safeCallback,
       })
     } catch (err: unknown) {
       const msg =
