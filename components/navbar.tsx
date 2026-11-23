@@ -37,6 +37,13 @@ export function Navbar() {
       ? "/dashboard/vendor"
       : "/dashboard/customer"
 
+  const profileHref =
+    role === "vendor"
+      ? "/dashboard/vendor/profile"
+      : role === "admin"
+      ? "/dashboard/admin"
+      : "/dashboard/customer/profile"
+
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Browse Services", href: "/services" },
@@ -112,7 +119,7 @@ export function Navbar() {
                   <span>Dashboard</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => router.push("/profile")}
+                  onClick={() => router.push(profileHref)}
                   className="cursor-pointer flex items-center gap-2"
                 >
                   <Settings className="w-4 h-4 text-muted-foreground" />
@@ -192,7 +199,7 @@ export function Navbar() {
                         Dashboard
                       </Link>
                       <Link
-                        href="/profile"
+                        href={profileHref}
                         onClick={() => setMobileOpen(false)}
                         className="py-2 text-base text-muted-foreground hover:text-primary flex items-center gap-2"
                       >
