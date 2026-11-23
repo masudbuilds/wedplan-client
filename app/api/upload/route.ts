@@ -1,10 +1,28 @@
 import { NextRequest, NextResponse } from "next/server"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB limit
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 
 export async function POST(req: NextRequest) {
   try {
+    // 0. Verify user is authenticated before processing uploads
+    const reqHeaders = await headers()
+    const session = await auth.api.getSession({
+      headers: reqHeaders,
+    })
+
+    if (!session) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized. Please sign in to upload images.",
+        },
+        { status: 401 }
+      )
+    }
+
     const formData = await req.formData()
     const file = formData.get("file") as File | null
 
