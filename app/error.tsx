@@ -36,11 +36,6 @@ export default function ErrorBoundary({
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
             We encountered an unexpected issue while loading this page. You can try refreshing the component or return to the homepage.
           </p>
-          {error?.message && process.env.NODE_ENV === "development" && (
-            <p className="mt-3 p-3 text-xs bg-muted text-muted-foreground rounded-lg font-mono text-left break-all">
-              {error.message}
-            </p>
-          )}
         </div>
 
         {/* Action Buttons */}

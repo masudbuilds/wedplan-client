@@ -59,26 +59,15 @@ export async function POST(req: NextRequest) {
     const apiKey = process.env.IMGBB_API_KEY
 
     // Missing API Key handling
-    if (!apiKey || apiKey === "sample_imgbb_key") {
-      // In production, missing credentials must strictly return a 500 server error
-      if (process.env.NODE_ENV !== "development") {
-        return NextResponse.json(
-          {
-            success: false,
-            error:
-              "Image upload service is unconfigured. IMGBB_API_KEY is missing on the server.",
-          },
-          { status: 500 }
-        )
-      }
-
-      // Development-only fallback: allows testing registration and services locally before setting up an ImgBB key
-      return NextResponse.json({
-        success: true,
-        url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
-        message:
-          "Development fallback image returned (IMGBB_API_KEY not configured).",
-      })
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Image upload service is currently unavailable. Please try again later.",
+        },
+        { status: 500 }
+      )
     }
 
     // 3. Upload to ImgBB via multipart FormData
