@@ -30,7 +30,7 @@ function TwitterIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 // Global platform footer with editorial typography and links
 export function Footer() {
-  const currentYear = 2026
+  const currentYear = new Date().getFullYear()
 
   return (
     <footer className="border-t border-border/80 bg-card/60 mt-auto">
@@ -109,17 +109,17 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/signup?role=vendor" className="hover:text-primary transition-colors">
+                <Link href="/sign-up?role=vendor" className="hover:text-primary transition-colors">
                   Become a Vendor
                 </Link>
               </li>
               <li>
-                <Link href="/signup?role=customer" className="hover:text-primary transition-colors">
+                <Link href="/sign-up?role=customer" className="hover:text-primary transition-colors">
                   Join as a Couple
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-primary transition-colors">
+                <Link href="/dashboard/vendor/subscription" className="hover:text-primary transition-colors">
                   Vendor Subscriptions
                 </Link>
               </li>
