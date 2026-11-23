@@ -60,7 +60,7 @@ export const auth = betterAuth({
       role: {
         type: "string",
         defaultValue: "customer",
-        input: false, // Prevent client from arbitrary modification via updateUser
+        required: false,
       },
       isBlocked: {
         type: "boolean",
@@ -122,14 +122,14 @@ export const auth = betterAuth({
       update: {
         before: async (user) => {
           // Security Rule: Prevent updating role, isBlocked, or subscription via profile updates
-          const safeData = { ...(user as Record<string, unknown>) }
-          delete safeData.role
-          delete safeData.isBlocked
-          delete safeData.subscriptionPlan
-          delete safeData.subscriptionExpiresAt
+          const userRec = user as Record<string, unknown>
+          delete userRec.role
+          delete userRec.isBlocked
+          delete userRec.subscriptionPlan
+          delete userRec.subscriptionExpiresAt
 
           return {
-            data: safeData,
+            data: userRec,
           }
         },
       },
