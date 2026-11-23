@@ -21,9 +21,10 @@ import { RoleGuard } from "@/components/dashboard/role-guard"
 import { DevJwtTester } from "@/components/dashboard/dev-jwt-tester"
 import { StatCard } from "@/components/stat-card"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
+import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
 import { getCustomerStats, getMyBookings } from "@/lib/api"
 import { Booking, CustomerStats, NavItem } from "@/types"
@@ -121,14 +122,16 @@ export default function CustomerDashboardPage() {
                 </p>
               </div>
 
-              <Button
-                render={
-                  <Link href="/services" className="rounded-full shadow-xs">
-                    <Heart className="w-4 h-4 mr-2 fill-current" />
-                    Browse Services
-                  </Link>
-                }
-              />
+              <Link
+                href="/services"
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "rounded-full shadow-xs"
+                )}
+              >
+                <Heart className="w-4 h-4 mr-2 fill-current" />
+                Browse Services
+              </Link>
             </CardContent>
           </Card>
 
@@ -225,16 +228,16 @@ export default function CustomerDashboardPage() {
                       Explore our directory of photographers, venues, and caterers to send your first inquiry.
                     </p>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    render={
-                      <Link href="/services" className="rounded-full">
-                        <Heart className="w-3.5 h-3.5 mr-1.5" />
-                        Explore Wedding Catalog
-                      </Link>
-                    }
-                  />
+                  <Link
+                    href="/services"
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "sm" }),
+                      "rounded-full"
+                    )}
+                  >
+                    <Heart className="w-3.5 h-3.5 mr-1.5" />
+                    Explore Wedding Catalog
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-3">

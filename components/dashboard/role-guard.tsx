@@ -3,10 +3,11 @@
 import * as React from "react"
 import Link from "next/link"
 import { ShieldAlert, ArrowLeft, LayoutDashboard, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useAuth } from "@/lib/auth-context"
 import { UserRole } from "@/types"
+import { cn } from "@/lib/utils"
 
 interface RoleGuardProps {
   allowedRoles: UserRole[]
@@ -42,21 +43,18 @@ export function RoleGuard({ allowedRoles, children }: RoleGuardProps) {
             </p>
           </div>
           <div className="pt-2 flex flex-col gap-2">
-            <Button
-              render={
-                <Link href="/sign-in" className="w-full rounded-full">
-                  Sign In to Your Account
-                </Link>
-              }
-            />
-            <Button
-              variant="outline"
-              render={
-                <Link href="/" className="w-full rounded-full">
-                  Return to Home
-                </Link>
-              }
-            />
+            <Link
+              href="/sign-in"
+              className={cn(buttonVariants({ variant: "default" }), "w-full rounded-full")}
+            >
+              Sign In to Your Account
+            </Link>
+            <Link
+              href="/"
+              className={cn(buttonVariants({ variant: "outline" }), "w-full rounded-full")}
+            >
+              Return to Home
+            </Link>
           </div>
         </Card>
       </div>
@@ -90,23 +88,20 @@ export function RoleGuard({ allowedRoles, children }: RoleGuardProps) {
             </p>
           </div>
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button
-              render={
-                <Link href={userDashboard} className="rounded-full">
-                  <LayoutDashboard className="w-4 h-4 mr-2" />
-                  Go to My {role.charAt(0).toUpperCase() + role.slice(1)} Dashboard
-                </Link>
-              }
-            />
-            <Button
-              variant="outline"
-              render={
-                <Link href="/" className="rounded-full">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Return Home
-                </Link>
-              }
-            />
+            <Link
+              href={userDashboard}
+              className={cn(buttonVariants({ variant: "default" }), "rounded-full")}
+            >
+              <LayoutDashboard className="w-4 h-4 mr-2" />
+              Go to My {role.charAt(0).toUpperCase() + role.slice(1)} Dashboard
+            </Link>
+            <Link
+              href="/"
+              className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Return Home
+            </Link>
           </div>
         </Card>
       </div>
