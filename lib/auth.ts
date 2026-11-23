@@ -7,6 +7,16 @@ import { client, db } from "@/lib/mongodb"
 // Better Auth Server Instance Configuration
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  trustedOrigins: Array.from(
+    new Set(
+      [
+        process.env.BETTER_AUTH_URL,
+        process.env.NEXT_PUBLIC_APP_URL,
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+      ].filter((origin): origin is string => Boolean(origin))
+    )
+  ),
   secret:
     process.env.BETTER_AUTH_SECRET ||
     "wedplan_super_secret_auth_key_development_only_12345",
