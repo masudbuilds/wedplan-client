@@ -5,16 +5,26 @@ import { APIError } from "better-auth/api"
 import { client, db } from "@/lib/mongodb"
 
 // Better Auth Server Instance Configuration
+const rawBaseUrl =
+  process.env.BETTER_AUTH_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  ""
+const baseURL = rawBaseUrl.replace(/\/+$/, "")
+
+const rawOrigins = [
+  process.env.BETTER_AUTH_URL,
+  process.env.NEXT_PUBLIC_APP_URL,
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+]
+  .filter((origin): origin is string => Boolean(origin))
+  .map((origin) => origin.replace(/\/+$/, ""))
+
+const trustedOrigins = Array.from(new Set(rawOrigins))
+
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "",
-  trustedOrigins: Array.from(
-    new Set(
-      [
-        process.env.BETTER_AUTH_URL,
-        process.env.NEXT_PUBLIC_APP_URL,
-      ].filter((origin): origin is string => Boolean(origin))
-    )
-  ),
+  baseURL,
+  trustedOrigins,
   secret: process.env.BETTER_AUTH_SECRET || "",
 
   // MongoDB Database Adapter with plural collection names ("users", "sessions")

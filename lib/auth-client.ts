@@ -5,10 +5,13 @@ import { jwtClient, inferAdditionalFields } from "better-auth/client/plugins"
 import type { auth } from "./auth"
 
 // Better Auth Client with JWT Client Plugin and additional fields typing
+const rawAppUrl =
+  process.env.NEXT_PUBLIC_APP_URL ||
+  (typeof window !== "undefined" ? window.location.origin : "")
+const baseURL = rawAppUrl.replace(/\/+$/, "")
+
 export const authClient = createAuthClient({
-  baseURL:
-    process.env.NEXT_PUBLIC_APP_URL ||
-    (typeof window !== "undefined" ? window.location.origin : ""),
+  baseURL,
   plugins: [jwtClient(), inferAdditionalFields<typeof auth>()],
 })
 

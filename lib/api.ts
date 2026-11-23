@@ -20,7 +20,8 @@ import {
 } from "@/types"
 import { toast } from "sonner"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL
+const API_BASE_URL = rawApiUrl ? rawApiUrl.replace(/\/+$/, "") : ""
 
 // Custom API Error carrying HTTP status code and server error message
 export class ApiError extends Error {
@@ -37,7 +38,15 @@ export async function apiFetch<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`
+  if (!API_BASE_URL) {
+    throw new ApiError(
+      500,
+      "NEXT_PUBLIC_API_URL is unconfigured. Please set NEXT_PUBLIC_API_URL in your environment variables."
+    )
+  }
+
+  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`
+  const url = `${API_BASE_URL}${cleanEndpoint}`
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",

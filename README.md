@@ -2,10 +2,15 @@
 
 > An editorial, role-based wedding planning marketplace connecting couples with premier wedding photographers, venues, florists, caterers, makeup artists, and wedding fashion specialists.
 
+- **Live Website**: [https://wedplan-client-pearl.vercel.app](https://wedplan-client-pearl.vercel.app)
+- **Client Repository**: [https://github.com/masudbuilds/wedplan-client](https://github.com/masudbuilds/wedplan-client)
+- **Server API**: [https://wedplan-server-qkjk.onrender.com](https://wedplan-server-qkjk.onrender.com)
+
 ---
 
 ## Table of Contents
 - [Overview](#overview)
+- [Required Application URLs](#required-application-urls)
 - [Key Features by Role](#key-features-by-role)
   - [Public & Visitors](#1-public--visitors)
   - [Customer (Couples & Planners)](#2-customer-couples--planners)
@@ -24,6 +29,18 @@
 ## Overview
 
 WedPlan provides a seamless experience for wedding planning. Couples can discover verified wedding services, filter by category and location, and place booking requests. Wedding vendors can manage their portfolio, service packages, and incoming booking requests, as well as upgrade to a Premium tier via Stripe. Administrators have complete moderation capabilities over users, services, and transactions.
+
+---
+
+## Required Application URLs
+
+| Variable / Endpoint | Production Value | Description |
+| :--- | :--- | :--- |
+| **`BETTER_AUTH_URL`** | `https://wedplan-client-pearl.vercel.app` | Canonical public URL of the Next.js client |
+| **`NEXT_PUBLIC_APP_URL`** | `https://wedplan-client-pearl.vercel.app` | Client-accessible base URL |
+| **`NEXT_PUBLIC_API_URL`** | `https://wedplan-server-qkjk.onrender.com/api` | Express API base endpoint |
+| **Google Redirect URI** | `https://wedplan-client-pearl.vercel.app/api/auth/callback/google` | Authorized Google OAuth callback URL |
+| **Server JWKS URL** | `https://wedplan-client-pearl.vercel.app/api/auth/jwks` | Better Auth JWKS endpoint for Express JWT verification |
 
 ---
 
@@ -169,13 +186,13 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ### Production Environment Variables Checklist
 When deploying to Vercel, Render, or Railway, provide:
 - `BETTER_AUTH_SECRET`: Generate a random 32+ character string (`openssl rand -hex 32`).
-- `BETTER_AUTH_URL`: Your production client URL (e.g., `https://wedplan.vercel.app`).
+- `BETTER_AUTH_URL`: `https://wedplan-client-pearl.vercel.app`
 - `MONGODB_URI`: Production MongoDB Atlas connection URI.
 - `DB_NAME`: Database name (e.g., `wedplan`).
-- `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`: Configured in Google Cloud Console with authorized redirect URI `https://<your-domain>/api/auth/callback/google`.
+- `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`: Configured in Google Cloud Console with authorized redirect URI `https://wedplan-client-pearl.vercel.app/api/auth/callback/google`.
 - `IMGBB_API_KEY`: ImgBB account API key for user and service photos.
-- `NEXT_PUBLIC_API_URL`: Production URL of your Express API server (e.g., `https://api.wedplan.com/api`).
-- `NEXT_PUBLIC_APP_URL`: Your production client URL (e.g., `https://wedplan.vercel.app`).
+- `NEXT_PUBLIC_API_URL`: `https://wedplan-server-qkjk.onrender.com/api`
+- `NEXT_PUBLIC_APP_URL`: `https://wedplan-client-pearl.vercel.app`
 
 ---
 
@@ -242,10 +259,10 @@ For testing the Vendor Premium subscription flow at `/dashboard/vendor/subscript
 ## Deployment Guide
 
 ### Vercel (Recommended)
-1. Push your repository to GitHub.
+1. Push your repository to GitHub (`https://github.com/masudbuilds/wedplan-client`).
 2. Import the project in Vercel. Set the root directory to `wedplan-client`.
 3. Configure the Production Environment Variables listed above.
-4. Ensure `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` match your assigned Vercel URL (e.g., `https://wedplan.vercel.app`).
-5. In Google Cloud Console, add `https://<your-vercel-domain>/api/auth/callback/google` to the **Authorized redirect URIs**.
-6. In Stripe Dashboard, configure the webhook endpoint pointing to your Express server (`https://<api-domain>/api/payments/webhook`).
+4. Ensure `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` match `https://wedplan-client-pearl.vercel.app`.
+5. In Google Cloud Console, add `https://wedplan-client-pearl.vercel.app/api/auth/callback/google` to the **Authorized redirect URIs**.
+6. In Stripe Dashboard, configure the webhook endpoint pointing to your Express server (`https://wedplan-server-qkjk.onrender.com/api/payments/webhook`).
 7. Deploy!
