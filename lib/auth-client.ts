@@ -6,7 +6,9 @@ import type { auth } from "./auth"
 
 // Better Auth Client with JWT Client Plugin and additional fields typing
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  baseURL:
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (typeof window !== "undefined" ? window.location.origin : ""),
   plugins: [jwtClient(), inferAdditionalFields<typeof auth>()],
 })
 

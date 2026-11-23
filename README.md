@@ -164,9 +164,6 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 
 # Client Base URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Stripe Publishable Key (Test Mode)
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
 ### Production Environment Variables Checklist
@@ -179,7 +176,6 @@ When deploying to Vercel, Render, or Railway, provide:
 - `IMGBB_API_KEY`: ImgBB account API key for user and service photos.
 - `NEXT_PUBLIC_API_URL`: Production URL of your Express API server (e.g., `https://api.wedplan.com/api`).
 - `NEXT_PUBLIC_APP_URL`: Your production client URL (e.g., `https://wedplan.vercel.app`).
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Stripe test or live publishable key (`pk_test_...`).
 
 ---
 

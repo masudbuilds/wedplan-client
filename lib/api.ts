@@ -20,8 +20,7 @@ import {
 } from "@/types"
 import { toast } from "sonner"
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
 
 // Custom API Error carrying HTTP status code and server error message
 export class ApiError extends Error {

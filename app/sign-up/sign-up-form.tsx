@@ -210,7 +210,7 @@ export function SignUpForm() {
           <Input
             id="signup-email"
             type="email"
-            placeholder="you@example.com"
+            placeholder="alexandra@wedplan.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
