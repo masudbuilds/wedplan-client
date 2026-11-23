@@ -18,9 +18,12 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "WedPlan | Role-Based Wedding Planning Platform",
+  title: "WedPlan | Curated Wedding Services & Planning Marketplace",
   description:
-    "Discover wedding services, explore curated vendors, and seamlessly manage your wedding bookings.",
+    "Discover premier wedding photographers, venues, florists, and artisans. Seamlessly manage bookings, vendor portfolios, and celebrations.",
+  icons: {
+    icon: "/icon.svg",
+  },
 }
 
 export default function RootLayout({

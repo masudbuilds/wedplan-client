@@ -51,13 +51,31 @@ export function Footer() {
             </p>
             {/* Social Icons */}
             <div className="flex items-center gap-3 pt-2 text-muted-foreground">
-              <a href="#" aria-label="Instagram" className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
+              >
                 <InstagramIcon className="w-4 h-4" />
               </a>
-              <a href="#" aria-label="Facebook" className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
+              >
                 <FacebookIcon className="w-4 h-4" />
               </a>
-              <a href="#" aria-label="Twitter" className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors">
+              <a
+                href="https://x.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X (formerly Twitter)"
+                className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:text-primary hover:border-primary transition-colors"
+              >
                 <TwitterIcon className="w-4 h-4" />
               </a>
             </div>
@@ -138,11 +156,11 @@ export function Footer() {
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
-                <span>+1 (800) 555-PLAN</span>
+                <span>+1 (212) 555-0199</span>
               </p>
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <span>450 Grand Avenue, New York, NY 10001</span>
+                <span>450 Lexington Avenue, Suite 1400, New York, NY 10017</span>
               </p>
             </div>
           </div>
