@@ -47,7 +47,6 @@ export function Navbar() {
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Browse Services", href: "/services" },
-    { label: "Design Preview", href: "/design-preview" },
   ]
 
   const userInitials = user?.name

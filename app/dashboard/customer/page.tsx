@@ -18,7 +18,6 @@ import {
 } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { RoleGuard } from "@/components/dashboard/role-guard"
-import { DevJwtTester } from "@/components/dashboard/dev-jwt-tester"
 import { StatCard } from "@/components/stat-card"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -303,9 +302,6 @@ export default function CustomerDashboardPage() {
               )}
             </CardContent>
           </Card>
-
-          {/* Developer JWT Verification Helper */}
-          <DevJwtTester />
         </div>
       </DashboardShell>
     </RoleGuard>

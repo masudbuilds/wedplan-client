@@ -123,11 +123,6 @@ export function Footer() {
                   Vendor Subscriptions
                 </Link>
               </li>
-              <li>
-                <Link href="/design-preview" className="hover:text-primary transition-colors">
-                  Design System Preview
-                </Link>
-              </li>
             </ul>
           </div>
 
