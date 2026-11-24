@@ -27,8 +27,8 @@ export default function ErrorBoundary({
 
         {/* Heading */}
         <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-widest text-destructive">
-            Application Notice
+          <p className="text-xs font-medium text-destructive">
+            Application notice
           </p>
           <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground">
             Something Went Wrong
