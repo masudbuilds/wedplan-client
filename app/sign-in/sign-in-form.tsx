@@ -113,7 +113,7 @@ export function SignInForm() {
           <Input
             id="signin-email"
             type="email"
-            placeholder="alexandra@wedplan.com"
+            placeholder="Enter your email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
@@ -163,10 +163,7 @@ export function SignInForm() {
               Signing In...
             </>
           ) : (
-            <>
-              <LogIn className="w-4 h-4 mr-2" />
-              Sign In
-            </>
+            "Sign In"
           )}
         </Button>
       </form>

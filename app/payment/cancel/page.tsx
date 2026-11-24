@@ -38,7 +38,6 @@ export default function PaymentCancelPage() {
                 "w-full sm:w-auto rounded-full px-6 text-xs shadow-xs"
               )}
             >
-              <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
               Try Again
             </Link>
             <Link

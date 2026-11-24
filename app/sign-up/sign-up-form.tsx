@@ -116,7 +116,7 @@ export function SignUpForm() {
             )}
           >
             <User className="w-3.5 h-3.5" />
-            <span>Couple / Planning</span>
+            <span>Customer</span>
           </button>
           <button
             type="button"
@@ -129,7 +129,7 @@ export function SignUpForm() {
             )}
           >
             <Briefcase className="w-3.5 h-3.5" />
-            <span>Wedding Vendor</span>
+            <span>Vendor</span>
           </button>
         </div>
       </div>
@@ -171,7 +171,7 @@ export function SignUpForm() {
           <Input
             id="signup-name"
             type="text"
-            placeholder="e.g. Eleanor Vance"
+            placeholder="Enter your full name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={isLoading}
@@ -189,7 +189,7 @@ export function SignUpForm() {
             <Input
               id="signup-business"
               type="text"
-              placeholder="e.g. Julian & Co. Photography"
+              placeholder="Enter your studio or business name"
               value={businessName}
               onChange={(e) => setBusinessName(e.target.value)}
               disabled={isLoading}
@@ -210,7 +210,7 @@ export function SignUpForm() {
           <Input
             id="signup-email"
             type="email"
-            placeholder="alexandra@wedplan.com"
+            placeholder="Enter your email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
@@ -293,10 +293,7 @@ export function SignUpForm() {
               Creating Account...
             </>
           ) : (
-            <>
-              <Sparkles className="w-4 h-4 mr-2" />
-              {role === "vendor" ? "Register as Vendor" : "Create Account"}
-            </>
+            role === "vendor" ? "Register as Vendor" : "Create Customer Account"
           )}
         </Button>
       </form>
