@@ -1,7 +1,8 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
-import { MapPin } from "lucide-react"
+import { MapPin, Sparkles } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
@@ -19,10 +20,9 @@ interface ServiceCardProps {
 // Photo-first service card with pricing, vendor badge, and details CTA
 export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
   const { user } = useAuth()
+  const [imgError, setImgError] = React.useState(false)
 
-  const primaryImage =
-    service.images?.[0] ||
-    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
+  const primaryImage = service.images?.[0] || ""
 
   const vendorInitials = service.vendorName
     ? service.vendorName
@@ -40,14 +40,23 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
 
   return (
     <Card className="group overflow-hidden rounded-2xl border border-border/70 bg-card card-hover-lift shadow-xs flex flex-col h-full">
-      {/* Photo Header */}
-      <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-muted">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={primaryImage}
-          alt={service.serviceName}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+      {/* Photo Header: fixed 4:3 aspect ratio */}
+      <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
+        {imgError || !primaryImage ? (
+          <div className="h-full w-full flex flex-col items-center justify-center bg-muted/60 text-muted-foreground p-4 text-center">
+            <Sparkles className="w-6 h-6 text-primary/40 mb-1" />
+            <span className="font-serif text-xs font-semibold text-foreground/80">{service.category}</span>
+            <span className="text-[10px] text-muted-foreground/70">Wedding Service</span>
+          </div>
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={primaryImage}
+            alt={service.serviceName}
+            onError={() => setImgError(true)}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-104"
+          />
+        )}
         <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
           <Badge className="bg-card/90 text-foreground backdrop-blur-xs font-medium text-[11px] shadow-xs hover:bg-card">
             {service.category}
@@ -58,22 +67,22 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
 
       {/* Card Content */}
       <CardContent className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-baseline justify-between gap-2">
-            <h3 className="font-serif font-bold text-base sm:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">
-              {service.serviceName}
-            </h3>
-            <span className="text-sm font-semibold text-primary whitespace-nowrap">
+        <div className="space-y-1.5">
+          <h3 className="font-serif font-bold text-base sm:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">
+            {service.serviceName}
+          </h3>
+
+          <div className="flex items-center justify-between gap-2 pt-0.5">
+            <div className="flex items-center text-xs text-muted-foreground gap-1 min-w-0">
+              <MapPin className="w-3.5 h-3.5 shrink-0 text-muted-foreground/80" />
+              <span className="truncate">{service.location}</span>
+            </div>
+            <span className="text-sm sm:text-base font-serif font-bold text-primary whitespace-nowrap">
               ${service.price.toLocaleString()}
             </span>
           </div>
 
-          <div className="flex items-center text-xs text-muted-foreground gap-1">
-            <MapPin className="w-3.5 h-3.5 shrink-0 text-muted-foreground/80" />
-            <span className="line-clamp-1">{service.location}</span>
-          </div>
-
-          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed pt-1">
             {service.description}
           </p>
         </div>
