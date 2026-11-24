@@ -158,7 +158,7 @@ function ServicesPageContent() {
       {/* 1. Header */}
       <FadeIn>
         <SectionHeading
-          eyebrow="Marketplace Directory"
+          eyebrow="Directory"
           title="Browse Wedding Services"
           subtitle="Discover curated photographers, venues, florists, caterers, and bridal stylists for your celebration."
         />

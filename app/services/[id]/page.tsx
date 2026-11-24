@@ -279,7 +279,7 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
                     {isVendorPremium && <PremiumBadge size="sm" />}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Verified Wedding Specialist • Fast Response Rate
+                    Independent Wedding Specialist
                   </p>
                 </div>
               </div>
@@ -307,16 +307,16 @@ export default function ServiceDetailsPage({ params }: ServiceDetailsPageProps) 
               {/* Confidence Points */}
               <div className="space-y-2.5 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-                  <span>Verified Artisan & Date Guarantee</span>
-                </div>
-                <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-primary shrink-0" />
                   <span>Direct Vendor Communication</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#C9A66B] shrink-0" />
-                  <span>No Booking Intermediary Fees</span>
+                  <Sparkles className="w-4 h-4 text-primary shrink-0" />
+                  <span>Transparent Upfront Package Pricing</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                  <span>No Intermediary Booking Markups</span>
                 </div>
               </div>
 

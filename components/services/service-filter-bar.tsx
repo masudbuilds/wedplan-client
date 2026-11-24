@@ -75,7 +75,7 @@ export function ServiceFilterBar({
             onValueChange={(val) => onCategoryChange(val ?? "all")}
           >
             <SelectTrigger className="bg-background h-10 rounded-xl w-full">
-              <SelectValue placeholder="Category: All" />
+              <SelectValue placeholder="All Specialties" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
@@ -95,7 +95,7 @@ export function ServiceFilterBar({
             onValueChange={(val) => onLocationChange(val ?? "all")}
           >
             <SelectTrigger className="bg-background h-10 rounded-xl w-full">
-              <SelectValue placeholder="Location: All" />
+              <SelectValue placeholder="All Locations" />
             </SelectTrigger>
             <SelectContent>
               {LOCATIONS.map((loc) => (
@@ -117,7 +117,7 @@ export function ServiceFilterBar({
             onValueChange={(val) => onSortChange(val ?? "default")}
           >
             <SelectTrigger className="bg-background h-10 rounded-xl w-full">
-              <SelectValue placeholder="Sort: Default" />
+              <SelectValue placeholder="Default Order" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="default">Default Order</SelectItem>
