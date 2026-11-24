@@ -23,45 +23,43 @@ const STEPS = [
   },
 ]
 
-// Section 5: How WedPlan Works — Calm sequence with authentic numbers
+// Section 5: How WedPlan Works — Horizontal connected sequence
 export function HowItWorksSection() {
   return (
     <section className="w-full py-16 sm:py-20 md:py-24 bg-blush/20 border-t border-border/60">
-      <div className="container mx-auto px-4 max-w-7xl space-y-10">
+      <div className="container mx-auto px-4 max-w-6xl space-y-12">
         <SectionHeading
-          eyebrow="Process"
           title="How WedPlan Works"
           subtitle="Three straightforward steps from your initial discovery to vendor confirmation."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {STEPS.map((item) => {
-            const Icon = item.icon
-            return (
-              <div
-                key={item.step}
-                className="relative p-6 sm:p-8 rounded-xl bg-card border border-border/80 shadow-xs flex flex-col items-start space-y-4"
-              >
-                <div className="w-full flex items-center justify-between">
-                  <span className="font-serif text-2xl sm:text-3xl font-bold text-primary-text/40">
-                    {item.step}
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-blush text-primary flex items-center justify-center">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                </div>
+        <div className="relative">
+          {/* Horizontal connecting hairline for desktop */}
+          <div className="hidden md:block absolute top-6 left-12 right-12 h-px bg-border/80 z-0" />
 
-                <div className="space-y-1.5">
-                  <h3 className="font-serif font-semibold text-lg text-foreground">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 relative z-10">
+            {STEPS.map((item) => {
+              const Icon = item.icon
+              return (
+                <div key={item.step} className="flex flex-col items-start space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="w-12 h-12 rounded-full bg-background border border-border/80 flex items-center justify-center font-serif text-lg font-bold text-primary shadow-xs shrink-0">
+                      {item.step}
+                    </span>
+                    <div className="w-8 h-8 rounded-lg bg-blush/60 text-primary flex items-center justify-center md:hidden">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <h3 className="font-serif font-bold text-lg text-foreground pt-1">
                     {item.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {item.description}
                   </p>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
       </div>
     </section>
