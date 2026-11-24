@@ -250,7 +250,7 @@ export default function VendorSubscriptionPage() {
                 >
                   <CardHeader className="pb-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      <span className="text-xs font-medium text-muted-foreground">
                         Standard Partner
                       </span>
                       {!isPremium && (
@@ -327,13 +327,13 @@ export default function VendorSubscriptionPage() {
                   )}
                 >
                   {/* Top highlight ribbon */}
-                  <div className="absolute top-0 right-0 bg-[#C9A66B] text-white text-[10px] font-semibold px-3 py-1 rounded-bl-xl tracking-wide uppercase">
+                  <div className="absolute top-0 right-0 bg-[#C9A66B] text-white text-[10px] font-medium px-3 py-1 rounded-bl-xl tracking-normal">
                     Recommended
                   </div>
 
                   <CardHeader className="pb-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-[#9A6E2E] dark:text-[#E2C38C] uppercase tracking-wider flex items-center gap-1">
+                      <span className="text-xs font-medium text-[#875C1C] dark:text-[#E2C38C] flex items-center gap-1">
                         <Crown className="w-3.5 h-3.5 text-[#C9A66B]" />
                         Professional Partner
                       </span>
