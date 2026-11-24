@@ -35,14 +35,11 @@ export function WhyChooseSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column: Editorial Statement */}
           <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
-            <p className="text-xs font-medium text-primary-text">
-              Transparent planning
-            </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-foreground tracking-tight leading-snug">
               A Calm, Direct Way to Plan Your Wedding
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              WedPlan connects couples directly with independent wedding specialists. No hidden commissions, no artificial review manipulation, and no opaque price quotes.
+              WedPlan connects couples directly with independent wedding specialists. No hidden commissions, no third-party markups, and no opaque price quotes.
             </p>
             <div className="pt-2">
               <Link

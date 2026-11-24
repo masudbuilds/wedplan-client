@@ -30,11 +30,6 @@ export function HeroSection() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Left Column: Editorial Headline, Honest Copy & Direct Search */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-primary-text">
-                <span className="w-2 h-2 rounded-full bg-primary" />
-                <span>Curated wedding marketplace</span>
-              </div>
-
               <h1 className="text-2xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground tracking-tight leading-[1.15] break-words">
                 Where Exceptional Celebrations Begin
               </h1>
@@ -99,26 +94,15 @@ export function HeroSection() {
                 <div className="absolute -inset-2 rounded-2xl border border-[#C9A66B]/50 transform translate-x-2 translate-y-2 pointer-events-none" />
 
                 {/* Main Photo Frame */}
-                <div className="relative rounded-2xl overflow-hidden bg-card border border-border shadow-md aspect-4/5">
+                <div className="relative rounded-2xl overflow-hidden bg-card border border-border/80 shadow-md aspect-4/5">
                   <Image
-                    src="/images/hero.jpg"
-                    alt="Bride and groom sharing an intimate wedding celebration moment"
+                    src="/images/hero.webp"
+                    alt="Joyful bride and groom celebrating their wedding ceremony in warm natural daylight"
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-                  {/* Editorial Photo Caption */}
-                  <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-card/90 backdrop-blur-xs border border-border/60 text-left">
-                    <p className="font-serif font-semibold text-xs sm:text-sm text-foreground">
-                      Bespoke Celebrations & Artistry
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
-                      Connecting couples with wedding specialists across six specialties
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>

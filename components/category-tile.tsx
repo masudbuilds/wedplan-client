@@ -5,12 +5,12 @@ import { cn } from "@/lib/utils"
 import { ServiceCategory } from "@/types"
 
 export const CATEGORY_PHOTOS: Record<ServiceCategory, string> = {
-  "Photography & Videography": "/images/photography.jpg",
-  "Wedding Venues": "/images/venues.jpg",
-  "Decoration & Florist": "/images/decoration.jpg",
-  "Catering Services": "/images/catering.jpg",
-  "Makeup & Styling": "/images/makeup.jpg",
-  "Wedding Fashion": "/images/fashion.jpg",
+  "Photography & Videography": "/images/photography.webp",
+  "Wedding Venues": "/images/venues.webp",
+  "Decoration & Florist": "/images/decoration.webp",
+  "Catering Services": "/images/catering.webp",
+  "Makeup & Styling": "/images/makeup.webp",
+  "Wedding Fashion": "/images/fashion.webp",
 }
 
 interface CategoryTileProps {
@@ -25,30 +25,30 @@ export function CategoryTile({
   href,
   className,
 }: CategoryTileProps) {
-  const imageSrc = CATEGORY_PHOTOS[name] || "/images/hero.jpg"
+  const imageSrc = CATEGORY_PHOTOS[name] || "/images/hero.webp"
   const targetHref = href || `/services?category=${encodeURIComponent(name)}`
 
   return (
     <Link
       href={targetHref}
       className={cn(
-        "group block rounded-xl bg-card border border-border/80 overflow-hidden shadow-xs hover:border-[#C9A66B]/60 hover:shadow-sm transition-all duration-300",
+        "group relative block aspect-4/5 w-full rounded-2xl overflow-hidden bg-card border border-border/70 shadow-xs hover:border-[#C9A66B]/70 hover:shadow-md transition-all duration-300",
         className
       )}
     >
-      <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
-        <Image
-          src={imageSrc}
-          alt={name}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-      </div>
+      <Image
+        src={imageSrc}
+        alt={name}
+        fill
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+        className="object-cover transition-transform duration-500 group-hover:scale-104"
+      />
+      {/* Soft gradient overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity group-hover:opacity-90" />
 
-      <div className="p-2.5 sm:p-3.5 text-center min-h-[2.75rem] sm:min-h-[3rem] flex items-center justify-center">
-        <h3 className="font-serif font-semibold text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
+      {/* Category Name at bottom */}
+      <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 text-left">
+        <h3 className="font-serif font-bold text-base sm:text-lg text-white drop-shadow-xs group-hover:text-[#F3E5D0] transition-colors leading-snug">
           {name}
         </h3>
       </div>

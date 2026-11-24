@@ -59,7 +59,6 @@ export function FeaturedServicesSection() {
       <div className="container mx-auto px-4 max-w-7xl space-y-8">
         <FadeIn>
           <SectionHeading
-            eyebrow="Featured"
             title="Featured Wedding Services"
             subtitle="Browse packages across photography, venues, florals, and attire with transparent pricing and direct inquiries."
           />

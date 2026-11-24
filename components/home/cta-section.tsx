@@ -8,10 +8,6 @@ export function CtaSection() {
   return (
     <section className="w-full py-16 sm:py-20 md:py-24 bg-card border-t border-border/70">
       <div className="container mx-auto px-4 max-w-4xl text-center space-y-6">
-        <p className="text-xs font-medium text-primary-text">
-          Begin planning
-        </p>
-
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-foreground tracking-tight">
           Ready to Plan Your Celebration?
         </h2>
