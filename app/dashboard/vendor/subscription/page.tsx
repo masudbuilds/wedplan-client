@@ -17,6 +17,7 @@ import {
 import { DashboardShell } from "@/components/dashboard-shell"
 import { RoleGuard } from "@/components/dashboard/role-guard"
 import { PremiumBadge } from "@/components/premium-badge"
+import { VENDOR_PREMIUM_PLAN } from "@/lib/constants"
 import {
   getVendorSubscription,
   createCheckoutSession,
@@ -348,10 +349,10 @@ export default function VendorSubscriptionPage() {
                     </CardTitle>
                     <div className="pt-2">
                       <span className="font-serif text-3xl font-bold text-foreground">
-                        $49
+                        {VENDOR_PREMIUM_PLAN.priceDisplay}
                       </span>
                       <span className="text-xs text-muted-foreground ml-1.5">
-                        / month (auto-renews)
+                        {VENDOR_PREMIUM_PLAN.billingInterval} {VENDOR_PREMIUM_PLAN.billingDetails}
                       </span>
                     </div>
                     <CardDescription className="text-xs pt-1">

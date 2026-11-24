@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Heart, Mail, Phone, MapPin } from "lucide-react"
+import { SOCIAL_LINKS } from "@/lib/constants"
 
 function InstagramIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -50,7 +51,7 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex items-center gap-3 pt-2 text-muted-foreground">
               <a
-                href="https://github.com/masudbuilds"
+                href={SOCIAL_LINKS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -59,7 +60,7 @@ export function Footer() {
                 <InstagramIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://github.com/masudbuilds"
+                href={SOCIAL_LINKS.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -68,7 +69,7 @@ export function Footer() {
                 <FacebookIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://github.com/masudbuilds"
+                href={SOCIAL_LINKS.x}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="X (formerly Twitter)"
