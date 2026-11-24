@@ -88,7 +88,7 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
               </AvatarFallback>
             </Avatar>
             <span className="text-xs font-medium text-foreground truncate max-w-[110px]">
-              {service.vendorName || "Verified Vendor"}
+              {service.vendorName || "Wedding Specialist"}
             </span>
           </div>
 
@@ -99,7 +99,7 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
               "rounded-full text-xs hover:bg-primary hover:text-white hover:border-primary shrink-0"
             )}
           >
-            View Details
+            View details
           </Link>
         </div>
       </CardContent>
