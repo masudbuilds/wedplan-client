@@ -1,65 +1,57 @@
 import Link from "next/link"
+import Image from "next/image"
 import * as React from "react"
-import {
-  Camera,
-  Building2,
-  Flower2,
-  UtensilsCrossed,
-  Sparkles,
-  Shirt,
-  LucideIcon,
-} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ServiceCategory } from "@/types"
 
-// Map categories to romantic thematic icons
-export const CATEGORY_ICONS: Record<ServiceCategory, LucideIcon> = {
-  "Photography & Videography": Camera,
-  "Wedding Venues": Building2,
-  "Decoration & Florist": Flower2,
-  "Catering Services": UtensilsCrossed,
-  "Makeup & Styling": Sparkles,
-  "Wedding Fashion": Shirt,
+export const CATEGORY_PHOTOS: Record<ServiceCategory, string> = {
+  "Photography & Videography": "/images/photography.jpg",
+  "Wedding Venues": "/images/venues.jpg",
+  "Decoration & Florist": "/images/decoration.jpg",
+  "Catering Services": "/images/catering.jpg",
+  "Makeup & Styling": "/images/makeup.jpg",
+  "Wedding Fashion": "/images/fashion.jpg",
 }
 
 interface CategoryTileProps {
   name: ServiceCategory
-  itemCount?: number
   href?: string
   className?: string
 }
 
-// Editorial interactive category tile
+// Editorial photo-first category tile
 export function CategoryTile({
   name,
-  itemCount,
   href,
   className,
 }: CategoryTileProps) {
-  const Icon = CATEGORY_ICONS[name] || Sparkles
+  const imageSrc = CATEGORY_PHOTOS[name] || "/images/hero.jpg"
   const targetHref = href || `/services?category=${encodeURIComponent(name)}`
 
   return (
     <Link
       href={targetHref}
       className={cn(
-        "group relative block p-5 sm:p-6 rounded-2xl bg-card border border-border/70 card-hover-lift shadow-xs transition-all duration-200 text-center hover:border-primary/40",
+        "group block rounded-xl bg-card border border-border/80 overflow-hidden shadow-xs hover:border-[#C9A66B]/60 hover:shadow-sm transition-all duration-300",
         className
       )}
     >
-      <div className="mx-auto w-12 h-12 rounded-xl bg-blush/60 text-primary flex items-center justify-center mb-3 group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all duration-200">
-        <Icon className="w-6 h-6 transition-colors" />
+      <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
+        <Image
+          src={imageSrc}
+          alt={name}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
       </div>
 
-      <h3 className="font-serif font-semibold text-sm sm:text-base text-foreground group-hover:text-primary transition-colors">
-        {name}
-      </h3>
-
-      {itemCount !== undefined && (
-        <p className="text-xs text-muted-foreground mt-1">
-          {itemCount} {itemCount === 1 ? "vendor" : "vendors"}
-        </p>
-      )}
+      <div className="p-3 sm:p-3.5 text-center">
+        <h3 className="font-serif font-semibold text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
+          {name}
+        </h3>
+      </div>
     </Link>
   )
 }
