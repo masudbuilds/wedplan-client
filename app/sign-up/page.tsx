@@ -11,10 +11,10 @@ export default function SignUpPage() {
           {/* Form Column */}
           <div className="lg:col-span-7 max-w-lg mx-auto lg:mx-0 w-full space-y-6">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-serif font-bold text-foreground tracking-tight break-words">
                 Create Your Account
               </h1>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                 Join WedPlan as a customer planning a wedding or as a professional vendor.
               </p>
             </div>

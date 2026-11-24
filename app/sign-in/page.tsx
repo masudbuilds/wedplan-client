@@ -11,10 +11,10 @@ export default function SignInPage() {
           {/* Form Column */}
           <div className="lg:col-span-6 max-w-md mx-auto lg:mx-0 w-full space-y-6">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-serif font-bold text-foreground tracking-tight break-words">
                 Welcome Back
               </h1>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                 Sign in to manage your wedding bookings or vendor portfolio.
               </p>
             </div>

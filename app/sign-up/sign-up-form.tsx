@@ -141,7 +141,7 @@ export function SignUpForm() {
         <GoogleButton label="Continue with Google" callbackURL="/dashboard" />
         <div className="relative flex items-center justify-center text-xs text-muted-foreground">
           <div className="w-full border-t border-border/80" />
-          <span className="bg-background px-3 relative">or continue with email</span>
+          <span className="bg-background px-3 relative whitespace-nowrap shrink-0">or continue with email</span>
           <div className="w-full border-t border-border/80" />
         </div>
       </div>
