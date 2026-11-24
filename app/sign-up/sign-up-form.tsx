@@ -99,17 +99,14 @@ export function SignUpForm() {
 
   return (
     <div className="space-y-6">
-      {/* Role Selection Tabs */}
-      <div className="space-y-2">
-        <Label className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-          Account Type
-        </Label>
-        <div className="grid grid-cols-2 gap-2 p-1 bg-muted/60 rounded-xl">
+      {/* Role Selection Segmented Control */}
+      <div className="space-y-1.5">
+        <div className="grid grid-cols-2 p-1 bg-muted/60 rounded-xl border border-border/60">
           <button
             type="button"
             onClick={() => setRole("customer")}
             className={cn(
-              "flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-medium transition-all cursor-pointer",
+              "py-2 px-3 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-2",
               role === "customer"
                 ? "bg-card text-foreground shadow-xs font-semibold"
                 : "text-muted-foreground hover:text-foreground"
@@ -122,7 +119,7 @@ export function SignUpForm() {
             type="button"
             onClick={() => setRole("vendor")}
             className={cn(
-              "flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-medium transition-all cursor-pointer",
+              "py-2 px-3 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-2",
               role === "vendor"
                 ? "bg-card text-foreground shadow-xs font-semibold text-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -132,15 +129,20 @@ export function SignUpForm() {
             <span>Vendor</span>
           </button>
         </div>
+        <p className="text-[11px] text-muted-foreground">
+          {role === "customer"
+            ? "Plan your wedding and submit booking inquiries to independent artisans."
+            : "Showcase wedding packages and receive booking requests from clients."}
+        </p>
       </div>
 
       {/* Google Quick Sign-Up */}
       <div className="space-y-3">
-        <GoogleButton label="Sign up with Google" callbackURL="/dashboard" />
+        <GoogleButton label="Continue with Google" callbackURL="/dashboard" />
         <div className="relative flex items-center justify-center text-xs text-muted-foreground">
-          <div className="w-full border-t border-border" />
-          <span className="bg-card px-3 relative">or continue with email</span>
-          <div className="w-full border-t border-border" />
+          <div className="w-full border-t border-border/80" />
+          <span className="bg-background px-3 relative">or continue with email</span>
+          <div className="w-full border-t border-border/80" />
         </div>
       </div>
 
@@ -250,34 +252,37 @@ export function SignUpForm() {
           </div>
 
           {/* Inline Password Rules Indicator */}
-          <div className="grid grid-cols-3 gap-1 pt-1.5 text-[11px]">
-            <span
-              className={cn(
-                "flex items-center gap-1",
-                hasMinLength ? "text-emerald-600 font-medium" : "text-muted-foreground"
+          <div className="p-2.5 rounded-xl bg-muted/40 border border-border/60 space-y-1 text-[11px]">
+            <div className="flex items-center gap-1.5">
+              {hasMinLength ? (
+                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              ) : (
+                <X className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
               )}
-            >
-              {hasMinLength ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
-              6+ chars
-            </span>
-            <span
-              className={cn(
-                "flex items-center gap-1",
-                hasUpper ? "text-emerald-600 font-medium" : "text-muted-foreground"
+              <span className={cn(hasMinLength ? "text-emerald-700 dark:text-emerald-400 font-medium" : "text-muted-foreground")}>
+                At least 6 characters
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {hasUpper ? (
+                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              ) : (
+                <X className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
               )}
-            >
-              {hasUpper ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
-              1 uppercase
-            </span>
-            <span
-              className={cn(
-                "flex items-center gap-1",
-                hasLower ? "text-emerald-600 font-medium" : "text-muted-foreground"
+              <span className={cn(hasUpper ? "text-emerald-700 dark:text-emerald-400 font-medium" : "text-muted-foreground")}>
+                One uppercase letter
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {hasLower ? (
+                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              ) : (
+                <X className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
               )}
-            >
-              {hasLower ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
-              1 lowercase
-            </span>
+              <span className={cn(hasLower ? "text-emerald-700 dark:text-emerald-400 font-medium" : "text-muted-foreground")}>
+                One lowercase letter
+              </span>
+            </div>
           </div>
         </div>
 
@@ -293,7 +298,7 @@ export function SignUpForm() {
               Creating Account...
             </>
           ) : (
-            role === "vendor" ? "Register as Vendor" : "Create Customer Account"
+            role === "vendor" ? "Register as Vendor" : "Create Account"
           )}
         </Button>
       </form>
@@ -302,7 +307,7 @@ export function SignUpForm() {
       <div className="text-center text-xs text-muted-foreground pt-2">
         Already have an account?{" "}
         <Link href="/sign-in" className="text-primary font-medium hover:underline">
-          Sign In
+          Sign in
         </Link>
       </div>
     </div>
