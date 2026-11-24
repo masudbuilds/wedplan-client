@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { Heart, Mail, Phone, MapPin } from "lucide-react"
 
-// Clean inline SVGs for social platforms
 function InstagramIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -28,15 +27,14 @@ function TwitterIcon({ className = "w-4 h-4" }: { className?: string }) {
   )
 }
 
-// Global platform footer with editorial typography and links
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-border/80 bg-card/60 mt-auto">
+    <footer className="border-t border-border/80 bg-card mt-auto">
       <div className="container mx-auto px-4 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Logo & Description */}
+          {/* Logo & Platform Mission */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2 group">
               <span className="w-8 h-8 rounded-full bg-blush flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
@@ -47,12 +45,12 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              A curated role-based marketplace connecting couples with premier wedding photographers, venues, florists, and artisans.
+              An editorial wedding planning marketplace connecting couples directly with premier wedding photographers, venues, florists, and artisans.
             </p>
-            {/* Social Icons */}
+            {/* Social Links */}
             <div className="flex items-center gap-3 pt-2 text-muted-foreground">
               <a
-                href="https://instagram.com"
+                href="https://github.com/masudbuilds"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -61,7 +59,7 @@ export function Footer() {
                 <InstagramIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://facebook.com"
+                href="https://github.com/masudbuilds"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -70,7 +68,7 @@ export function Footer() {
                 <FacebookIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://x.com"
+                href="https://github.com/masudbuilds"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="X (formerly Twitter)"
@@ -81,10 +79,10 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Quick Navigation Links */}
+          {/* Official Categories (matching server exact names) */}
           <div className="space-y-3">
-            <h4 className="font-serif font-semibold text-foreground text-sm uppercase tracking-wider">
-              Explore Services
+            <h4 className="font-serif font-semibold text-foreground text-sm">
+              Explore Specialties
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
@@ -99,17 +97,22 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/services?category=Decoration%20%26%20Florist" className="hover:text-primary transition-colors">
-                  Florists & Decor
+                  Decoration & Florist
                 </Link>
               </li>
               <li>
                 <Link href="/services?category=Catering%20Services" className="hover:text-primary transition-colors">
-                  Catering & Cakes
+                  Catering Services
                 </Link>
               </li>
               <li>
                 <Link href="/services?category=Makeup%20%26%20Styling" className="hover:text-primary transition-colors">
-                  Hair & Makeup
+                  Makeup & Styling
+                </Link>
+              </li>
+              <li>
+                <Link href="/services?category=Wedding%20Fashion" className="hover:text-primary transition-colors">
+                  Wedding Fashion
                 </Link>
               </li>
             </ul>
@@ -117,7 +120,7 @@ export function Footer() {
 
           {/* Platform & Roles */}
           <div className="space-y-3">
-            <h4 className="font-serif font-semibold text-foreground text-sm uppercase tracking-wider">
+            <h4 className="font-serif font-semibold text-foreground text-sm">
               Platform & Roles
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -133,7 +136,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/sign-up?role=customer" className="hover:text-primary transition-colors">
-                  Join as a Couple
+                  Join as a Customer
                 </Link>
               </li>
               <li>
@@ -146,10 +149,10 @@ export function Footer() {
 
           {/* Contact Information */}
           <div className="space-y-3">
-            <h4 className="font-serif font-semibold text-foreground text-sm uppercase tracking-wider">
+            <h4 className="font-serif font-semibold text-foreground text-sm">
               Contact & Support
             </h4>
-            <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-2.5 text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary shrink-0" />
                 <span>concierge@wedplan.com</span>
@@ -166,13 +169,19 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
+        {/* Real Policy Links */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>© {currentYear} WedPlan Inc. All rights reserved.</p>
-          <div className="flex gap-4">
-            <a href="#" className="hover:underline">Privacy Policy</a>
-            <a href="#" className="hover:underline">Terms of Service</a>
-            <a href="#" className="hover:underline">Security</a>
+          <div className="flex gap-5">
+            <Link href="/privacy" className="hover:text-primary transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-primary transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="/security" className="hover:text-primary transition-colors">
+              Security
+            </Link>
           </div>
         </div>
       </div>
