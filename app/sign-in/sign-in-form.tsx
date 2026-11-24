@@ -88,13 +88,13 @@ export function SignInForm() {
       {/* Google Quick Sign-In */}
       <div className="space-y-3">
         <GoogleButton
-          label="Sign in with Google"
+          label="Continue with Google"
           callbackURL={getSafeRedirectUrl()}
         />
         <div className="relative flex items-center justify-center text-xs text-muted-foreground">
-          <div className="w-full border-t border-border" />
-          <span className="bg-card px-3 relative">or sign in with email</span>
-          <div className="w-full border-t border-border" />
+          <div className="w-full border-t border-border/80" />
+          <span className="bg-background px-3 relative">or continue with email</span>
+          <div className="w-full border-t border-border/80" />
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export function SignInForm() {
               Signing In...
             </>
           ) : (
-            "Sign In"
+            "Sign in"
           )}
         </Button>
       </form>
@@ -175,7 +175,7 @@ export function SignInForm() {
           href="/sign-up"
           className="text-primary font-medium hover:underline"
         >
-          Create Account
+          Create an account
         </Link>
       </div>
     </div>
