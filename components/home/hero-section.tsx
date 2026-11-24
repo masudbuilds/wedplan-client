@@ -35,7 +35,7 @@ export function HeroSection() {
                 <span>Curated wedding marketplace</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground tracking-tight leading-[1.12]">
+              <h1 className="text-2xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground tracking-tight leading-[1.15] break-words">
                 Where Exceptional Celebrations Begin
               </h1>
 

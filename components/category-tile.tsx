@@ -47,8 +47,8 @@ export function CategoryTile({
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
       </div>
 
-      <div className="p-3 sm:p-3.5 text-center">
-        <h3 className="font-serif font-semibold text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
+      <div className="p-2.5 sm:p-3.5 text-center min-h-[2.75rem] sm:min-h-[3rem] flex items-center justify-center">
+        <h3 className="font-serif font-semibold text-xs sm:text-sm text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
           {name}
         </h3>
       </div>
