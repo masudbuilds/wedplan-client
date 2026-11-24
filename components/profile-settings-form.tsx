@@ -189,7 +189,7 @@ export function ProfileSettingsForm({ user, className }: ProfileSettingsFormProp
             </div>
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-xs capitalize">
-                {user.role === "customer" ? "Couple Account" : `${user.role} Account`}
+                {user.role === "customer" ? "Customer Account" : `${user.role} Account`}
               </Badge>
               {user.subscriptionPlan && (
                 <Badge className="bg-blush text-primary border-primary/20 text-xs capitalize">

@@ -324,7 +324,7 @@ function AdminServicesContent() {
       <DashboardShell
         navItems={ADMIN_NAV_ITEMS}
         title="Manage Wedding Services"
-        subtitle="Review submitted packages, verify vendor authenticity, approve or reject listings, and remove inappropriate content."
+        subtitle="Review submitted packages, approve or reject listings, and manage published content."
       >
         <div className="space-y-6">
           {/* Filter Bar */}

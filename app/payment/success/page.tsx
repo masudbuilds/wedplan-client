@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Sparkles,
   Loader2,
-  ArrowRight,
   Clock,
   RefreshCw,
   AlertCircle,
@@ -149,7 +148,7 @@ function PaymentSuccessContent() {
                   Welcome to Premium!
                 </h2>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                  Your payment has been successfully verified. You now have unlimited listings, priority search rank, and gold badges.
+                  Your payment has been successfully confirmed. You now have unlimited listings, priority search rank, and gold badges.
                 </p>
               </div>
 
@@ -174,7 +173,6 @@ function PaymentSuccessContent() {
                   )}
                 >
                   Go to Vendor Dashboard
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Link>
                 <Link
                   href="/dashboard/vendor/services/new"

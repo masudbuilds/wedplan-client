@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ArrowRight, AlertCircle, RotateCcw } from "lucide-react"
+import { AlertCircle, RotateCcw } from "lucide-react"
 import { Service } from "@/types"
 import { getFeaturedServices } from "@/lib/api"
 import { SectionHeading } from "@/components/section-heading"
@@ -59,9 +59,9 @@ export function FeaturedServicesSection() {
       <div className="container mx-auto px-4 max-w-7xl space-y-8">
         <FadeIn>
           <SectionHeading
-            eyebrow="Handpicked Excellence"
+            eyebrow="Featured"
             title="Featured Wedding Services"
-            subtitle="Browse top-rated wedding specialists celebrated for artistry, reliability, and unforgettable memories."
+            subtitle="Browse packages across photography, venues, florals, and attire with transparent pricing and direct inquiries."
           />
         </FadeIn>
 
@@ -116,20 +116,17 @@ export function FeaturedServicesSection() {
         )}
 
         {/* View All Services Link */}
-        <FadeIn delay={0.2}>
-          <div className="mt-8 text-center">
-            <Link
-              href="/services"
-              className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "rounded-full px-8 hover:bg-primary hover:text-white hover:border-primary gap-2"
-              )}
-            >
-              <span>View All Wedding Services</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </FadeIn>
+        <div className="mt-8 text-center">
+          <Link
+            href="/services"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "rounded-full px-8 hover:bg-primary hover:text-white hover:border-primary shadow-xs"
+            )}
+          >
+            View All Services
+          </Link>
+        </div>
       </div>
     </section>
   )

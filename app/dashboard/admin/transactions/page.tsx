@@ -186,7 +186,7 @@ function AdminTransactionsContent() {
             <div className="flex items-center gap-2">
               <Lock className="w-4 h-4 text-primary shrink-0" />
               <span>
-                <strong>Audit Ledger:</strong> Payment records are read only. Transactions reflect verified Stripe events.
+                <strong>Audit Ledger:</strong> Payment records are read only. Transactions reflect confirmed Stripe events.
               </span>
             </div>
             <Badge variant="outline" className="text-[10px] text-muted-foreground hidden sm:inline-flex">

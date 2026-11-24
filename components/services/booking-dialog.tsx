@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { toast } from "sonner"
-import { Calendar, MapPin, Loader2, Send, CheckCircle2, ArrowRight } from "lucide-react"
+import { Calendar, MapPin, Loader2, Send, CheckCircle2 } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -141,8 +141,7 @@ export function BookingDialog({
                 onClick={() => setOpen(false)}
                 className={cn(buttonVariants({ variant: "default" }), "rounded-full px-6")}
               >
-                <span>View in My Bookings</span>
-                <ArrowRight className="w-4 h-4 ml-1.5" />
+                View in My Bookings
               </Link>
               <Button
                 variant="outline"

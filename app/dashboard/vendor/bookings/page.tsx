@@ -104,7 +104,7 @@ export default function VendorBookingsPage() {
       const res = await updateBookingStatus(booking.id, action)
       toast.success(
         res.message ||
-          `Booking request ${action === "accepted" ? "accepted" : "declined"} successfully.`
+          `Booking request ${action === "accepted" ? "accepted" : "rejected"} successfully.`
       )
       setActionTarget(null)
       if (detailBooking?.id === booking.id) {
@@ -165,7 +165,7 @@ export default function VendorBookingsPage() {
         return (
           <Badge variant="destructive" className="flex items-center gap-1 text-[11px]">
             <XCircle className="w-3 h-3" />
-            Declined
+            Rejected
           </Badge>
         )
       case "cancelled":
@@ -198,7 +198,7 @@ export default function VendorBookingsPage() {
       <DashboardShell
         navItems={VENDOR_NAV_ITEMS}
         title="Booking Requests"
-        subtitle="Review, accept, or decline wedding date inquiries received from prospective couples."
+        subtitle="Review, accept, or reject wedding date inquiries received from prospective customers."
       >
         <div className="space-y-6">
           {/* Status Filter Tabs */}
@@ -219,7 +219,7 @@ export default function VendorBookingsPage() {
                   Accepted ({acceptedCount})
                 </TabsTrigger>
                 <TabsTrigger value="rejected" className="text-xs">
-                  Declined ({rejectedCount})
+                  Rejected ({rejectedCount})
                 </TabsTrigger>
                 <TabsTrigger value="cancelled" className="text-xs">
                   Cancelled ({cancelledCount})
@@ -431,7 +431,7 @@ export default function VendorBookingsPage() {
                                   className="h-8 px-2.5 text-xs text-destructive border-destructive/30 hover:bg-destructive/10"
                                 >
                                   <XCircle className="w-3.5 h-3.5 mr-1" />
-                                  Decline
+                                  Reject
                                 </Button>
                               </>
                             )}
@@ -558,7 +558,7 @@ export default function VendorBookingsPage() {
                               className="h-7 px-2.5 text-xs text-destructive border-destructive/30"
                             >
                               <XCircle className="w-3.5 h-3.5 mr-1" />
-                              Decline
+                              Reject
                             </Button>
                           </div>
                         )}
@@ -678,7 +678,7 @@ export default function VendorBookingsPage() {
                         className="rounded-full text-xs text-destructive border-destructive/30"
                       >
                         <XCircle className="w-3.5 h-3.5 mr-1" />
-                        Decline
+                        Reject
                       </Button>
                       <Button
                         onClick={() => {

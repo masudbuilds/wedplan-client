@@ -10,7 +10,6 @@ import {
   Clock,
   Receipt,
   ShieldCheck,
-  ArrowRight,
   AlertCircle,
   RefreshCw,
 } from "lucide-react"
@@ -159,7 +158,7 @@ export default function AdminDashboardPage() {
               <StatCard
                 title="Total Customers"
                 value={String(stats?.totalCustomers ?? 0)}
-                description="Engaged couples"
+                description="Registered customers"
                 variant="sage"
                 icon={<Heart className="w-5 h-5" />}
               />
@@ -181,7 +180,7 @@ export default function AdminDashboardPage() {
                 <StatCard
                   title="Pending Services"
                   value={String(stats?.pendingServices ?? 0)}
-                  description="Awaiting moderation →"
+                  description="Awaiting moderation"
                   variant="gold"
                   icon={<Clock className="w-5 h-5" />}
                   className={cn(
@@ -222,8 +221,8 @@ export default function AdminDashboardPage() {
                   </p>
                 </div>
               </div>
-              <div className="text-xs text-primary font-medium flex items-center gap-1 mt-4 pt-3 border-t border-border/50">
-                View User Directory <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <div className="text-xs text-primary font-medium mt-4 pt-3 border-t border-border/50">
+                View User Directory
               </div>
             </Link>
 
@@ -245,8 +244,8 @@ export default function AdminDashboardPage() {
                   </p>
                 </div>
               </div>
-              <div className="text-xs text-primary font-medium flex items-center gap-1 mt-4 pt-3 border-t border-border/50">
-                Moderate Services <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <div className="text-xs text-primary font-medium mt-4 pt-3 border-t border-border/50">
+                Moderate Services
               </div>
             </Link>
 
@@ -268,8 +267,8 @@ export default function AdminDashboardPage() {
                   </p>
                 </div>
               </div>
-              <div className="text-xs text-primary font-medium flex items-center gap-1 mt-4 pt-3 border-t border-border/50">
-                Audit Transactions <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <div className="text-xs text-primary font-medium mt-4 pt-3 border-t border-border/50">
+                Audit Transactions
               </div>
             </Link>
           </div>

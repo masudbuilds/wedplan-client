@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { XCircle, RotateCcw, ShieldCheck } from "lucide-react"
+import { XCircle, ShieldCheck } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"

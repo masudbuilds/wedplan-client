@@ -7,7 +7,6 @@ import {
   Heart,
   Sparkles,
   Clock,
-  ArrowRight,
   AlertCircle,
   RefreshCw,
   CheckCircle2,
@@ -85,7 +84,7 @@ export default function CustomerDashboardPage() {
       case "pending":
         return <Badge className="bg-amber-500/20 text-amber-700 border-amber-300">Pending</Badge>
       case "rejected":
-        return <Badge variant="destructive">Declined</Badge>
+        return <Badge variant="destructive">Rejected</Badge>
       case "cancelled":
         return <Badge variant="outline" className="text-muted-foreground">Cancelled</Badge>
       default:
@@ -107,14 +106,14 @@ export default function CustomerDashboardPage() {
               <div className="space-y-2 max-w-xl">
                 <div className="flex items-center gap-2">
                   <Badge className="bg-primary text-white border-none text-[11px] px-2.5 py-0.5">
-                    Couple Account
+                    Customer Account
                   </Badge>
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5 text-accent" /> Ready to plan
                   </span>
                 </div>
                 <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-                  Welcome back, {user?.name || "Lovely Couple"}!
+                  Welcome back, {user?.name || "Customer"}!
                 </h2>
                 <p className="text-sm text-muted-foreground">
                   Explore top wedding venues, photographers, and stylists, or check the status of your existing booking inquiries.
@@ -177,9 +176,9 @@ export default function CustomerDashboardPage() {
                 icon={<CheckCircle2 className="w-5 h-5" />}
               />
               <StatCard
-                title="Declined"
+                title="Rejected"
                 value={String(stats?.rejected ?? 0)}
-                description="Unavailable dates"
+                description="Rejected by vendor"
                 variant="default"
                 icon={<XCircle className="w-5 h-5" />}
               />
@@ -204,9 +203,9 @@ export default function CustomerDashboardPage() {
               </div>
               <Link
                 href="/dashboard/customer/bookings"
-                className="text-xs text-primary font-medium flex items-center gap-1 hover:underline"
+                className="text-xs text-primary font-medium hover:underline"
               >
-                View all bookings <ArrowRight className="w-3.5 h-3.5" />
+                View all bookings
               </Link>
             </CardHeader>
             <CardContent>
@@ -291,9 +290,9 @@ export default function CustomerDashboardPage() {
                         {getStatusBadge(booking.status)}
                         <Link
                           href="/dashboard/customer/bookings"
-                          className="text-xs text-primary font-medium hover:underline flex items-center gap-1"
+                          className="text-xs text-primary font-medium hover:underline inline-block"
                         >
-                          Details <ArrowRight className="w-3 h-3" />
+                          Details
                         </Link>
                       </div>
                     </div>

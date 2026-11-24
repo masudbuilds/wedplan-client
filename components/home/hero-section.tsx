@@ -116,7 +116,7 @@ export function HeroSection() {
                       Bespoke Celebrations & Artistry
                     </p>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      Connecting couples with verified wedding specialists across six specialties
+                      Connecting couples with wedding specialists across six specialties
                     </p>
                   </div>
                 </div>

@@ -294,7 +294,7 @@ export default function VendorSubscriptionPage() {
                       </div>
                       <div className="flex items-center gap-2.5 text-muted-foreground line-through">
                         <Check className="w-4 h-4 text-muted-foreground/40 shrink-0" />
-                        <span>Gold Verified Premium badge</span>
+                        <span>Gold Premium badge</span>
                       </div>
                     </div>
 
@@ -367,7 +367,7 @@ export default function VendorSubscriptionPage() {
                       </div>
                       <div className="flex items-center gap-2.5 text-foreground font-medium">
                         <Sparkles className="w-4 h-4 text-[#C9A66B] shrink-0" />
-                        <span>Verified Gold Premium Badge on all cards & profile</span>
+                        <span>Gold Premium badge on all cards and profile</span>
                       </div>
                       <div className="flex items-center gap-2.5 text-foreground font-medium">
                         <Sparkles className="w-4 h-4 text-[#C9A66B] shrink-0" />

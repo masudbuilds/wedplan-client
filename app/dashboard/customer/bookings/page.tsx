@@ -136,7 +136,7 @@ export default function CustomerBookingsPage() {
       case "pending":
         return <Badge className="bg-amber-500/20 text-amber-700 border-amber-300">Pending</Badge>
       case "rejected":
-        return <Badge variant="destructive">Declined</Badge>
+        return <Badge variant="destructive">Rejected</Badge>
       case "cancelled":
         return <Badge variant="outline" className="text-muted-foreground">Cancelled</Badge>
       default:
@@ -184,7 +184,7 @@ export default function CustomerBookingsPage() {
                   Accepted ({acceptedCount})
                 </TabsTrigger>
                 <TabsTrigger value="rejected" className="text-xs">
-                  Declined ({rejectedCount})
+                  Rejected ({rejectedCount})
                 </TabsTrigger>
                 <TabsTrigger value="cancelled" className="text-xs">
                   Cancelled ({cancelledCount})
@@ -245,7 +245,7 @@ export default function CustomerBookingsPage() {
                   </h3>
                   <p className="text-xs text-muted-foreground max-w-sm mx-auto">
                     {statusFilter === "all"
-                      ? "Discover verified wedding photographers, venues, and caterers, then send your inquiry."
+                      ? "Discover independent wedding photographers, venues, and caterers, then send your inquiry."
                       : "Try switching to another tab or browse services to submit new inquiries."}
                   </p>
                 </div>

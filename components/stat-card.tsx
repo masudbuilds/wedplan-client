@@ -31,7 +31,7 @@ export function StatCard({
     <Card className={cn("border border-border/70 shadow-xs", className)}>
       <CardContent className="p-5 flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-xs font-medium text-muted-foreground">
             {title}
           </p>
           <p className="text-2xl sm:text-3xl font-serif font-bold text-foreground">

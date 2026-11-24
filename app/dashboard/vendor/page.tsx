@@ -9,7 +9,6 @@ import {
   Clock,
   PlusCircle,
   Crown,
-  ArrowRight,
   AlertCircle,
   RefreshCw,
   Sparkles,
@@ -116,7 +115,7 @@ export default function VendorDashboardPage() {
                 </h2>
                 <p className="text-sm text-muted-foreground">
                   {isPremium
-                    ? "Your Premium membership gives you unlimited service packages, priority search placement, and verified gold badges."
+                    ? "Your Premium membership gives you unlimited service packages, priority search placement, and gold premium badges."
                     : `You are on the Free plan (${activeCount} of ${freeLimit} active services used). Upgrade to Premium for unlimited service listings and top-tier placement.`}
                 </p>
               </div>
@@ -261,9 +260,9 @@ export default function VendorDashboardPage() {
                 </div>
                 <Link
                   href="/dashboard/vendor/services"
-                  className="text-xs text-primary font-medium flex items-center gap-1 hover:underline"
+                  className="text-xs text-primary font-medium hover:underline"
                 >
-                  View all <ArrowRight className="w-3.5 h-3.5" />
+                  View all
                 </Link>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -300,9 +299,9 @@ export default function VendorDashboardPage() {
                 </div>
                 <Link
                   href="/dashboard/vendor/bookings"
-                  className="text-xs text-primary font-medium flex items-center gap-1 hover:underline"
+                  className="text-xs text-primary font-medium hover:underline"
                 >
-                  View all <ArrowRight className="w-3.5 h-3.5" />
+                  View all
                 </Link>
               </CardHeader>
               <CardContent className="space-y-3">
