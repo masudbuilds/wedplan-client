@@ -32,7 +32,7 @@ export function CategoryTile({
     <Link
       href={targetHref}
       className={cn(
-        "group relative block aspect-4/5 w-full rounded-2xl overflow-hidden bg-card border border-border/70 shadow-xs hover:border-[#C9A66B]/70 hover:shadow-md transition-all duration-300",
+        "group relative block aspect-4/5 w-full rounded-2xl overflow-hidden bg-card border border-border/70 shadow-xs hover:border-[#C9A66B]/70 hover:shadow-md transition-all duration-300 isolate",
         className
       )}
     >

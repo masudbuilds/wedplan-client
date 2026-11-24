@@ -119,7 +119,7 @@ export function MultiImageUpload({
             <img
               src={url}
               alt={`Service photo ${index + 1}`}
-              className="w-full h-full object-cover transition-transform group-hover:scale-105"
+              className="block w-full h-full object-cover transition-transform group-hover:scale-105"
             />
 
             {/* Badge for Primary / Cover Photo */}

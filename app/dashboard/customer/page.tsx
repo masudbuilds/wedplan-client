@@ -252,7 +252,7 @@ export default function CustomerDashboardPage() {
                             <img
                               src={booking.serviceImage}
                               alt={booking.serviceName || "Service"}
-                              className="w-full h-full object-cover"
+                              className="block w-full h-full object-cover"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">

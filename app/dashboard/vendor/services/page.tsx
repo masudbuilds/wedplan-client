@@ -293,7 +293,7 @@ export default function VendorServicesPage() {
                                 <img
                                   src={coverPhoto}
                                   alt={service.serviceName}
-                                  className="w-full h-full object-cover"
+                                  className="block w-full h-full object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground">
@@ -429,7 +429,7 @@ export default function VendorServicesPage() {
                               <img
                                 src={coverPhoto}
                                 alt={service.serviceName}
-                                className="w-full h-full object-cover"
+                                className="block w-full h-full object-cover"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
@@ -560,7 +560,7 @@ export default function VendorServicesPage() {
                           <img
                             src={imgUrl}
                             alt={`${detailService.serviceName} photo ${i + 1}`}
-                            className="w-full h-full object-cover"
+                            className="block w-full h-full object-cover"
                           />
                         </div>
                       ))}

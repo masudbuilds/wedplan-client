@@ -525,7 +525,7 @@ function AdminServicesContent() {
                                 <img
                                   src={coverPhoto}
                                   alt={s.serviceName}
-                                  className="w-full h-full object-cover"
+                                  className="block w-full h-full object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground">
@@ -744,7 +744,7 @@ function AdminServicesContent() {
                               <img
                                 src={coverPhoto}
                                 alt={s.serviceName}
-                                className="w-full h-full object-cover"
+                                className="block w-full h-full object-cover"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
@@ -956,7 +956,7 @@ function AdminServicesContent() {
                           <img
                             src={imgUrl}
                             alt={`${detailsData.serviceName} photo ${i + 1}`}
-                            className="w-full h-full object-cover"
+                            className="block w-full h-full object-cover"
                           />
                         </div>
                       ))}

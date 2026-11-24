@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import { MapPin, Sparkles } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -39,9 +38,9 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
     : `/sign-in?redirect=${encodeURIComponent(`/services/${service.id}`)}`
 
   return (
-    <Card className="group overflow-hidden rounded-2xl border border-border/70 bg-card card-hover-lift shadow-xs flex flex-col h-full">
-      {/* Photo Header: fixed 4:3 aspect ratio */}
-      <div className="relative aspect-4/3 w-full overflow-hidden bg-muted">
+    <div className="group overflow-hidden rounded-2xl border border-border/70 bg-card card-hover-lift shadow-xs flex flex-col h-full isolate">
+      {/* Photo Header: fixed 4:3 aspect ratio, photo touches card border with no gap */}
+      <div className="relative aspect-4/3 w-full bg-muted">
         {imgError || !primaryImage ? (
           <div className="h-full w-full flex flex-col items-center justify-center bg-muted/60 text-muted-foreground p-4 text-center">
             <Sparkles className="w-6 h-6 text-primary/40 mb-1" />
@@ -54,7 +53,7 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
             src={primaryImage}
             alt={service.serviceName}
             onError={() => setImgError(true)}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-104"
+            className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-104"
           />
         )}
         <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap">
@@ -66,7 +65,7 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
       </div>
 
       {/* Card Content */}
-      <CardContent className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-4">
+      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-4">
         <div className="space-y-1.5">
           <h3 className="font-serif font-bold text-base sm:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">
             {service.serviceName}
@@ -111,7 +110,7 @@ export function ServiceCard({ service, isVendorPremium }: ServiceCardProps) {
             View details
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

@@ -33,7 +33,7 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
             src={activeImage}
             alt={`${title} - view ${selectedIndex + 1}`}
             onError={() => setImgError(true)}
-            className="h-full w-full object-cover transition-opacity duration-300"
+            className="block h-full w-full object-cover transition-opacity duration-300"
           />
         )}
         {images && images.length > 1 && (
@@ -65,7 +65,7 @@ export function ImageGallery({ images, title, className }: ImageGalleryProps) {
               <img
                 src={img}
                 alt={`${title} thumbnail ${idx + 1}`}
-                className="h-full w-full object-cover"
+                className="block h-full w-full object-cover"
               />
             </button>
           ))}

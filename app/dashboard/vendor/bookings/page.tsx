@@ -349,7 +349,7 @@ export default function VendorBookingsPage() {
                                 <img
                                   src={b.serviceImage}
                                   alt={b.serviceName || "Service"}
-                                  className="w-full h-full object-cover"
+                                  className="block w-full h-full object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground">
@@ -492,7 +492,7 @@ export default function VendorBookingsPage() {
                             <img
                               src={b.serviceImage}
                               alt={b.serviceName || "Service"}
-                              className="w-full h-full object-cover"
+                              className="block w-full h-full object-cover"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground">
