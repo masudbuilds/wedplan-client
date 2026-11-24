@@ -3,32 +3,44 @@
 > An editorial, role-based wedding planning marketplace connecting couples with premier wedding photographers, venues, florists, caterers, makeup artists, and wedding fashion specialists.
 
 - **Live Website**: [https://wedplan-client-pearl.vercel.app](https://wedplan-client-pearl.vercel.app)
+- **Live Server API**: [https://wedplan-server-ruddy.vercel.app](https://wedplan-server-ruddy.vercel.app)
 - **Client Repository**: [https://github.com/masudbuilds/wedplan-client](https://github.com/masudbuilds/wedplan-client)
-- **Server API**: [https://wedplan-server-qkjk.onrender.com](https://wedplan-server-qkjk.onrender.com)
+- **Server Repository**: [https://github.com/masudbuilds/wedplan-server](https://github.com/masudbuilds/wedplan-server)
 
 ---
 
 ## Table of Contents
-- [Overview](#overview)
+- [Project Overview](#project-overview)
+- [Live Links and Repositories](#live-links-and-repositories)
 - [Required Application URLs](#required-application-urls)
-- [Key Features by Role](#key-features-by-role)
-  - [Public & Visitors](#1-public--visitors)
-  - [Customer (Couples & Planners)](#2-customer-couples--planners)
-  - [Wedding Vendors](#3-wedding-vendors)
-  - [Platform Administrators](#4-platform-administrators)
+- [Important Features](#important-features)
+  - [1. Public & Visitors](#1-public--visitors)
+  - [2. Customer (Couples & Planners)](#2-customer-couples--planners)
+  - [3. Wedding Vendors](#3-wedding-vendors)
+  - [4. Platform Administrators](#4-platform-administrators)
 - [Technology Stack](#technology-stack)
 - [Architecture & Security Highlights](#architecture--security-highlights)
 - [Environment Variables](#environment-variables)
-- [Getting Started](#getting-started)
-- [Testing Credentials](#testing-credentials)
-- [Stripe Test Card Information](#stripe-test-card-information)
-- [Deployment Guide](#deployment-guide)
+  - [Production Environment Variables Checklist](#production-environment-variables-checklist)
+- [Installation Instructions](#installation-instructions)
+- [How to Run Locally](#how-to-run-locally)
 
 ---
 
-## Overview
+## Project Overview
 
-WedPlan provides a seamless experience for wedding planning. Couples can discover verified wedding services, filter by category and location, and place booking requests. Wedding vendors can manage their portfolio, service packages, and incoming booking requests, as well as upgrade to a Premium tier via Stripe. Administrators have complete moderation capabilities over users, services, and transactions.
+WedPlan provides a seamless, editorial digital experience for wedding planning. Couples can discover verified wedding services, filter by category and location, view transparent pricing, and place booking requests. Wedding vendors can manage their portfolio, service packages, and incoming booking requests, as well as upgrade to a Premium tier via Stripe. Administrators have complete moderation capabilities over users, services, and transactions.
+
+---
+
+## Live Links and Repositories
+
+| Resource | URL |
+| :--- | :--- |
+| **Live Website** | [https://wedplan-client-pearl.vercel.app](https://wedplan-client-pearl.vercel.app) |
+| **Live Server API** | [https://wedplan-server-ruddy.vercel.app](https://wedplan-server-ruddy.vercel.app) |
+| **Client Repository** | [https://github.com/masudbuilds/wedplan-client](https://github.com/masudbuilds/wedplan-client) |
+| **Server Repository** | [https://github.com/masudbuilds/wedplan-server](https://github.com/masudbuilds/wedplan-server) |
 
 ---
 
@@ -38,13 +50,13 @@ WedPlan provides a seamless experience for wedding planning. Couples can discove
 | :--- | :--- | :--- |
 | **`BETTER_AUTH_URL`** | `https://wedplan-client-pearl.vercel.app` | Canonical public URL of the Next.js client |
 | **`NEXT_PUBLIC_APP_URL`** | `https://wedplan-client-pearl.vercel.app` | Client-accessible base URL |
-| **`NEXT_PUBLIC_API_URL`** | `https://wedplan-server-qkjk.onrender.com/api` | Express API base endpoint |
+| **`NEXT_PUBLIC_API_URL`** | `https://wedplan-server-ruddy.vercel.app/api` | Express API base endpoint |
 | **Google Redirect URI** | `https://wedplan-client-pearl.vercel.app/api/auth/callback/google` | Authorized Google OAuth callback URL |
 | **Server JWKS URL** | `https://wedplan-client-pearl.vercel.app/api/auth/jwks` | Better Auth JWKS endpoint for Express JWT verification |
 
 ---
 
-## Key Features by Role
+## Important Features
 
 ### 1. Public & Visitors
 - **Editorial Homepage (`/`)**:
@@ -55,7 +67,7 @@ WedPlan provides a seamless experience for wedding planning. Couples can discove
 - **Browse Services (`/services`)**:
   - Live search by service title and description.
   - Category selector synchronized with URL query parameters (`?category=...`).
-  - Location search/filter.
+  - Location search and filter.
   - Sort by "Default", "Price: Low to High", and "Price: High to Low".
   - One-click "Clear Filters" button.
   - Skeletons, zero-state illustrations, and responsive pagination.
@@ -158,111 +170,70 @@ WedPlan provides a seamless experience for wedding planning. Couples can discove
 
 ## Environment Variables
 
-Copy `.env.example` to `.env.local` for local development.
+Copy `.env.example` to `.env.local` for local development. Only variable names and descriptions are documented here; never commit real secrets or `.env` files.
 
-```bash
-# Better Auth Configuration
-BETTER_AUTH_SECRET=your_32_character_random_secret_here
-BETTER_AUTH_URL=http://localhost:3000
-
-# MongoDB Database Configuration
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net
-DB_NAME=wedplan
-
-# Google OAuth Credentials (Optional for local, required for Google Sign-In)
-GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-# ImgBB API Key (Server-side image hosting)
-IMGBB_API_KEY=your_imgbb_api_key
-
-# Backend API URL (Express.js server)
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-
-# Client Base URL
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
+| Variable Name | Required | Description |
+| :--- | :--- | :--- |
+| `BETTER_AUTH_SECRET` | Yes | A 32+ character random secret used by Better Auth to encrypt session cookies and sign tokens |
+| `BETTER_AUTH_URL` | Yes | Canonical public URL of the Next.js client (`http://localhost:3000` locally) |
+| `MONGODB_URI` | Yes | MongoDB Atlas connection string URI used by the Better Auth MongoDB adapter |
+| `DB_NAME` | Yes | MongoDB database name (e.g. `wedplan`) |
+| `GOOGLE_CLIENT_ID` | Optional | Google OAuth 2.0 Client ID for Google Sign-In |
+| `GOOGLE_CLIENT_SECRET` | Optional | Google OAuth 2.0 Client Secret for Google Sign-In |
+| `IMGBB_API_KEY` | Yes | ImgBB account API key used on the server side for image uploads |
+| `NEXT_PUBLIC_API_URL` | Yes | Public URL of the Express API (`http://localhost:5000/api` locally) |
+| `NEXT_PUBLIC_APP_URL` | Yes | Public base URL of the client application (`http://localhost:3000` locally) |
 
 ### Production Environment Variables Checklist
-When deploying to Vercel, Render, or Railway, provide:
-- `BETTER_AUTH_SECRET`: Generate a random 32+ character string (`openssl rand -hex 32`).
+When deploying to production (e.g. Vercel), provide the following environment variables:
+- `BETTER_AUTH_SECRET`: Random 32+ character secret string.
 - `BETTER_AUTH_URL`: `https://wedplan-client-pearl.vercel.app`
 - `MONGODB_URI`: Production MongoDB Atlas connection URI.
-- `DB_NAME`: Database name (e.g., `wedplan`).
-- `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`: Configured in Google Cloud Console with authorized redirect URI `https://wedplan-client-pearl.vercel.app/api/auth/callback/google`.
-- `IMGBB_API_KEY`: ImgBB account API key for user and service photos.
-- `NEXT_PUBLIC_API_URL`: `https://wedplan-server-qkjk.onrender.com/api`
+- `DB_NAME`: Production database name (e.g. `wedplan`).
+- `GOOGLE_CLIENT_ID`: Configured in Google Cloud Console with authorized redirect URI `https://wedplan-client-pearl.vercel.app/api/auth/callback/google`.
+- `GOOGLE_CLIENT_SECRET`: Matching Google OAuth Client Secret.
+- `IMGBB_API_KEY`: Production ImgBB API key.
+- `NEXT_PUBLIC_API_URL`: `https://wedplan-server-ruddy.vercel.app/api`
 - `NEXT_PUBLIC_APP_URL`: `https://wedplan-client-pearl.vercel.app`
 
 ---
 
-## Getting Started
+## Installation Instructions
 
-### Prerequisites
-- Node.js 18.18+ or 20+
-- npm or yarn
-- MongoDB Atlas cluster or local MongoDB instance
-- Running WedPlan Express server (`wedplan-server`) on port 5000
-
-### Installation
-
-1. Navigate to the client directory:
+1. **Clone the repository**:
    ```bash
+   git clone https://github.com/masudbuilds/wedplan-client.git
    cd wedplan-client
    ```
 
-2. Install dependencies:
+2. **Install project dependencies**:
    ```bash
    npm install
    ```
 
-3. Set up environment variables:
+3. **Configure environment variables**:
+   Create a local environment file from the example template:
    ```bash
    cp .env.example .env.local
-   # Fill in BETTER_AUTH_SECRET, MONGODB_URI, etc.
+   ```
+   Open `.env.local` and supply your database connection and Better Auth secrets.
+
+---
+
+## How to Run Locally
+
+1. **Ensure the backend server is running**:
+   Start the companion Express server (`wedplan-server`) on port 5000:
+   ```bash
+   cd ../wedplan-server
+   npm run dev
    ```
 
-4. Start the development server:
+2. **Start the Next.js development client**:
+   In the `wedplan-client` directory, run:
    ```bash
    npm run dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## Testing Credentials
-
-You can use the following pre-configured test accounts to review the three distinct platform roles:
-
-| Role | Email | Password | Access / Dashboard |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@wedplan.com` | `Admin123!` | `/dashboard/admin` (Full moderation) |
-| **Vendor (Premium)** | `vendor@wedplan.com` | `Vendor123!` | `/dashboard/vendor` (Services, Bookings, Subscription) |
-| **Customer** | `couple@wedplan.com` | `Customer123!` | `/dashboard/customer` (Bookings, Profile) |
-
-*Note: You can also register a fresh Customer or Vendor account anytime at `/sign-up`.*
-
----
-
-## Stripe Test Card Information
-
-For testing the Vendor Premium subscription flow at `/dashboard/vendor/subscription`:
-
-- **Card Number**: `4242 •••• •••• 4242` (Enter `4242424242424242`)
-- **Expiration Date**: Any valid future month and year (e.g., `12/34`)
-- **CVC**: Any 3 digits (e.g., `123`)
-- **Postal Code**: Any valid postal code (e.g., `90210`)
-
----
-
-## Deployment Guide
-
-### Vercel (Recommended)
-1. Push your repository to GitHub (`https://github.com/masudbuilds/wedplan-client`).
-2. Import the project in Vercel. Set the root directory to `wedplan-client`.
-3. Configure the Production Environment Variables listed above.
-4. Ensure `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` match `https://wedplan-client-pearl.vercel.app`.
-5. In Google Cloud Console, add `https://wedplan-client-pearl.vercel.app/api/auth/callback/google` to the **Authorized redirect URIs**.
-6. In Stripe Dashboard, configure the webhook endpoint pointing to your Express server (`https://wedplan-server-qkjk.onrender.com/api/payments/webhook`).
-7. Deploy!
+3. **Access the application**:
+   Open [http://localhost:3000](http://localhost:3000) in your web browser.
