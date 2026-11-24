@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Suspense } from "react"
-import Image from "next/image"
+import { FramedPhoto } from "@/components/framed-photo"
 import { SignInForm } from "./sign-in-form"
 
 export default function SignInPage() {
@@ -32,19 +32,13 @@ export default function SignInPage() {
 
           {/* Editorial Photo Column */}
           <div className="hidden lg:block lg:col-span-6 relative">
-            <div className="relative w-full max-w-md mx-auto">
-              {/* Soft gold hairline offset frame */}
-              <div className="absolute -inset-2 rounded-2xl border border-[#C9A66B]/50 transform translate-x-2 translate-y-2 pointer-events-none" />
-              <div className="relative rounded-2xl overflow-hidden bg-card border border-border shadow-md aspect-4/5">
-                <Image
-                  src="/images/auth.webp"
-                  alt="Bride and groom celebrating their wedding in natural light"
-                  fill
-                  sizes="(max-width: 1200px) 50vw, 40vw"
-                  className="object-cover"
-                />
-              </div>
-            </div>
+            <FramedPhoto
+              src="/images/auth.webp"
+              alt="Bride and groom celebrating their wedding in natural light"
+              priority
+              sizes="(max-width: 1200px) 50vw, 40vw"
+              className="w-full max-w-md mx-auto"
+            />
           </div>
         </div>
       </div>

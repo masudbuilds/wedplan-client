@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 import { FadeIn } from "@/components/motion-wrapper"
+import { FramedPhoto } from "@/components/framed-photo"
 import { cn } from "@/lib/utils"
 
 // Section 1: Editorial Split Hero with Integrated Search & Gold Hairline Frame
@@ -87,24 +87,15 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Right Column: Editorial Photo in Soft Gold Hairline Frame */}
+            {/* Right Column: Editorial Photo in Concentric Soft Gold Hairline Frame */}
             <div className="lg:col-span-5 relative flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-md lg:max-w-none">
-                {/* Gold Hairline Offset Background Accent */}
-                <div className="absolute -inset-2 rounded-2xl border border-[#C9A66B]/50 transform translate-x-2 translate-y-2 pointer-events-none" />
-
-                {/* Main Photo Frame */}
-                <div className="relative rounded-2xl overflow-hidden bg-card border border-border/80 shadow-md aspect-4/5">
-                  <Image
-                    src="/images/hero.webp"
-                    alt="Joyful bride and groom celebrating their wedding ceremony in warm natural daylight"
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
+              <FramedPhoto
+                src="/images/hero.webp"
+                alt="Joyful bride and groom celebrating their wedding ceremony in warm natural daylight"
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                className="w-full max-w-md lg:max-w-none"
+              />
             </div>
           </div>
         </FadeIn>
