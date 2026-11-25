@@ -34,7 +34,6 @@ import { ADMIN_NAV_ITEMS } from "@/lib/admin-nav"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -295,21 +294,21 @@ function AdminServicesContent() {
     switch (status) {
       case "approved":
         return (
-          <Badge className="bg-emerald-600 text-white border-none flex items-center gap-1 text-[11px] w-fit">
+          <Badge className="bg-sage text-sage-foreground border border-sage-foreground/15 hover:bg-sage inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 w-fit">
             <CheckCircle2 className="w-3 h-3" />
             Approved
           </Badge>
         )
       case "pending":
         return (
-          <Badge className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-300 flex items-center gap-1 text-[11px] w-fit font-semibold">
-            <Clock className="w-3 h-3 text-amber-600 animate-pulse" />
+          <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-400/30 hover:bg-amber-500/15 inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 w-fit">
+            <Clock className="w-3 h-3 text-amber-700" />
             Pending Review
           </Badge>
         )
       case "rejected":
         return (
-          <Badge variant="destructive" className="flex items-center gap-1 text-[11px] w-fit">
+          <Badge variant="destructive" className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 w-fit">
             <XCircle className="w-3 h-3" />
             Rejected
           </Badge>
@@ -326,94 +325,92 @@ function AdminServicesContent() {
         title="Manage Wedding Services"
         subtitle="Review submitted packages, approve or reject listings, and manage published content."
       >
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-6xl">
           {/* Filter Bar */}
-          <Card className="border-border/80 shadow-xs">
-            <CardContent className="p-4 sm:p-5 space-y-3">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                {/* Search input */}
-                <div className="relative flex-1">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search by package name..."
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="pl-9 text-xs h-9 rounded-xl"
-                  />
-                </div>
-
-                {/* Status Select Filter */}
-                <div className="w-full sm:w-44">
-                  <Select
-                    value={statusFilter}
-                    onValueChange={(val) => {
-                      const selected = val || "all"
-                      updateQueryParams({ status: selected, page: 1 })
-                    }}
-                  >
-                    <SelectTrigger className="w-full text-xs h-9 rounded-xl">
-                      <SelectValue placeholder="All Statuses" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Statuses</SelectItem>
-                      <SelectItem value="pending">Pending Review</SelectItem>
-                      <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="rejected">Rejected</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Category Select Filter */}
-                <div className="w-full sm:w-56">
-                  <Select
-                    value={categoryFilter}
-                    onValueChange={(val) => {
-                      const selected = val || "all"
-                      updateQueryParams({ category: selected, page: 1 })
-                    }}
-                  >
-                    <SelectTrigger className="w-full text-xs h-9 rounded-xl">
-                      <SelectValue placeholder="All Categories" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {SERVICE_CATEGORIES.map((cat) => (
-                        <SelectItem key={cat} value={cat}>
-                          {cat}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Reset Filters */}
-                {(searchInput || statusFilter !== "all" || categoryFilter !== "all") && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setSearchInput("")
-                      updateQueryParams({
-                        search: "",
-                        status: "all",
-                        category: "all",
-                        page: 1,
-                      })
-                    }}
-                    className="text-xs h-9 px-2 text-muted-foreground hover:text-foreground shrink-0"
-                  >
-                    Reset
-                  </Button>
-                )}
+          <section className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              {/* Search input */}
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search by package name..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="pl-9 text-xs h-10 rounded-xl"
+                />
               </div>
-            </CardContent>
-          </Card>
+
+              {/* Status Select Filter */}
+              <div className="w-full sm:w-44">
+                <Select
+                  value={statusFilter}
+                  onValueChange={(val) => {
+                    const selected = val || "all"
+                    updateQueryParams({ status: selected, page: 1 })
+                  }}
+                >
+                  <SelectTrigger className="w-full text-xs h-10 rounded-xl">
+                    <SelectValue placeholder="All Statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="pending">Pending Review</SelectItem>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Category Select Filter */}
+              <div className="w-full sm:w-56">
+                <Select
+                  value={categoryFilter}
+                  onValueChange={(val) => {
+                    const selected = val || "all"
+                    updateQueryParams({ category: selected, page: 1 })
+                  }}
+                >
+                  <SelectTrigger className="w-full text-xs h-10 rounded-xl">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {SERVICE_CATEGORIES.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Reset Filters */}
+              {(searchInput || statusFilter !== "all" || categoryFilter !== "all") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSearchInput("")
+                    updateQueryParams({
+                      search: "",
+                      status: "all",
+                      category: "all",
+                      page: 1,
+                    })
+                  }}
+                  className="text-xs h-10 px-3 text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
+                >
+                  Reset
+                </Button>
+              )}
+            </div>
+          </section>
 
           {/* Results Summary */}
-          <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+          <div className="flex items-center justify-between text-xs text-muted-foreground px-1 tabular-nums">
             <span>
               Showing {services.length > 0 ? (page - 1) * limit + 1 : 0} –{" "}
-              {Math.min(page * limit, total)} of <strong>{total}</strong> services
+              {Math.min(page * limit, total)} of <strong className="text-foreground">{total}</strong> services
             </span>
             <span>
               Page {page} of {totalPages}
@@ -422,7 +419,7 @@ function AdminServicesContent() {
 
           {/* Error State */}
           {error && !loading && (
-            <div className="p-8 text-center border border-destructive/20 rounded-2xl bg-destructive/5 space-y-3">
+            <div className="p-8 text-center border border-destructive/25 rounded-2xl bg-card space-y-3">
               <AlertCircle className="w-8 h-8 text-destructive mx-auto" />
               <p className="text-sm font-medium text-foreground">{error}</p>
               <Button
@@ -448,55 +445,69 @@ function AdminServicesContent() {
 
           {/* Empty State */}
           {!loading && !error && services.length === 0 && (
-            <Card className="border-border/80 shadow-xs">
-              <CardContent className="p-12 text-center space-y-4">
-                <div className="w-12 h-12 rounded-full bg-blush text-primary flex items-center justify-center mx-auto">
-                  <Package className="w-6 h-6" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-serif text-lg font-bold">No Services Found</h3>
-                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    {searchInput || statusFilter !== "all" || categoryFilter !== "all"
-                      ? "No wedding services match your current search, status, or category filter."
-                      : "There are currently no wedding service packages submitted in the system."}
-                  </p>
-                </div>
-                {(searchInput || statusFilter !== "all" || categoryFilter !== "all") && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setSearchInput("")
-                      updateQueryParams({
-                        search: "",
-                        status: "all",
-                        category: "all",
-                        page: 1,
-                      })
-                    }}
-                    className="rounded-full text-xs"
-                  >
-                    Clear Filter Criteria
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+            <div className="rounded-2xl border border-border bg-card p-12 text-center space-y-4">
+              <div className="w-12 h-12 rounded-full bg-blush text-primary-text flex items-center justify-center mx-auto">
+                <Package className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-serif text-xl font-bold text-foreground">No Services Found</h3>
+                <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                  {searchInput || statusFilter !== "all" || categoryFilter !== "all"
+                    ? "No wedding services match your current search, status, or category filter."
+                    : "There are currently no wedding service packages submitted in the system."}
+                </p>
+              </div>
+              {(searchInput || statusFilter !== "all" || categoryFilter !== "all") && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearchInput("")
+                    updateQueryParams({
+                      search: "",
+                      status: "all",
+                      category: "all",
+                      page: 1,
+                    })
+                  }}
+                  className="rounded-full text-xs h-9 px-4 cursor-pointer"
+                >
+                  Clear Filter Criteria
+                </Button>
+              )}
+            </div>
           )}
 
           {/* Desktop Table View */}
           {!loading && !error && services.length > 0 && (
-            <div className="hidden lg:block bg-card rounded-2xl border border-border/80 overflow-hidden shadow-xs">
+            <div className="hidden lg:block bg-card rounded-2xl border border-border overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[280px]">Package</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Vendor</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Availability</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                  <TableRow className="hover:bg-transparent border-border">
+                    <TableHead className="px-5 py-3.5 w-65 text-xs font-medium text-muted-foreground">
+                      Package
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Category
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Price
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Vendor
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Status
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Availability
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Created
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground text-right">
+                      Actions
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -513,13 +524,14 @@ function AdminServicesContent() {
                       <TableRow
                         key={s.id}
                         className={cn(
-                          isPending && "bg-amber-500/5 hover:bg-amber-500/10 transition-colors"
+                          "border-border/70",
+                          isPending && "bg-[#C9A66B]/5 hover:bg-[#C9A66B]/9 transition-colors"
                         )}
                       >
                         {/* Package Thumbnail & Name */}
-                        <TableCell>
+                        <TableCell className="px-5 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-muted shrink-0 border border-border/60">
+                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-muted shrink-0 border border-border/70">
                               {coverPhoto ? (
                                 /* eslint-disable-next-line @next/next/no-img-element */
                                 <img
@@ -538,53 +550,53 @@ function AdminServicesContent() {
                                 {s.serviceName}
                               </p>
                               <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                                <MapPin className="w-3 h-3 text-primary shrink-0" />
-                                <span className="truncate max-w-[150px]">{s.location}</span>
+                                <MapPin className="w-3 h-3 text-primary-text shrink-0" />
+                                <span className="truncate max-w-37.5">{s.location}</span>
                               </span>
                             </div>
                           </div>
                         </TableCell>
 
                         {/* Category */}
-                        <TableCell>
+                        <TableCell className="px-5 py-4">
                           <span className="text-xs font-medium text-foreground">
                             {s.category}
                           </span>
                         </TableCell>
 
                         {/* Price */}
-                        <TableCell>
-                          <span className="text-xs font-serif font-bold text-foreground">
+                        <TableCell className="px-5 py-4">
+                          <span className="text-sm font-semibold text-foreground tabular-nums">
                             ${s.price.toLocaleString()}
                           </span>
                         </TableCell>
 
                         {/* Vendor info */}
-                        <TableCell>
+                        <TableCell className="px-5 py-4">
                           <div className="space-y-0.5 min-w-0">
                             <div className="flex items-center gap-1.5">
-                              <p className="font-medium text-xs text-foreground truncate max-w-[140px]">
+                              <p className="font-medium text-xs text-foreground truncate max-w-35">
                                 {vendorName}
                               </p>
                               {s.vendor?.isPremium && (
                                 <PremiumBadge size="sm" label="PRO" className="text-[9px] px-1.5 py-0" />
                               )}
                             </div>
-                            <p className="text-[10px] text-muted-foreground truncate max-w-[140px]">
+                            <p className="text-[11px] text-muted-foreground truncate max-w-35">
                               {s.vendor?.email || "No email"}
                             </p>
                           </div>
                         </TableCell>
 
                         {/* Status */}
-                        <TableCell>{renderStatusBadge(s.status)}</TableCell>
+                        <TableCell className="px-5 py-4">{renderStatusBadge(s.status)}</TableCell>
 
                         {/* Availability */}
-                        <TableCell>
+                        <TableCell className="px-5 py-4">
                           <span
                             className={cn(
                               "text-xs font-medium",
-                              s.isActive ? "text-emerald-600" : "text-muted-foreground"
+                              s.isActive ? "text-sage-foreground" : "text-muted-foreground"
                             )}
                           >
                             {s.isActive ? "Active" : "Inactive"}
@@ -592,18 +604,18 @@ function AdminServicesContent() {
                         </TableCell>
 
                         {/* Created Date */}
-                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                        <TableCell className="px-5 py-4 text-xs text-muted-foreground whitespace-nowrap">
                           {formatDate(s.createdAt)}
                         </TableCell>
 
                         {/* Actions */}
-                        <TableCell className="text-right">
+                        <TableCell className="px-5 py-4 text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleOpenDetails(s)}
-                              className="h-8 px-2 text-xs"
+                              className="h-8 px-2 text-xs cursor-pointer"
                               title="View full package details"
                             >
                               <Eye className="w-3.5 h-3.5 mr-1" />
@@ -619,7 +631,7 @@ function AdminServicesContent() {
                                   onClick={() =>
                                     setStatusTarget({ service: s, status: "approved" })
                                   }
-                                  className="h-8 px-2 text-xs bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-300 hover:bg-emerald-100"
+                                  className="h-8 px-2.5 text-xs rounded-full bg-sage text-sage-foreground border-sage-foreground/20 hover:bg-sage/80 cursor-pointer"
                                   title="Approve service package"
                                 >
                                   <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
@@ -631,7 +643,7 @@ function AdminServicesContent() {
                                   onClick={() =>
                                     setStatusTarget({ service: s, status: "rejected" })
                                   }
-                                  className="h-8 px-2 text-xs text-destructive border-destructive/30 hover:bg-destructive/10"
+                                  className="h-8 px-2.5 text-xs rounded-full text-destructive border-destructive/30 hover:bg-destructive/10 cursor-pointer"
                                   title="Reject service package"
                                 >
                                   <XCircle className="w-3.5 h-3.5 mr-1" />
@@ -646,7 +658,7 @@ function AdminServicesContent() {
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      className="h-8 px-2 text-xs"
+                                      className="h-8 px-2.5 text-xs rounded-full cursor-pointer"
                                     />
                                   }
                                 >
@@ -700,7 +712,7 @@ function AdminServicesContent() {
                               variant="ghost"
                               size="sm"
                               onClick={() => setDeleteTarget(s)}
-                              className="h-8 px-2 text-xs text-destructive hover:bg-destructive/10"
+                              className="h-8 px-2 text-xs text-destructive hover:bg-destructive/10 cursor-pointer"
                               title="Delete service permanently"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -728,156 +740,156 @@ function AdminServicesContent() {
                   "Vendor Partner"
 
                 return (
-                  <Card
+                  <div
                     key={s.id}
                     className={cn(
-                      "border-border/80 shadow-xs overflow-hidden",
-                      isPending && "border-amber-300 bg-amber-500/5 ring-1 ring-amber-300/40"
+                      "rounded-2xl border bg-card p-4 sm:p-5 space-y-3.5",
+                      isPending
+                        ? "border-[#C9A66B]/80 bg-[#C9A66B]/5"
+                        : "border-border"
                     )}
                   >
-                    <CardContent className="p-4 space-y-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-muted shrink-0 border border-border/60">
-                            {coverPhoto ? (
-                              /* eslint-disable-next-line @next/next/no-img-element */
-                              <img
-                                src={coverPhoto}
-                                alt={s.serviceName}
-                                className="block w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
-                                WP
-                              </div>
-                            )}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-xs leading-snug">
-                              {s.serviceName}
-                            </p>
-                            <span className="text-xs font-serif font-bold text-foreground">
-                              ${s.price.toLocaleString()}
-                            </span>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">
-                              {s.category}
-                            </p>
-                          </div>
-                        </div>
-
-                        {renderStatusBadge(s.status)}
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2 text-[11px] p-2.5 rounded-lg bg-muted/40">
-                        <div>
-                          <span className="text-muted-foreground block">Vendor:</span>
-                          <span className="font-medium text-foreground truncate block">
-                            {vendorName}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block">Location:</span>
-                          <span className="font-medium text-foreground truncate block">
-                            {s.location}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs">
-                        <span className="text-[11px] text-muted-foreground">
-                          {formatDate(s.createdAt)} • {s.isActive ? "Live in catalog" : "Inactive / Hidden"}
-                        </span>
-
-                        <div className="flex items-center gap-1.5">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleOpenDetails(s)}
-                            className="h-7 px-2 text-xs"
-                          >
-                            Details
-                          </Button>
-
-                          {isPending ? (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  setStatusTarget({ service: s, status: "approved" })
-                                }
-                                className="h-7 px-2 text-xs bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-300"
-                              >
-                                Approve
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  setStatusTarget({ service: s, status: "rejected" })
-                                }
-                                className="h-7 px-2 text-xs text-destructive border-destructive/30"
-                              >
-                                Reject
-                              </Button>
-                            </>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-14 h-14 rounded-xl overflow-hidden bg-muted shrink-0 border border-border/70">
+                          {coverPhoto ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img
+                              src={coverPhoto}
+                              alt={s.serviceName}
+                              className="block w-full h-full object-cover"
+                            />
                           ) : (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger
-                                render={
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-7 px-2 text-xs"
-                                  />
-                                }
-                              >
-                                <span>Status</span>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="text-xs">
-                                {s.status !== "approved" && (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      setStatusTarget({ service: s, status: "approved" })
-                                    }
-                                  >
-                                    Set Approved
-                                  </DropdownMenuItem>
-                                )}
-                                {s.status !== "rejected" && (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      setStatusTarget({ service: s, status: "rejected" })
-                                    }
-                                  >
-                                    Set Rejected
-                                  </DropdownMenuItem>
-                                )}
-                                {s.status !== "pending" && (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      setStatusTarget({ service: s, status: "pending" })
-                                    }
-                                  >
-                                    Set Pending
-                                  </DropdownMenuItem>
-                                )}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
+                              WP
+                            </div>
                           )}
-
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setDeleteTarget(s)}
-                            className="h-7 px-2 text-xs text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-xs text-foreground leading-snug truncate">
+                            {s.serviceName}
+                          </p>
+                          <span className="text-sm font-semibold text-foreground tabular-nums">
+                            ${s.price.toLocaleString()}
+                          </span>
+                          <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                            {s.category}
+                          </p>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+
+                      <div className="shrink-0">{renderStatusBadge(s.status)}</div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 text-xs p-3 rounded-xl bg-muted/40 border border-border/60">
+                      <div>
+                        <span className="text-[11px] text-muted-foreground block">Vendor</span>
+                        <span className="font-medium text-foreground truncate block">
+                          {vendorName}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-muted-foreground block">Location</span>
+                        <span className="font-medium text-foreground truncate block">
+                          {s.location}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-border/70 text-xs">
+                      <span className="text-[11px] text-muted-foreground">
+                        {formatDate(s.createdAt)} • {s.isActive ? "Live in catalog" : "Inactive / Hidden"}
+                      </span>
+
+                      <div className="flex items-center gap-1.5">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleOpenDetails(s)}
+                          className="h-8 px-2.5 text-xs rounded-full cursor-pointer"
+                        >
+                          Details
+                        </Button>
+
+                        {isPending ? (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setStatusTarget({ service: s, status: "approved" })
+                              }
+                              className="h-8 px-2.5 text-xs rounded-full bg-sage text-sage-foreground border-sage-foreground/20 cursor-pointer"
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setStatusTarget({ service: s, status: "rejected" })
+                              }
+                              className="h-8 px-2.5 text-xs rounded-full text-destructive border-destructive/30 cursor-pointer"
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        ) : (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger
+                              render={
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 px-3 text-xs rounded-full cursor-pointer"
+                                />
+                              }
+                            >
+                              <span>Status</span>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="text-xs">
+                              {s.status !== "approved" && (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    setStatusTarget({ service: s, status: "approved" })
+                                  }
+                                >
+                                  Set Approved
+                                </DropdownMenuItem>
+                              )}
+                              {s.status !== "rejected" && (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    setStatusTarget({ service: s, status: "rejected" })
+                                  }
+                                >
+                                  Set Rejected
+                                </DropdownMenuItem>
+                              )}
+                              {s.status !== "pending" && (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    setStatusTarget({ service: s, status: "pending" })
+                                  }
+                                >
+                                  Set Pending
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteTarget(s)}
+                          className="h-8 px-2 text-xs text-destructive hover:bg-destructive/10 rounded-full cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 )
               })}
             </div>
@@ -891,12 +903,12 @@ function AdminServicesContent() {
                 size="sm"
                 disabled={page <= 1}
                 onClick={() => updateQueryParams({ page: page - 1 })}
-                className="rounded-full text-xs h-8 px-3"
+                className="rounded-full text-xs h-9 px-4 cursor-pointer"
               >
                 <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                 Previous
               </Button>
-              <span className="text-xs text-muted-foreground px-2">
+              <span className="text-xs text-muted-foreground px-2 tabular-nums">
                 Page {page} of {totalPages}
               </span>
               <Button
@@ -904,7 +916,7 @@ function AdminServicesContent() {
                 size="sm"
                 disabled={page >= totalPages}
                 onClick={() => updateQueryParams({ page: page + 1 })}
-                className="rounded-full text-xs h-8 px-3"
+                className="rounded-full text-xs h-9 px-4 cursor-pointer"
               >
                 Next
                 <ChevronRight className="w-3.5 h-3.5 ml-1" />
@@ -923,7 +935,7 @@ function AdminServicesContent() {
             }
           }}
         >
-          <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl">
             <DialogHeader>
               <DialogTitle className="font-serif text-xl font-bold">
                 {selectedService?.serviceName}
@@ -942,15 +954,15 @@ function AdminServicesContent() {
               <div className="space-y-4 py-2 text-xs">
                 {/* Photo gallery */}
                 {detailsData.images && detailsData.images.length > 0 && (
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     <span className="font-medium text-muted-foreground">
-                      Package Photos ({detailsData.images.length}):
+                      Package Photos ({detailsData.images.length})
                     </span>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-2.5">
                       {detailsData.images.map((imgUrl, i) => (
                         <div
                           key={i}
-                          className="aspect-square rounded-xl overflow-hidden border border-border/80 bg-muted"
+                          className="aspect-square rounded-xl overflow-hidden border border-border bg-muted"
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -965,13 +977,13 @@ function AdminServicesContent() {
                 )}
 
                 {/* Status & Availability row */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-muted/40 border border-border/80">
+                <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-muted/40 border border-border">
                   <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">Moderation Status:</span>
+                    <span className="text-muted-foreground">Moderation Status</span>
                     {renderStatusBadge(detailsData.status)}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground">Availability:</span>
+                    <span className="text-muted-foreground">Availability</span>
                     <Badge variant={detailsData.isActive ? "default" : "outline"}>
                       {detailsData.isActive ? "Active in directory" : "Hidden by vendor"}
                     </Badge>
@@ -979,32 +991,32 @@ function AdminServicesContent() {
                 </div>
 
                 {/* Pricing & Category info */}
-                <div className="grid grid-cols-2 gap-3 p-3 rounded-xl border border-border/80">
+                <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl border border-border">
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Category:</span>
+                    <span className="text-muted-foreground block text-[11px]">Category</span>
                     <span className="font-semibold text-foreground text-sm">
                       {detailsData.category}
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Starting Price:</span>
-                    <span className="font-serif font-bold text-foreground text-sm">
+                    <span className="text-muted-foreground block text-[11px]">Starting Price</span>
+                    <span className="font-semibold text-foreground text-sm tabular-nums">
                       ${detailsData.price.toLocaleString()}
                     </span>
                   </div>
                   <div className="col-span-2">
-                    <span className="text-muted-foreground block text-[11px]">Coverage Location:</span>
+                    <span className="text-muted-foreground block text-[11px]">Coverage Location</span>
                     <span className="font-medium text-foreground flex items-center gap-1.5 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-primary" />
+                      <MapPin className="w-3.5 h-3.5 text-primary-text" />
                       {detailsData.location}
                     </span>
                   </div>
                 </div>
 
                 {/* Vendor Contact Information (Visible to Admins) */}
-                <div className="p-3 rounded-xl border border-border/80 space-y-2 bg-card">
-                  <span className="text-muted-foreground block font-medium">Vendor Specialist:</span>
-                  <div className="flex items-center justify-between">
+                <div className="p-3.5 rounded-xl border border-border space-y-2 bg-card">
+                  <span className="text-muted-foreground block font-medium">Vendor Specialist</span>
+                  <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="font-semibold text-sm text-foreground">
                         {detailsData.vendor?.businessName ||
@@ -1026,7 +1038,7 @@ function AdminServicesContent() {
                   {detailsData.vendor?.email && (
                     <a
                       href={`mailto:${detailsData.vendor.email}`}
-                      className="text-primary hover:underline flex items-center gap-1 pt-1"
+                      className="text-primary-text hover:underline inline-flex items-center gap-1.5 pt-1"
                     >
                       <Mail className="w-3.5 h-3.5" />
                       {detailsData.vendor.email}
@@ -1035,8 +1047,8 @@ function AdminServicesContent() {
                 </div>
 
                 {/* Description */}
-                <div className="p-3 rounded-xl border border-border/80 space-y-1">
-                  <span className="text-muted-foreground block font-medium">Package Description:</span>
+                <div className="p-3.5 rounded-xl border border-border space-y-1.5">
+                  <span className="text-muted-foreground block font-medium">Package Description</span>
                   <p className="text-foreground leading-relaxed whitespace-pre-wrap">
                     {detailsData.description}
                   </p>
@@ -1052,7 +1064,7 @@ function AdminServicesContent() {
                             const target = detailsData
                             setStatusTarget({ service: target, status: "rejected" })
                           }}
-                          className="rounded-full text-xs text-destructive border-destructive/30"
+                          className="rounded-full text-xs text-destructive border-destructive/30 cursor-pointer"
                         >
                           <XCircle className="w-3.5 h-3.5 mr-1" />
                           Reject
@@ -1062,7 +1074,7 @@ function AdminServicesContent() {
                             const target = detailsData
                             setStatusTarget({ service: target, status: "approved" })
                           }}
-                          className="rounded-full text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                          className="rounded-full text-xs bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
                           Approve
@@ -1078,7 +1090,7 @@ function AdminServicesContent() {
                               const target = detailsData
                               setStatusTarget({ service: target, status: "approved" })
                             }}
-                            className="rounded-full text-xs text-emerald-700 border-emerald-300 hover:bg-emerald-50"
+                            className="rounded-full text-xs bg-sage text-sage-foreground border-sage-foreground/20 hover:bg-sage/80 cursor-pointer"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
                             Approve
@@ -1092,7 +1104,7 @@ function AdminServicesContent() {
                               const target = detailsData
                               setStatusTarget({ service: target, status: "rejected" })
                             }}
-                            className="rounded-full text-xs text-destructive border-destructive/30 hover:bg-destructive/10"
+                            className="rounded-full text-xs text-destructive border-destructive/30 hover:bg-destructive/10 cursor-pointer"
                           >
                             <XCircle className="w-3.5 h-3.5 mr-1" />
                             Reject
@@ -1105,7 +1117,7 @@ function AdminServicesContent() {
                             const target = detailsData
                             setStatusTarget({ service: target, status: "pending" })
                           }}
-                          className="rounded-full text-xs text-amber-700 border-amber-300 hover:bg-amber-50"
+                          className="rounded-full text-xs text-amber-800 border-amber-400/40 hover:bg-amber-500/10 cursor-pointer"
                         >
                           <Clock className="w-3.5 h-3.5 mr-1" />
                           Mark Pending
@@ -1120,7 +1132,7 @@ function AdminServicesContent() {
                         const target = detailsData
                         setDeleteTarget(target)
                       }}
-                      className="rounded-full text-xs text-destructive hover:bg-destructive/10 ml-auto sm:ml-2"
+                      className="rounded-full text-xs text-destructive hover:bg-destructive/10 ml-auto sm:ml-2 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5 mr-1" />
                       Delete
@@ -1133,7 +1145,7 @@ function AdminServicesContent() {
                       setSelectedService(null)
                       setDetailsData(null)
                     }}
-                    className="rounded-full text-xs w-full sm:w-auto"
+                    className="rounded-full text-xs w-full sm:w-auto cursor-pointer"
                   >
                     Close
                   </Button>
@@ -1148,7 +1160,7 @@ function AdminServicesContent() {
           open={!!statusTarget}
           onOpenChange={(open) => !open && !updatingStatus && setStatusTarget(null)}
         >
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md rounded-2xl">
             <DialogHeader>
               <DialogTitle className="font-serif text-xl font-bold">
                 {statusTarget?.status === "approved"
@@ -1175,7 +1187,7 @@ function AdminServicesContent() {
                 variant="outline"
                 disabled={updatingStatus}
                 onClick={() => setStatusTarget(null)}
-                className="rounded-full text-xs"
+                className="rounded-full text-xs cursor-pointer"
               >
                 Cancel
               </Button>
@@ -1183,9 +1195,9 @@ function AdminServicesContent() {
                 disabled={updatingStatus}
                 onClick={handleConfirmStatusChange}
                 className={cn(
-                  "rounded-full text-xs",
+                  "rounded-full text-xs cursor-pointer",
                   statusTarget?.status === "approved" &&
-                    "bg-emerald-600 hover:bg-emerald-700 text-white",
+                    "bg-emerald-700 hover:bg-emerald-800 text-white",
                   statusTarget?.status === "rejected" &&
                     "bg-destructive hover:bg-destructive/90 text-white"
                 )}
@@ -1211,7 +1223,7 @@ function AdminServicesContent() {
           open={!!deleteTarget}
           onOpenChange={(open) => !open && !deleting && setDeleteTarget(null)}
         >
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md rounded-2xl">
             <DialogHeader>
               <DialogTitle className="font-serif text-xl font-bold text-destructive">
                 Delete Service Package?
@@ -1230,7 +1242,7 @@ function AdminServicesContent() {
                 variant="outline"
                 disabled={deleting}
                 onClick={() => setDeleteTarget(null)}
-                className="rounded-full text-xs"
+                className="rounded-full text-xs cursor-pointer"
               >
                 Keep Service
               </Button>
@@ -1238,7 +1250,7 @@ function AdminServicesContent() {
                 variant="destructive"
                 disabled={deleting}
                 onClick={handleConfirmDelete}
-                className="rounded-full text-xs"
+                className="rounded-full text-xs cursor-pointer"
               >
                 {deleting ? (
                   <>

@@ -12,13 +12,11 @@ import {
   ShieldCheck,
   AlertCircle,
   RefreshCw,
+  ArrowRight,
 } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { RoleGuard } from "@/components/dashboard/role-guard"
-import { StatCard } from "@/components/stat-card"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/lib/auth-context"
 import { getAdminStats } from "@/lib/api"
@@ -67,6 +65,60 @@ export default function AdminDashboardPage() {
     setRefreshTrigger((prev) => prev + 1)
   }
 
+  const pendingServicesCount = stats?.pendingServices ?? 0
+
+  const kpiItems = [
+    {
+      title: "Total Users",
+      value: String(stats?.totalUsers ?? 0),
+      description: "Registered accounts",
+      icon: <Users className="w-4 h-4" />,
+      iconClass: "bg-muted text-foreground",
+      href: "/dashboard/admin/users",
+    },
+    {
+      title: "Total Vendors",
+      value: String(stats?.totalVendors ?? 0),
+      description: "Wedding professionals",
+      icon: <Store className="w-4 h-4" />,
+      iconClass: "bg-blush text-primary-text",
+      href: "/dashboard/admin/users?role=vendor",
+    },
+    {
+      title: "Total Customers",
+      value: String(stats?.totalCustomers ?? 0),
+      description: "Registered customers",
+      icon: <Heart className="w-4 h-4" />,
+      iconClass: "bg-sage text-sage-foreground",
+      href: "/dashboard/admin/users?role=customer",
+    },
+    {
+      title: "Total Services",
+      value: String(stats?.totalServices ?? 0),
+      description: "Platform packages",
+      icon: <Package className="w-4 h-4" />,
+      iconClass: "bg-muted text-foreground",
+      href: "/dashboard/admin/services",
+    },
+    {
+      title: "Pending Services",
+      value: String(pendingServicesCount),
+      description: "Awaiting moderation",
+      icon: <Clock className="w-4 h-4" />,
+      iconClass: "bg-[#C9A66B]/15 text-gold-text",
+      href: "/dashboard/admin/services?status=pending",
+      highlight: pendingServicesCount > 0,
+    },
+    {
+      title: "Transactions",
+      value: String(stats?.totalTransactions ?? 0),
+      description: "Stripe payments logged",
+      icon: <Receipt className="w-4 h-4" />,
+      iconClass: "bg-blush text-primary-text",
+      href: "/dashboard/admin/transactions",
+    },
+  ]
+
   return (
     <RoleGuard allowedRoles={["admin"]}>
       <DashboardShell
@@ -74,53 +126,49 @@ export default function AdminDashboardPage() {
         title="Admin Control Center"
         subtitle="Manage platform users, moderate vendor services, and monitor Stripe subscription payments."
       >
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-6xl">
           {/* Welcome Banner */}
-          <Card className="border-primary/20 bg-gradient-to-r from-blush/60 via-card to-blush/30 shadow-xs overflow-hidden">
-            <CardContent className="p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="space-y-2 max-w-xl">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-foreground text-background border-none text-[11px] px-2.5 py-0.5">
-                    Platform Administrator
-                  </Badge>
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Full Access
-                  </span>
-                </div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-                  Welcome back, {user?.name || "Admin"}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Review new vendor submissions, manage user account permissions, and audit platform transactions.
-                </p>
+          <section className="rounded-2xl border border-border bg-gradient-to-r from-blush/45 via-card to-card p-6 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            <div className="space-y-2 max-w-xl">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-foreground text-background">
+                  Platform Administrator
+                </span>
+                <span className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-primary-text" /> Full Access
+                </span>
               </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+                Welcome back, {user?.name || "Admin"}
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Review new vendor submissions, manage user account permissions, and audit platform transactions.
+              </p>
+            </div>
 
-              <div className="flex flex-wrap items-center gap-2">
-                <Link
-                  href="/dashboard/admin/services?status=pending"
-                  className={cn(
-                    buttonVariants({ variant: "default" }),
-                    "rounded-full shadow-xs text-xs"
-                  )}
-                >
-                  <Clock className="w-3.5 h-3.5 mr-1.5" />
-                  Review Pending Services
-                  {stats && stats.pendingServices > 0 && (
-                    <span className="ml-1.5 px-2 py-0.2 bg-white/20 rounded-full font-bold">
-                      {stats.pendingServices}
-                    </span>
-                  )}
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+            <Link
+              href="/dashboard/admin/services?status=pending"
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "rounded-full shadow-xs text-xs h-10 px-5 shrink-0"
+              )}
+            >
+              <Clock className="w-3.5 h-3.5 mr-1.5" />
+              Review Pending Services
+              {stats && stats.pendingServices > 0 && (
+                <span className="ml-2 px-2 py-0.5 bg-white/20 rounded-full font-semibold tabular-nums">
+                  {stats.pendingServices}
+                </span>
+              )}
+            </Link>
+          </section>
 
           {/* Error State with Retry */}
           {error && !loading && (
-            <div className="p-6 text-center border border-destructive/20 rounded-2xl bg-destructive/5 space-y-3">
-              <AlertCircle className="w-6 h-6 text-destructive mx-auto" />
+            <div className="p-8 text-center border border-destructive/25 rounded-2xl bg-card space-y-3">
+              <AlertCircle className="w-7 h-7 text-destructive mx-auto" />
               <p className="text-sm text-foreground font-medium">{error}</p>
-              <Button variant="outline" size="sm" onClick={handleRetry} className="rounded-full">
+              <Button variant="outline" size="sm" onClick={handleRetry} className="rounded-full text-xs">
                 <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                 Try Again
               </Button>
@@ -131,147 +179,122 @@ export default function AdminDashboardPage() {
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-28 rounded-2xl" />
+                <Skeleton key={i} className="h-32 rounded-2xl" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-              {/* 1. Total Registered Users */}
-              <StatCard
-                title="Total Users"
-                value={String(stats?.totalUsers ?? 0)}
-                description="Registered accounts"
-                variant="default"
-                icon={<Users className="w-5 h-5" />}
-              />
-
-              {/* 2. Total Vendors */}
-              <StatCard
-                title="Total Vendors"
-                value={String(stats?.totalVendors ?? 0)}
-                description="Wedding professionals"
-                variant="primary"
-                icon={<Store className="w-5 h-5" />}
-              />
-
-              {/* 3. Total Customers */}
-              <StatCard
-                title="Total Customers"
-                value={String(stats?.totalCustomers ?? 0)}
-                description="Registered customers"
-                variant="sage"
-                icon={<Heart className="w-5 h-5" />}
-              />
-
-              {/* 4. Total Services */}
-              <StatCard
-                title="Total Services"
-                value={String(stats?.totalServices ?? 0)}
-                description="Platform packages"
-                variant="default"
-                icon={<Package className="w-5 h-5" />}
-              />
-
-              {/* 5. Pending Services (clickable link to filtered services) */}
-              <Link
-                href="/dashboard/admin/services?status=pending"
-                className="group block transition-transform hover:scale-[1.02]"
-              >
-                <StatCard
-                  title="Pending Services"
-                  value={String(stats?.pendingServices ?? 0)}
-                  description="Awaiting moderation"
-                  variant="gold"
-                  icon={<Clock className="w-5 h-5" />}
+            <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+              {kpiItems.map((item) => (
+                <Link
+                  key={item.title}
+                  href={item.href}
                   className={cn(
-                    (stats?.pendingServices ?? 0) > 0 &&
-                      "ring-2 ring-amber-400/50 bg-amber-500/5 cursor-pointer"
+                    "rounded-2xl border bg-card p-4 sm:p-5 flex flex-col justify-between gap-3 transition-colors hover:border-primary/40",
+                    item.highlight
+                      ? "border-[#C9A66B]/80 bg-[#C9A66B]/[0.06]"
+                      : "border-border"
                   )}
-                />
-              </Link>
-
-              {/* 6. Total Transactions */}
-              <StatCard
-                title="Transactions"
-                value={String(stats?.totalTransactions ?? 0)}
-                description="Stripe payments logged"
-                variant="primary"
-                icon={<Receipt className="w-5 h-5" />}
-              />
-            </div>
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {item.title}
+                    </span>
+                    <span
+                      className={cn(
+                        "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
+                        item.iconClass
+                      )}
+                    >
+                      {item.icon}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-2xl sm:text-3xl font-serif font-bold text-foreground tabular-nums">
+                      {item.value}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-snug">
+                      {item.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </section>
           )}
 
           {/* System Quick Links Section */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Users */}
             <Link
               href="/dashboard/admin/users"
-              className="p-5 rounded-2xl border border-border/80 bg-card hover:border-primary/50 hover:bg-muted/30 transition-all flex flex-col justify-between group shadow-xs"
+              className="rounded-2xl border border-border bg-card hover:border-primary/45 p-6 transition-colors flex flex-col justify-between gap-5 group"
             >
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-blush text-primary flex items-center justify-center">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-blush text-primary-text flex items-center justify-center">
                   <Users className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-primary-text transition-colors">
                     Manage Users
-                  </h4>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Search users by name or email, filter by customer/vendor/admin, inspect details, and block/unblock accounts.
                   </p>
                 </div>
               </div>
-              <div className="text-xs text-primary font-medium mt-4 pt-3 border-t border-border/50">
+              <div className="inline-flex items-center gap-1 text-xs text-primary-text font-medium pt-3 border-t border-border/70">
                 View User Directory
+                <ArrowRight className="w-3 h-3" />
               </div>
             </Link>
 
             {/* Services Moderation */}
             <Link
               href="/dashboard/admin/services"
-              className="p-5 rounded-2xl border border-border/80 bg-card hover:border-primary/50 hover:bg-muted/30 transition-all flex flex-col justify-between group shadow-xs"
+              className="rounded-2xl border border-border bg-card hover:border-primary/45 p-6 transition-colors flex flex-col justify-between gap-5 group"
             >
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-[#C9A66B]/15 text-gold-text flex items-center justify-center">
                   <Package className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-primary-text transition-colors">
                     Manage Services
-                  </h4>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Review pending listings, approve or reject wedding packages, change status, and delete inappropriate entries.
                   </p>
                 </div>
               </div>
-              <div className="text-xs text-primary font-medium mt-4 pt-3 border-t border-border/50">
+              <div className="inline-flex items-center gap-1 text-xs text-primary-text font-medium pt-3 border-t border-border/70">
                 Moderate Services
+                <ArrowRight className="w-3 h-3" />
               </div>
             </Link>
 
             {/* Transactions */}
             <Link
               href="/dashboard/admin/transactions"
-              className="p-5 rounded-2xl border border-border/80 bg-card hover:border-primary/50 hover:bg-muted/30 transition-all flex flex-col justify-between group shadow-xs"
+              className="rounded-2xl border border-border bg-card hover:border-primary/45 p-6 transition-colors flex flex-col justify-between gap-5 group"
             >
-              <div className="space-y-2">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-sage text-sage-foreground flex items-center justify-center">
                   <Receipt className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-base text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-primary-text transition-colors">
                     Payment Transactions
-                  </h4>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                     Audit platform Stripe billing records, premium vendor subscription payments, and status history (read only).
                   </p>
                 </div>
               </div>
-              <div className="text-xs text-primary font-medium mt-4 pt-3 border-t border-border/50">
+              <div className="inline-flex items-center gap-1 text-xs text-primary-text font-medium pt-3 border-t border-border/70">
                 Audit Transactions
+                <ArrowRight className="w-3 h-3" />
               </div>
             </Link>
-          </div>
+          </section>
         </div>
       </DashboardShell>
     </RoleGuard>

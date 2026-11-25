@@ -14,11 +14,10 @@ import {
   Ban,
   MapPin,
   Calendar,
+  ArrowRight,
 } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { RoleGuard } from "@/components/dashboard/role-guard"
-import { StatCard } from "@/components/stat-card"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -80,17 +79,71 @@ export default function CustomerDashboardPage() {
   const getStatusBadge = (status: Booking["status"]) => {
     switch (status) {
       case "accepted":
-        return <Badge className="bg-emerald-600 text-white border-none">Accepted</Badge>
+        return (
+          <Badge className="bg-sage text-sage-foreground border border-sage-foreground/15 hover:bg-sage text-[11px] font-medium px-2.5 py-0.5">
+            Accepted
+          </Badge>
+        )
       case "pending":
-        return <Badge className="bg-amber-500/20 text-amber-700 border-amber-300">Pending</Badge>
+        return (
+          <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-400/30 hover:bg-amber-500/15 text-[11px] font-medium px-2.5 py-0.5">
+            Pending
+          </Badge>
+        )
       case "rejected":
-        return <Badge variant="destructive">Rejected</Badge>
+        return (
+          <Badge variant="destructive" className="text-[11px] font-medium px-2.5 py-0.5">
+            Rejected
+          </Badge>
+        )
       case "cancelled":
-        return <Badge variant="outline" className="text-muted-foreground">Cancelled</Badge>
+        return (
+          <Badge variant="outline" className="text-muted-foreground text-[11px] font-medium px-2.5 py-0.5">
+            Cancelled
+          </Badge>
+        )
       default:
         return <Badge variant="outline">{status}</Badge>
     }
   }
+
+  const kpiItems = [
+    {
+      title: "Total Inquiries",
+      value: String(stats?.totalBookings ?? 0),
+      description: "Submitted booking requests",
+      icon: <CalendarCheck className="w-4 h-4" />,
+      iconClass: "bg-muted text-foreground",
+    },
+    {
+      title: "Pending Requests",
+      value: String(stats?.pending ?? 0),
+      description: "Awaiting vendor response",
+      icon: <Clock className="w-4 h-4" />,
+      iconClass: "bg-[#C9A66B]/15 text-gold-text",
+    },
+    {
+      title: "Accepted Bookings",
+      value: String(stats?.accepted ?? 0),
+      description: "Confirmed wedding artisans",
+      icon: <CheckCircle2 className="w-4 h-4" />,
+      iconClass: "bg-sage text-sage-foreground",
+    },
+    {
+      title: "Rejected",
+      value: String(stats?.rejected ?? 0),
+      description: "Rejected by vendor",
+      icon: <XCircle className="w-4 h-4" />,
+      iconClass: "bg-blush text-primary-text",
+    },
+    {
+      title: "Cancelled",
+      value: String(stats?.cancelled ?? 0),
+      description: "Withdrawn by you",
+      icon: <Ban className="w-4 h-4" />,
+      iconClass: "bg-muted text-muted-foreground",
+    },
+  ]
 
   return (
     <RoleGuard allowedRoles={["customer"]}>
@@ -99,46 +152,44 @@ export default function CustomerDashboardPage() {
         title="Planning Dashboard"
         subtitle="Manage your wedding bookings, track inquiries, and plan your special celebration."
       >
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-5xl">
           {/* Welcome Banner */}
-          <Card className="border-primary/20 bg-gradient-to-r from-blush/60 via-card to-blush/30 shadow-xs overflow-hidden">
-            <CardContent className="p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="space-y-2 max-w-xl">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-primary text-white border-none text-[11px] px-2.5 py-0.5">
-                    Customer Account
-                  </Badge>
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-accent" /> Ready to plan
-                  </span>
-                </div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-                  Welcome back, {user?.name || "Customer"}!
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Explore top wedding venues, photographers, and stylists, or check the status of your existing booking inquiries.
-                </p>
+          <section className="rounded-2xl border border-border bg-gradient-to-r from-blush/45 via-card to-card p-6 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            <div className="space-y-2 max-w-xl">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blush text-primary-text">
+                  Customer Account
+                </span>
+                <span className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-[#C9A66B]" /> Ready to plan
+                </span>
               </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+                Welcome back, {user?.name || "Customer"}!
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Explore top wedding venues, photographers, and stylists, or check the status of your existing booking inquiries.
+              </p>
+            </div>
 
-              <Link
-                href="/services"
-                className={cn(
-                  buttonVariants({ variant: "default" }),
-                  "rounded-full shadow-xs"
-                )}
-              >
-                <Heart className="w-4 h-4 mr-2 fill-current" />
-                Browse Services
-              </Link>
-            </CardContent>
-          </Card>
+            <Link
+              href="/services"
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "rounded-full shadow-xs text-xs h-10 px-5 shrink-0"
+              )}
+            >
+              <Heart className="w-3.5 h-3.5 mr-1.5 fill-current" />
+              Browse Services
+            </Link>
+          </section>
 
           {/* Error State with Retry */}
           {error && !loading && (
-            <div className="p-6 text-center border border-destructive/20 rounded-2xl bg-destructive/5 space-y-3">
-              <AlertCircle className="w-6 h-6 text-destructive mx-auto" />
+            <div className="p-8 text-center border border-destructive/25 rounded-2xl bg-card space-y-3">
+              <AlertCircle className="w-7 h-7 text-destructive mx-auto" />
               <p className="text-sm text-foreground font-medium">{error}</p>
-              <Button variant="outline" size="sm" onClick={handleRetry} className="rounded-full">
+              <Button variant="outline" size="sm" onClick={handleRetry} className="rounded-full text-xs">
                 <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                 Try Again
               </Button>
@@ -147,160 +198,157 @@ export default function CustomerDashboardPage() {
 
           {/* Metric Stat Cards */}
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-28 rounded-2xl" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-32 rounded-2xl" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-              <StatCard
-                title="Total Inquiries"
-                value={String(stats?.totalBookings ?? 0)}
-                description="Submitted booking requests"
-                variant="default"
-                icon={<CalendarCheck className="w-5 h-5" />}
-              />
-              <StatCard
-                title="Pending Requests"
-                value={String(stats?.pending ?? 0)}
-                description="Awaiting vendor response"
-                variant="gold"
-                icon={<Clock className="w-5 h-5" />}
-              />
-              <StatCard
-                title="Accepted Bookings"
-                value={String(stats?.accepted ?? 0)}
-                description="Confirmed wedding artisans"
-                variant="primary"
-                icon={<CheckCircle2 className="w-5 h-5" />}
-              />
-              <StatCard
-                title="Rejected"
-                value={String(stats?.rejected ?? 0)}
-                description="Rejected by vendor"
-                variant="default"
-                icon={<XCircle className="w-5 h-5" />}
-              />
-              <StatCard
-                title="Cancelled"
-                value={String(stats?.cancelled ?? 0)}
-                description="Withdrawn by you"
-                variant="sage"
-                icon={<Ban className="w-5 h-5" />}
-              />
-            </div>
+            <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+              {kpiItems.map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-border bg-card p-4 sm:p-5 flex flex-col justify-between gap-3"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {item.title}
+                    </span>
+                    <span
+                      className={cn(
+                        "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
+                        item.iconClass
+                      )}
+                    >
+                      {item.icon}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-2xl sm:text-3xl font-serif font-bold text-foreground tabular-nums">
+                      {item.value}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-1 leading-snug">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </section>
           )}
 
           {/* 3 Most Recent Bookings Section */}
-          <Card className="border-border/80 shadow-xs">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <section className="rounded-2xl border border-border bg-card p-5 sm:p-6 space-y-5">
+            <div className="flex items-start justify-between gap-4 pb-4 border-b border-border">
               <div>
-                <CardTitle className="font-serif text-lg">Recent Booking Requests</CardTitle>
-                <CardDescription>
+                <h3 className="font-serif text-xl font-bold text-foreground">
+                  Recent Booking Requests
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Your latest inquiries submitted to wedding service specialists.
-                </CardDescription>
+                </p>
               </div>
               <Link
                 href="/dashboard/customer/bookings"
-                className="text-xs text-primary font-medium hover:underline"
+                className="inline-flex items-center gap-1 text-xs text-primary-text font-medium hover:underline shrink-0"
               >
                 View all bookings
+                <ArrowRight className="w-3 h-3" />
               </Link>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="space-y-3">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <Skeleton key={i} className="h-20 rounded-xl" />
-                  ))}
-                </div>
-              ) : recentBookings.length === 0 ? (
-                <div className="p-8 border border-dashed border-border/80 rounded-2xl text-center space-y-3">
-                  <div className="w-10 h-10 rounded-full bg-blush text-primary flex items-center justify-center mx-auto">
-                    <CalendarCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold">No booking requests submitted yet</p>
-                    <p className="text-xs text-muted-foreground mt-0.5 max-w-sm mx-auto">
-                      Explore our directory of photographers, venues, and caterers to send your first inquiry.
-                    </p>
-                  </div>
-                  <Link
-                    href="/services"
-                    className={cn(
-                      buttonVariants({ variant: "outline", size: "sm" }),
-                      "rounded-full"
-                    )}
-                  >
-                    <Heart className="w-3.5 h-3.5 mr-1.5" />
-                    Explore Wedding Catalog
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {recentBookings.map((booking) => (
-                    <div
-                      key={booking.id}
-                      className="p-4 rounded-xl border border-border/70 bg-card hover:bg-muted/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                    >
-                      <div className="flex items-center gap-3.5">
-                        {/* Service Thumbnail */}
-                        <div className="w-14 h-14 rounded-xl overflow-hidden bg-muted shrink-0 border border-border/60">
-                          {booking.serviceImage ? (
-                            /* eslint-disable-next-line @next/next/no-img-element */
-                            <img
-                              src={booking.serviceImage}
-                              alt={booking.serviceName || "Service"}
-                              className="block w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
-                              WP
-                            </div>
-                          )}
-                        </div>
+            </div>
 
-                        {/* Booking Meta */}
-                        <div className="space-y-1">
-                          <p className="text-sm font-semibold text-foreground leading-snug">
-                            {booking.serviceName || "Service no longer available"}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Vendor:{" "}
-                            <span className="font-medium text-foreground">
-                              {booking.vendorName || booking.vendor?.businessName || booking.vendor?.name || "WedPlan Partner"}
-                            </span>
-                          </p>
-                          <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground pt-0.5">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3 text-primary" />
-                              {booking.eventDate}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3 text-primary" />
-                              {booking.eventLocation}
-                            </span>
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-20 rounded-xl" />
+                ))}
+              </div>
+            ) : recentBookings.length === 0 ? (
+              <div className="p-10 border border-dashed border-border rounded-2xl text-center space-y-3">
+                <div className="w-11 h-11 rounded-full bg-blush text-primary-text flex items-center justify-center mx-auto">
+                  <CalendarCheck className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                  <p className="font-serif text-lg font-bold text-foreground">
+                    No booking requests submitted yet
+                  </p>
+                  <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                    Explore our directory of photographers, venues, and caterers to send your first inquiry.
+                  </p>
+                </div>
+                <Link
+                  href="/services"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "sm" }),
+                    "rounded-full text-xs h-9 px-4"
+                  )}
+                >
+                  <Heart className="w-3.5 h-3.5 mr-1.5 text-primary-text" />
+                  Explore Wedding Catalog
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recentBookings.map((booking) => (
+                  <div
+                    key={booking.id}
+                    className="p-4 rounded-xl border border-border bg-background/60 hover:bg-muted/35 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      {/* Service Thumbnail */}
+                      <div className="w-14 h-14 rounded-xl overflow-hidden bg-muted shrink-0 border border-border/70">
+                        {booking.serviceImage ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={booking.serviceImage}
+                            alt={booking.serviceName || "Service"}
+                            className="block w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
+                            WP
                           </div>
-                        </div>
+                        )}
                       </div>
 
-                      {/* Status & Link */}
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40">
-                        {getStatusBadge(booking.status)}
-                        <Link
-                          href="/dashboard/customer/bookings"
-                          className="text-xs text-primary font-medium hover:underline inline-block"
-                        >
-                          Details
-                        </Link>
+                      {/* Booking Meta */}
+                      <div className="space-y-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground leading-snug truncate">
+                          {booking.serviceName || "Service no longer available"}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          Vendor:{" "}
+                          <span className="font-medium text-foreground">
+                            {booking.vendorName || booking.vendor?.businessName || booking.vendor?.name || "WedPlan Partner"}
+                          </span>
+                        </p>
+                        <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground pt-0.5">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3 text-primary-text" />
+                            {booking.eventDate}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-primary-text" />
+                            {booking.eventLocation}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+
+                    {/* Status & Link */}
+                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 pt-2.5 sm:pt-0 border-t sm:border-t-0 border-border/60 shrink-0">
+                      {getStatusBadge(booking.status)}
+                      <Link
+                        href="/dashboard/customer/bookings"
+                        className="text-xs text-primary-text font-medium hover:underline inline-block"
+                      >
+                        Details
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
       </DashboardShell>
     </RoleGuard>

@@ -23,7 +23,6 @@ import { Transaction, TransactionStatus } from "@/types"
 import { ADMIN_NAV_ITEMS } from "@/lib/admin-nav"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -149,21 +148,21 @@ function AdminTransactionsContent() {
     switch (status) {
       case "completed":
         return (
-          <Badge className="bg-emerald-600 text-white border-none flex items-center gap-1 text-[11px] w-fit">
+          <Badge className="bg-sage text-sage-foreground border border-sage-foreground/15 hover:bg-sage inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 w-fit">
             <CheckCircle2 className="w-3 h-3" />
             Completed
           </Badge>
         )
       case "pending":
         return (
-          <Badge className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-300 flex items-center gap-1 text-[11px] w-fit">
+          <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-400/30 hover:bg-amber-500/15 inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 w-fit">
             <Clock className="w-3 h-3" />
             Pending
           </Badge>
         )
       case "failed":
         return (
-          <Badge variant="destructive" className="flex items-center gap-1 text-[11px] w-fit">
+          <Badge variant="destructive" className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 w-fit">
             <XCircle className="w-3 h-3" />
             Failed
           </Badge>
@@ -180,67 +179,65 @@ function AdminTransactionsContent() {
         title="Payment Transactions"
         subtitle="Review platform billing charges, Stripe webhook events, and vendor subscription settlements."
       >
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-6xl">
           {/* Read Only Notice Banner */}
-          <div className="p-3.5 rounded-2xl bg-muted/40 border border-border/80 flex items-center justify-between gap-3 text-xs text-muted-foreground shadow-xs">
-            <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-primary shrink-0" />
+          <section className="rounded-2xl bg-card border border-border p-4 sm:px-5 flex items-center justify-between gap-3 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2.5">
+              <Lock className="w-4 h-4 text-primary-text shrink-0" />
               <span>
-                <strong>Audit Ledger:</strong> Payment records are read only. Transactions reflect confirmed Stripe events.
+                <strong className="text-foreground">Audit Ledger:</strong> Payment records are read only. Transactions reflect confirmed Stripe events.
               </span>
             </div>
-            <Badge variant="outline" className="text-[10px] text-muted-foreground hidden sm:inline-flex">
+            <Badge variant="outline" className="text-[11px] text-muted-foreground hidden sm:inline-flex shrink-0">
               Immutable Records
             </Badge>
-          </div>
+          </section>
 
           {/* Filter Bar */}
-          <Card className="border-border/80 shadow-xs">
-            <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-muted-foreground shrink-0 hidden sm:block" />
-                <Select
-                  value={currentStatus}
-                  onValueChange={(val) => {
-                    const selected = val || "all"
-                    updateQueryParams({ status: selected, page: 1 })
+          <section className="rounded-2xl border border-border bg-card p-4 sm:p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-muted-foreground shrink-0 hidden sm:block" />
+              <Select
+                value={currentStatus}
+                onValueChange={(val) => {
+                  const selected = val || "all"
+                  updateQueryParams({ status: selected, page: 1 })
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-48 text-xs h-10 rounded-xl">
+                  <SelectValue placeholder="All Transaction Statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="failed">Failed</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {currentStatus !== "all" && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    updateQueryParams({ status: "all", page: 1 })
                   }}
+                  className="text-xs h-10 px-3 text-muted-foreground hover:text-foreground cursor-pointer"
                 >
-                  <SelectTrigger className="w-full sm:w-48 text-xs h-9 rounded-xl">
-                    <SelectValue placeholder="All Transaction Statuses" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="failed">Failed</SelectItem>
-                  </SelectContent>
-                </Select>
+                  Reset
+                </Button>
+              )}
+            </div>
 
-                {currentStatus !== "all" && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      updateQueryParams({ status: "all", page: 1 })
-                    }}
-                    className="text-xs h-9 px-2 text-muted-foreground hover:text-foreground"
-                  >
-                    Reset
-                  </Button>
-                )}
-              </div>
-
-              <div className="text-xs text-muted-foreground">
-                Showing {transactions.length > 0 ? (page - 1) * limit + 1 : 0} –{" "}
-                {Math.min(page * limit, total)} of <strong>{total}</strong> records
-              </div>
-            </CardContent>
-          </Card>
+            <div className="text-xs text-muted-foreground tabular-nums">
+              Showing {transactions.length > 0 ? (page - 1) * limit + 1 : 0} –{" "}
+              {Math.min(page * limit, total)} of <strong className="text-foreground">{total}</strong> records
+            </div>
+          </section>
 
           {/* Error State */}
           {error && !loading && (
-            <div className="p-8 text-center border border-destructive/20 rounded-2xl bg-destructive/5 space-y-3">
+            <div className="p-8 text-center border border-destructive/25 rounded-2xl bg-card space-y-3">
               <AlertCircle className="w-8 h-8 text-destructive mx-auto" />
               <p className="text-sm font-medium text-foreground">{error}</p>
               <Button
@@ -266,47 +263,57 @@ function AdminTransactionsContent() {
 
           {/* Empty State */}
           {!loading && !error && transactions.length === 0 && (
-            <Card className="border-border/80 shadow-xs">
-              <CardContent className="p-12 text-center space-y-4">
-                <div className="w-12 h-12 rounded-full bg-blush text-primary flex items-center justify-center mx-auto">
-                  <Receipt className="w-6 h-6" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-serif text-lg font-bold">No Transactions Found</h3>
-                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    {currentStatus !== "all"
-                      ? `No payment transactions match the "${currentStatus}" status filter.`
-                      : "There are currently no billing transactions recorded on the platform."}
-                  </p>
-                </div>
-                {currentStatus !== "all" && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      updateQueryParams({ status: "all", page: 1 })
-                    }}
-                    className="rounded-full text-xs"
-                  >
-                    View All Transactions
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+            <div className="rounded-2xl border border-border bg-card p-12 text-center space-y-4">
+              <div className="w-12 h-12 rounded-full bg-blush text-primary-text flex items-center justify-center mx-auto">
+                <Receipt className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-serif text-xl font-bold text-foreground">No Transactions Found</h3>
+                <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                  {currentStatus !== "all"
+                    ? `No payment transactions match the "${currentStatus}" status filter.`
+                    : "There are currently no billing transactions recorded on the platform."}
+                </p>
+              </div>
+              {currentStatus !== "all" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    updateQueryParams({ status: "all", page: 1 })
+                  }}
+                  className="rounded-full text-xs h-9 px-4 cursor-pointer"
+                >
+                  View All Transactions
+                </Button>
+              )}
+            </div>
           )}
 
           {/* Desktop Table View */}
           {!loading && !error && transactions.length > 0 && (
-            <div className="hidden lg:block bg-card rounded-2xl border border-border/80 overflow-hidden shadow-xs">
+            <div className="hidden lg:block bg-card rounded-2xl border border-border overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[280px]">Vendor</TableHead>
-                    <TableHead>Subscription Plan</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Date & Time</TableHead>
-                    <TableHead className="text-right">Stripe Session / ID</TableHead>
+                  <TableRow className="hover:bg-transparent border-border">
+                    <TableHead className="px-5 py-3.5 w-[260px] text-xs font-medium text-muted-foreground">
+                      Vendor
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Subscription Plan
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Amount
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Status
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
+                      Date & Time
+                    </TableHead>
+                    <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground text-right">
+                      Stripe Session / ID
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -320,9 +327,9 @@ function AdminTransactionsContent() {
                       tx.vendor?.email || tx.vendorEmail || ""
 
                     return (
-                      <TableRow key={tx.id}>
+                      <TableRow key={tx.id} className="border-border/70">
                         {/* Vendor Name & Email */}
-                        <TableCell>
+                        <TableCell className="px-5 py-4">
                           <div className="space-y-0.5">
                             <p className="font-semibold text-xs text-foreground truncate">
                               {vendorDisplayName}
@@ -330,9 +337,9 @@ function AdminTransactionsContent() {
                             {vendorEmail ? (
                               <a
                                 href={`mailto:${vendorEmail}`}
-                                className="text-[11px] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+                                className="text-[11px] text-muted-foreground hover:text-primary-text transition-colors inline-flex items-center gap-1"
                               >
-                                <Mail className="w-3 h-3 text-primary" />
+                                <Mail className="w-3 h-3 text-primary-text" />
                                 {vendorEmail}
                               </a>
                             ) : (
@@ -344,30 +351,30 @@ function AdminTransactionsContent() {
                         </TableCell>
 
                         {/* Plan */}
-                        <TableCell>
-                          <span className="text-xs font-semibold text-[#9A6E2E] dark:text-[#E2C38C] inline-flex items-center gap-1">
-                            <Sparkles className="w-3 h-3 text-[#C9A66B]" />
+                        <TableCell className="px-5 py-4">
+                          <span className="text-xs font-semibold text-gold-text inline-flex items-center gap-1.5">
+                            <Sparkles className="w-3.5 h-3.5 text-[#C9A66B]" />
                             <span className="capitalize">{tx.plan || "Premium"}</span>
                           </span>
                         </TableCell>
 
                         {/* Amount */}
-                        <TableCell>
-                          <span className="text-xs font-serif font-bold text-foreground">
+                        <TableCell className="px-5 py-4">
+                          <span className="text-sm font-semibold tabular-nums text-foreground">
                             {formatAmount(tx.amount, tx.currency)}
                           </span>
                         </TableCell>
 
                         {/* Status */}
-                        <TableCell>{renderStatusBadge(tx.status)}</TableCell>
+                        <TableCell className="px-5 py-4">{renderStatusBadge(tx.status)}</TableCell>
 
                         {/* Date */}
-                        <TableCell className="text-xs text-muted-foreground">
+                        <TableCell className="px-5 py-4 text-xs text-muted-foreground whitespace-nowrap">
                           {formatDate(tx.createdAt)}
                         </TableCell>
 
                         {/* Session / ID */}
-                        <TableCell className="text-right text-xs font-mono text-muted-foreground">
+                        <TableCell className="px-5 py-4 text-right text-xs font-mono text-muted-foreground">
                           {tx.stripeSessionId ? (
                             <span title={tx.stripeSessionId}>
                               {tx.stripeSessionId.slice(0, 16)}...
@@ -397,49 +404,50 @@ function AdminTransactionsContent() {
                   tx.vendor?.email || tx.vendorEmail || ""
 
                 return (
-                  <Card key={tx.id} className="border-border/80 shadow-xs">
-                    <CardContent className="p-4 space-y-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="font-semibold text-xs text-foreground truncate">
-                            {vendorDisplayName}
+                  <div
+                    key={tx.id}
+                    className="rounded-2xl border border-border bg-card p-4 sm:p-5 space-y-3.5"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 space-y-0.5">
+                        <p className="font-semibold text-xs text-foreground truncate">
+                          {vendorDisplayName}
+                        </p>
+                        {vendorEmail && (
+                          <p className="text-[11px] text-muted-foreground flex items-center gap-1 truncate">
+                            <Mail className="w-3 h-3 text-primary-text shrink-0" />
+                            <span className="truncate">{vendorEmail}</span>
                           </p>
-                          {vendorEmail && (
-                            <p className="text-[11px] text-muted-foreground flex items-center gap-1">
-                              <Mail className="w-3 h-3 text-primary" />
-                              {vendorEmail}
-                            </p>
-                          )}
-                        </div>
-                        {renderStatusBadge(tx.status)}
+                        )}
                       </div>
+                      <div className="shrink-0">{renderStatusBadge(tx.status)}</div>
+                    </div>
 
-                      <div className="grid grid-cols-2 gap-2 text-[11px] p-2.5 rounded-lg bg-muted/40">
-                        <div>
-                          <span className="text-muted-foreground block">Plan:</span>
-                          <span className="font-semibold text-foreground capitalize flex items-center gap-1">
-                            <Sparkles className="w-3 h-3 text-[#C9A66B]" />
-                            {tx.plan || "Premium"}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground block">Amount:</span>
-                          <span className="font-serif font-bold text-foreground text-sm">
-                            {formatAmount(tx.amount, tx.currency)}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-border/50 text-[11px] text-muted-foreground">
-                        <span>{formatDate(tx.createdAt)}</span>
-                        <span className="font-mono text-[10px]">
-                          {tx.stripeSessionId
-                            ? `${tx.stripeSessionId.slice(0, 12)}...`
-                            : tx.id}
+                    <div className="grid grid-cols-2 gap-3 text-xs p-3 rounded-xl bg-muted/40 border border-border/60">
+                      <div>
+                        <span className="text-[11px] text-muted-foreground block">Plan</span>
+                        <span className="font-semibold text-gold-text capitalize inline-flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-[#C9A66B]" />
+                          {tx.plan || "Premium"}
                         </span>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div>
+                        <span className="text-[11px] text-muted-foreground block">Amount</span>
+                        <span className="font-semibold tabular-nums text-foreground text-sm">
+                          {formatAmount(tx.amount, tx.currency)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2.5 border-t border-border/70 text-[11px] text-muted-foreground">
+                      <span>{formatDate(tx.createdAt)}</span>
+                      <span className="font-mono">
+                        {tx.stripeSessionId
+                          ? `${tx.stripeSessionId.slice(0, 12)}...`
+                          : tx.id}
+                      </span>
+                    </div>
+                  </div>
                 )
               })}
             </div>
@@ -453,12 +461,12 @@ function AdminTransactionsContent() {
                 size="sm"
                 disabled={page <= 1}
                 onClick={() => updateQueryParams({ page: page - 1 })}
-                className="rounded-full text-xs h-8 px-3"
+                className="rounded-full text-xs h-9 px-4 cursor-pointer"
               >
                 <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                 Previous
               </Button>
-              <span className="text-xs text-muted-foreground px-2">
+              <span className="text-xs text-muted-foreground px-2 tabular-nums">
                 Page {page} of {totalPages}
               </span>
               <Button
@@ -466,7 +474,7 @@ function AdminTransactionsContent() {
                 size="sm"
                 disabled={page >= totalPages}
                 onClick={() => updateQueryParams({ page: page + 1 })}
-                className="rounded-full text-xs h-8 px-3"
+                className="rounded-full text-xs h-9 px-4 cursor-pointer"
               >
                 Next
                 <ChevronRight className="w-3.5 h-3.5 ml-1" />

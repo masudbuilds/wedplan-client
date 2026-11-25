@@ -29,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { createService, ApiError } from "@/lib/api"
 import { SERVICE_CATEGORIES, ServiceCategory } from "@/types"
 import { VENDOR_NAV_ITEMS } from "@/lib/vendor-nav"
@@ -152,258 +151,254 @@ export default function NewServicePage() {
 
           {/* Limit Reached 403 Banner */}
           {isLimitReached && (
-            <Card className="border-accent/40 bg-accent/10 shadow-xs">
-              <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Crown className="w-5 h-5 text-accent" />
-                    <h3 className="font-semibold text-sm text-foreground">
-                      Free Account Limit Reached
-                    </h3>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {serverError}
-                  </p>
+            <div className="rounded-2xl border border-[#C9A66B]/60 bg-[#C9A66B]/[0.07] p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-[#C9A66B] shrink-0" />
+                  <h3 className="font-semibold text-sm text-foreground">
+                    Free Account Limit Reached
+                  </h3>
                 </div>
-                <Link
-                  href="/dashboard/vendor/subscription"
-                  className={cn(
-                    buttonVariants({ variant: "default" }),
-                    "rounded-full text-xs shadow-xs shrink-0"
-                  )}
-                >
-                  <Crown className="w-3.5 h-3.5 mr-1.5" />
-                  Upgrade to Premium
-                </Link>
-              </CardContent>
-            </Card>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {serverError}
+                </p>
+              </div>
+              <Link
+                href="/dashboard/vendor/subscription"
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "rounded-full text-xs shadow-xs shrink-0 h-9 px-4"
+                )}
+              >
+                <Crown className="w-3.5 h-3.5 mr-1.5" />
+                Upgrade to Premium
+              </Link>
+            </div>
           )}
 
           {/* General Server Error */}
           {serverError && !isLimitReached && (
-            <div className="p-4 rounded-xl border border-destructive/20 bg-destructive/5 text-destructive text-xs flex items-center gap-2">
+            <div className="p-4 rounded-2xl border border-destructive/25 bg-destructive/5 text-destructive text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{serverError}</span>
             </div>
           )}
 
-          <Card className="border-border/80 shadow-xs">
-            <CardHeader className="pb-4">
-              <CardTitle className="font-serif text-xl font-bold">
+          <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 space-y-6">
+            <div className="space-y-1 pb-5 border-b border-border">
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-foreground">
                 Package Details
-              </CardTitle>
-              <CardDescription>
+              </h2>
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Provide detailed information and showcase high-quality images to attract couples.
-              </CardDescription>
-            </CardHeader>
+              </p>
+            </div>
 
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* 1. Service Name */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* 1. Service Name */}
+              <div className="space-y-1.5">
+                <Label htmlFor="serviceName" className="text-xs font-medium text-foreground">
+                  Service Name <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="serviceName"
+                  placeholder="e.g. Deluxe Bridal Photography Package"
+                  value={serviceName}
+                  onChange={(e) => {
+                    setServiceName(e.target.value)
+                    if (clientErrors.serviceName) {
+                      setClientErrors((prev) => ({ ...prev, serviceName: "" }))
+                    }
+                  }}
+                  className={cn("h-10 rounded-xl", clientErrors.serviceName && "border-destructive")}
+                  disabled={submitting}
+                />
+                {clientErrors.serviceName && (
+                  <p className="text-[11px] text-destructive">
+                    {clientErrors.serviceName}
+                  </p>
+                )}
+              </div>
+
+              {/* 2. Category & Price (2 cols) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Category */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="serviceName" className="text-xs font-medium">
-                    Service Name <span className="text-destructive">*</span>
+                  <Label className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-primary-text" />
+                    Category <span className="text-destructive">*</span>
+                  </Label>
+                  <Select
+                    value={category}
+                    onValueChange={(val) => {
+                      setCategory(val as ServiceCategory)
+                      if (clientErrors.category) {
+                        setClientErrors((prev) => ({ ...prev, category: "" }))
+                      }
+                    }}
+                    disabled={submitting}
+                  >
+                    <SelectTrigger className={cn("w-full h-10 rounded-xl", clientErrors.category && "border-destructive")}>
+                      <SelectValue placeholder="Select wedding category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SERVICE_CATEGORIES.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {clientErrors.category && (
+                    <p className="text-[11px] text-destructive">
+                      {clientErrors.category}
+                    </p>
+                  )}
+                </div>
+
+                {/* Price */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="price" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                    <DollarSign className="w-3.5 h-3.5 text-primary-text" />
+                    Starting Price ($ USD) <span className="text-destructive">*</span>
                   </Label>
                   <Input
-                    id="serviceName"
-                    placeholder="e.g. Deluxe Bridal Photography Package"
-                    value={serviceName}
+                    id="price"
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="e.g. 1500"
+                    value={price}
                     onChange={(e) => {
-                      setServiceName(e.target.value)
-                      if (clientErrors.serviceName) {
-                        setClientErrors((prev) => ({ ...prev, serviceName: "" }))
+                      setPrice(e.target.value)
+                      if (clientErrors.price) {
+                        setClientErrors((prev) => ({ ...prev, price: "" }))
                       }
                     }}
-                    className={cn(clientErrors.serviceName && "border-destructive")}
+                    className={cn("h-10 rounded-xl", clientErrors.price && "border-destructive")}
                     disabled={submitting}
                   />
-                  {clientErrors.serviceName && (
+                  {clientErrors.price && (
                     <p className="text-[11px] text-destructive">
-                      {clientErrors.serviceName}
+                      {clientErrors.price}
                     </p>
                   )}
                 </div>
+              </div>
 
-                {/* 2. Category & Price (2 cols) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Category */}
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-medium flex items-center gap-1">
-                      <Tag className="w-3.5 h-3.5 text-primary" />
-                      Category <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={category}
-                      onValueChange={(val) => {
-                        setCategory(val as ServiceCategory)
-                        if (clientErrors.category) {
-                          setClientErrors((prev) => ({ ...prev, category: "" }))
-                        }
-                      }}
-                      disabled={submitting}
-                    >
-                      <SelectTrigger className={cn(clientErrors.category && "border-destructive")}>
-                        <SelectValue placeholder="Select wedding category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SERVICE_CATEGORIES.map((cat) => (
-                          <SelectItem key={cat} value={cat}>
-                            {cat}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {clientErrors.category && (
-                      <p className="text-[11px] text-destructive">
-                        {clientErrors.category}
-                      </p>
-                    )}
-                  </div>
+              {/* 3. Location */}
+              <div className="space-y-1.5">
+                <Label htmlFor="location" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-primary-text" />
+                  Location / Service Area <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="location"
+                  placeholder="e.g. New York, NY (or Nationwide travel)"
+                  value={location}
+                  onChange={(e) => {
+                    setLocation(e.target.value)
+                    if (clientErrors.location) {
+                      setClientErrors((prev) => ({ ...prev, location: "" }))
+                    }
+                  }}
+                  className={cn("h-10 rounded-xl", clientErrors.location && "border-destructive")}
+                  disabled={submitting}
+                />
+                {clientErrors.location && (
+                  <p className="text-[11px] text-destructive">
+                    {clientErrors.location}
+                  </p>
+                )}
+              </div>
 
-                  {/* Price */}
-                  <div className="space-y-1.5">
-                    <Label htmlFor="price" className="text-xs font-medium flex items-center gap-1">
-                      <DollarSign className="w-3.5 h-3.5 text-primary" />
-                      Starting Price ($ USD) <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      min="1"
-                      step="1"
-                      placeholder="e.g. 1500"
-                      value={price}
-                      onChange={(e) => {
-                        setPrice(e.target.value)
-                        if (clientErrors.price) {
-                          setClientErrors((prev) => ({ ...prev, price: "" }))
-                        }
-                      }}
-                      className={cn(clientErrors.price && "border-destructive")}
-                      disabled={submitting}
-                    />
-                    {clientErrors.price && (
-                      <p className="text-[11px] text-destructive">
-                        {clientErrors.price}
-                      </p>
-                    )}
-                  </div>
-                </div>
+              {/* 4. Description */}
+              <div className="space-y-1.5">
+                <Label htmlFor="description" className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5 text-primary-text" />
+                  Service Description <span className="text-destructive">*</span>
+                </Label>
+                <Textarea
+                  id="description"
+                  rows={4}
+                  placeholder="Describe what is included in this wedding package (hours of coverage, deliverables, equipment, team size, etc.)..."
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value)
+                    if (clientErrors.description) {
+                      setClientErrors((prev) => ({ ...prev, description: "" }))
+                    }
+                  }}
+                  className={cn("rounded-xl", clientErrors.description && "border-destructive")}
+                  disabled={submitting}
+                />
+                {clientErrors.description && (
+                  <p className="text-[11px] text-destructive">
+                    {clientErrors.description}
+                  </p>
+                )}
+              </div>
 
-                {/* 3. Location */}
-                <div className="space-y-1.5">
-                  <Label htmlFor="location" className="text-xs font-medium flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-primary" />
-                    Location / Service Area <span className="text-destructive">*</span>
+              {/* 5. Images (1 to 5) */}
+              <div className="space-y-2.5 pt-4 border-t border-border">
+                <div className="space-y-0.5">
+                  <Label className="text-xs font-medium text-foreground">
+                    Service Photos (1 to 5) <span className="text-destructive">*</span>
                   </Label>
-                  <Input
-                    id="location"
-                    placeholder="e.g. New York, NY (or Nationwide travel)"
-                    value={location}
-                    onChange={(e) => {
-                      setLocation(e.target.value)
-                      if (clientErrors.location) {
-                        setClientErrors((prev) => ({ ...prev, location: "" }))
-                      }
-                    }}
-                    className={cn(clientErrors.location && "border-destructive")}
-                    disabled={submitting}
-                  />
-                  {clientErrors.location && (
-                    <p className="text-[11px] text-destructive">
-                      {clientErrors.location}
-                    </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Upload high-resolution photos showcasing your previous wedding work.
+                  </p>
+                </div>
+                <MultiImageUpload
+                  values={images}
+                  onChange={(newImages) => {
+                    setImages(newImages)
+                    if (newImages.length > 0 && clientErrors.images) {
+                      setClientErrors((prev) => ({ ...prev, images: "" }))
+                    }
+                  }}
+                  disabled={submitting}
+                  maxImages={5}
+                />
+                {clientErrors.images && (
+                  <p className="text-[11px] text-destructive">
+                    {clientErrors.images}
+                  </p>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="pt-5 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 border-t border-border">
+                <Link
+                  href="/dashboard/vendor/services"
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "w-full sm:w-auto rounded-full text-xs h-10 px-5"
                   )}
-                </div>
+                >
+                  Cancel
+                </Link>
 
-                {/* 4. Description */}
-                <div className="space-y-1.5">
-                  <Label htmlFor="description" className="text-xs font-medium flex items-center gap-1">
-                    <FileText className="w-3.5 h-3.5 text-primary" />
-                    Service Description <span className="text-destructive">*</span>
-                  </Label>
-                  <Textarea
-                    id="description"
-                    rows={4}
-                    placeholder="Describe what is included in this wedding package (hours of coverage, deliverables, equipment, team size, etc.)..."
-                    value={description}
-                    onChange={(e) => {
-                      setDescription(e.target.value)
-                      if (clientErrors.description) {
-                        setClientErrors((prev) => ({ ...prev, description: "" }))
-                      }
-                    }}
-                    className={cn(clientErrors.description && "border-destructive")}
-                    disabled={submitting}
-                  />
-                  {clientErrors.description && (
-                    <p className="text-[11px] text-destructive">
-                      {clientErrors.description}
-                    </p>
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full sm:w-auto rounded-full text-xs shadow-xs h-10 px-6 cursor-pointer"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Submitting Service...
+                    </>
+                  ) : (
+                    <>
+                      <PlusCircle className="w-4 h-4 mr-1.5" />
+                      Publish Listing
+                    </>
                   )}
-                </div>
-
-                {/* 5. Images (1 to 5) */}
-                <div className="space-y-2 pt-2 border-t border-border/70">
-                  <div className="space-y-0.5">
-                    <Label className="text-xs font-medium">
-                      Service Photos (1 to 5) <span className="text-destructive">*</span>
-                    </Label>
-                    <p className="text-[11px] text-muted-foreground">
-                      Upload high-resolution photos showcasing your previous wedding work.
-                    </p>
-                  </div>
-                  <MultiImageUpload
-                    values={images}
-                    onChange={(newImages) => {
-                      setImages(newImages)
-                      if (newImages.length > 0 && clientErrors.images) {
-                        setClientErrors((prev) => ({ ...prev, images: "" }))
-                      }
-                    }}
-                    disabled={submitting}
-                    maxImages={5}
-                  />
-                  {clientErrors.images && (
-                    <p className="text-[11px] text-destructive">
-                      {clientErrors.images}
-                    </p>
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="pt-4 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 border-t border-border/60">
-                  <Link
-                    href="/dashboard/vendor/services"
-                    className={cn(
-                      buttonVariants({ variant: "outline" }),
-                      "w-full sm:w-auto rounded-full text-xs"
-                    )}
-                  >
-                    Cancel
-                  </Link>
-
-                  <Button
-                    type="submit"
-                    disabled={submitting}
-                    className="w-full sm:w-auto rounded-full text-xs shadow-xs px-6"
-                  >
-                    {submitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Submitting Service...
-                      </>
-                    ) : (
-                      <>
-                        <PlusCircle className="w-4 h-4 mr-1.5" />
-                        Publish Listing
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </DashboardShell>
     </RoleGuard>

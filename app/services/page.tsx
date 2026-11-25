@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react"
 import { Service } from "@/types"
 import { getServices } from "@/lib/api"
-import { SectionHeading } from "@/components/section-heading"
 import { ServiceCard } from "@/components/service-card"
 import { ServiceCardSkeleton } from "@/components/loading-skeleton"
 import { EmptyState } from "@/components/empty-state"
@@ -154,18 +153,21 @@ function ServicesPageContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-10 sm:py-14 max-w-7xl space-y-8">
-      {/* 1. Header */}
+    <div className="container mx-auto px-4 py-10 sm:py-14 max-w-7xl space-y-7">
+      {/* 1. Editorial Page Header */}
       <FadeIn>
-        <SectionHeading
-          eyebrow="Directory"
-          title="Browse Wedding Services"
-          subtitle="Discover curated photographers, venues, florists, caterers, and bridal stylists for your celebration."
-        />
+        <div className="max-w-2xl mx-auto text-center space-y-2.5">
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-foreground tracking-tight">
+            Browse Wedding Services
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            Discover curated photographers, venues, florists, caterers, and bridal stylists for your celebration.
+          </p>
+        </div>
       </FadeIn>
 
       {/* 2. Responsive Filter Bar */}
-      <FadeIn delay={0.1}>
+      <FadeIn delay={0.08}>
         <ServiceFilterBar
           search={searchInput}
           category={category}
@@ -179,8 +181,8 @@ function ServicesPageContent() {
         />
       </FadeIn>
 
-      {/* 3. Result Count & Active Filter Indicator */}
-      <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground px-1">
+      {/* 3. Result Count & Active Category Indicator */}
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-muted-foreground px-1 tabular-nums">
         <span>
           {loading
             ? "Searching services..."
@@ -188,14 +190,14 @@ function ServicesPageContent() {
         </span>
         {category !== "all" && (
           <span className="font-medium text-foreground">
-            Category: <span className="text-primary">{category}</span>
+            Category: <span className="text-primary-text">{category}</span>
           </span>
         )}
       </div>
 
       {/* 4. Error State */}
       {error && !loading && (
-        <div className="p-8 sm:p-12 text-center border border-destructive/20 rounded-2xl bg-destructive/5 space-y-4">
+        <div className="p-8 sm:p-12 text-center border border-destructive/25 rounded-2xl bg-card space-y-4">
           <AlertCircle className="w-8 h-8 text-destructive mx-auto" />
           <p className="text-sm text-foreground font-medium">{error}</p>
           <Button
@@ -205,7 +207,7 @@ function ServicesPageContent() {
               setLoading(true)
               setRefreshTrigger((prev) => prev + 1)
             }}
-            className="rounded-full"
+            className="rounded-full text-xs cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
             Try Again
@@ -246,10 +248,10 @@ function ServicesPageContent() {
             ))}
           </div>
 
-          {/* 8. Simple Pagination Controls */}
+          {/* 8. Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-border/70 pt-6 px-1">
-              <p className="text-xs text-muted-foreground">
+            <div className="flex items-center justify-between border-t border-border pt-6 px-1">
+              <p className="text-xs text-muted-foreground tabular-nums">
                 Page <span className="font-semibold text-foreground">{page}</span> of{" "}
                 <span className="font-semibold text-foreground">{totalPages}</span>
               </p>
@@ -259,7 +261,7 @@ function ServicesPageContent() {
                   size="sm"
                   disabled={page <= 1 || loading}
                   onClick={() => handlePageChange(page - 1)}
-                  className="rounded-full h-9 text-xs"
+                  className="rounded-full h-9 px-4 text-xs cursor-pointer"
                 >
                   <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                   Previous
@@ -269,7 +271,7 @@ function ServicesPageContent() {
                   size="sm"
                   disabled={page >= totalPages || loading}
                   onClick={() => handlePageChange(page + 1)}
-                  className="rounded-full h-9 text-xs"
+                  className="rounded-full h-9 px-4 text-xs cursor-pointer"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5 ml-1" />
