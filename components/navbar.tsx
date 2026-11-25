@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Menu, Heart, LogOut, LayoutDashboard, Settings } from "lucide-react"
+import { Menu, Heart, LogOut, LayoutDashboard, Settings, ChevronDown } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -91,43 +91,59 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full p-0.5 focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer">
-                <Avatar className="w-9 h-9 border border-border">
+              <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-full p-0.5 pr-2 border border-border/70 bg-card hover:border-primary/40 hover:bg-muted/40 transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary/30 cursor-pointer">
+                <Avatar className="w-8 h-8 border border-border">
                   <AvatarImage src={user.image} alt={user.name} />
-                  <AvatarFallback className="bg-blush text-primary text-xs font-semibold">
+                  <AvatarFallback className="bg-blush text-primary-text text-xs font-semibold">
                     {userInitials}
                   </AvatarFallback>
                 </Avatar>
+                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 p-1 rounded-xl">
-                <DropdownMenuLabel className="font-normal px-2 py-1.5">
-                  <div className="flex flex-col space-y-0.5">
-                    <p className="text-sm font-semibold text-foreground leading-none">{user.name}</p>
-                    <p className="text-xs text-muted-foreground leading-none">{user.email}</p>
-                    <span className="text-[10px] uppercase font-bold text-primary mt-1 tracking-wider">
-                      {user.role}
-                    </span>
+              <DropdownMenuContent align="end" className="w-64 p-2 rounded-xl space-y-1">
+                <DropdownMenuLabel className="font-normal p-2.5 rounded-lg bg-background/70 border border-border/60">
+                  <div className="flex items-center gap-2.5">
+                    <Avatar className="w-9 h-9 border border-border shrink-0">
+                      <AvatarImage src={user.image} alt={user.name} />
+                      <AvatarFallback className="bg-blush text-primary-text text-xs font-semibold">
+                        {userInitials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1 space-y-0.5">
+                      <div className="flex items-center justify-between gap-1.5">
+                        <p className="text-sm font-semibold text-foreground truncate leading-none">
+                          {user.name}
+                        </p>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium capitalize bg-blush text-primary-text shrink-0">
+                          {user.role}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground truncate leading-snug">
+                        {user.email}
+                      </p>
+                    </div>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="my-1" />
                 <DropdownMenuItem
                   onClick={() => router.push(dashboardHref)}
-                  className="cursor-pointer flex items-center gap-2"
+                  className="cursor-pointer flex items-center gap-2.5"
                 >
                   <LayoutDashboard className="w-4 h-4 text-muted-foreground" />
                   <span>Dashboard</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => router.push(profileHref)}
-                  className="cursor-pointer flex items-center gap-2"
+                  className="cursor-pointer flex items-center gap-2.5"
                 >
                   <Settings className="w-4 h-4 text-muted-foreground" />
                   <span>Profile Settings</span>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="my-1" />
                 <DropdownMenuItem
+                  variant="destructive"
                   onClick={logout}
-                  className="cursor-pointer text-destructive focus:text-destructive flex items-center gap-2"
+                  className="cursor-pointer flex items-center gap-2.5"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>

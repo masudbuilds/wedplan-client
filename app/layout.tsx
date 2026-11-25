@@ -40,7 +40,7 @@ export default function RootLayout({
         <React.Suspense fallback={<div className="min-h-screen bg-background" />}>
           <SiteLayout>{children}</SiteLayout>
         </React.Suspense>
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-right" closeButton />
       </body>
     </html>
   )

@@ -118,10 +118,10 @@ export function BookingDialog({
         {triggerLabel}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg rounded-2xl">
         {isSuccess ? (
-          <div className="py-6 px-2 text-center space-y-5">
-            <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 mx-auto flex items-center justify-center">
+          <div className="py-4 px-1 text-center space-y-5">
+            <div className="w-16 h-16 rounded-full bg-sage text-sage-foreground mx-auto flex items-center justify-center">
               <CheckCircle2 className="w-9 h-9" />
             </div>
             <div className="space-y-2">
@@ -135,18 +135,18 @@ export function BookingDialog({
               </DialogDescription>
             </div>
 
-            <div className="pt-3 flex flex-col sm:flex-row justify-center gap-2.5">
+            <div className="pt-4 border-t border-border/70 flex flex-col sm:flex-row justify-center gap-2.5">
               <Link
                 href="/dashboard/customer/bookings"
                 onClick={() => setOpen(false)}
-                className={cn(buttonVariants({ variant: "default" }), "rounded-full px-6")}
+                className={cn(buttonVariants({ variant: "default" }), "rounded-full px-6 h-9 text-xs")}
               >
                 View in My Bookings
               </Link>
               <Button
                 variant="outline"
                 onClick={() => setOpen(false)}
-                className="rounded-full px-5"
+                className="rounded-full px-5 h-9 text-xs cursor-pointer"
               >
                 Done
               </Button>
@@ -164,14 +164,14 @@ export function BookingDialog({
             </DialogHeader>
 
             {/* Read-Only Summary Context */}
-            <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-blush/40 border border-primary/10 text-xs">
+            <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-blush/40 border border-primary/15 text-xs">
               <div>
-                <span className="text-muted-foreground block">Customer:</span>
+                <span className="text-muted-foreground block">Customer</span>
                 <span className="font-semibold text-foreground">{user.name}</span>
               </div>
               <div>
-                <span className="text-muted-foreground block">Package Investment:</span>
-                <span className="font-semibold text-primary">
+                <span className="text-muted-foreground block">Package Investment</span>
+                <span className="font-semibold text-primary-text tabular-nums">
                   ${service.price.toLocaleString()}
                 </span>
               </div>
@@ -185,10 +185,10 @@ export function BookingDialog({
             )}
 
             {/* Form Controls */}
-            <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Event Date */}
               <div className="space-y-1.5">
-                <Label htmlFor="booking-date" className="text-xs font-semibold">
+                <Label htmlFor="booking-date" className="text-xs font-medium text-foreground">
                   Event Date <span className="text-destructive">*</span>
                 </Label>
                 <Input
@@ -200,7 +200,7 @@ export function BookingDialog({
                     setEventDate(e.target.value)
                     if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }))
                   }}
-                  className="h-10"
+                  className="h-10 rounded-md"
                 />
                 {errors.date && (
                   <p className="text-xs text-destructive font-medium">{errors.date}</p>
@@ -209,7 +209,7 @@ export function BookingDialog({
 
               {/* Event Location */}
               <div className="space-y-1.5">
-                <Label htmlFor="booking-location" className="text-xs font-semibold">
+                <Label htmlFor="booking-location" className="text-xs font-medium text-foreground">
                   Event Location / Venue <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
@@ -222,7 +222,7 @@ export function BookingDialog({
                       setEventLocation(e.target.value)
                       if (errors.location) setErrors((prev) => ({ ...prev, location: undefined }))
                     }}
-                    className="pl-9 h-10"
+                    className="pl-9 h-10 rounded-md"
                   />
                 </div>
                 {errors.location && (
@@ -232,7 +232,7 @@ export function BookingDialog({
 
               {/* Additional Message */}
               <div className="space-y-1.5">
-                <Label htmlFor="booking-message" className="text-xs font-semibold">
+                <Label htmlFor="booking-message" className="text-xs font-medium text-foreground">
                   Additional Notes (Optional)
                 </Label>
                 <Textarea
@@ -241,24 +241,25 @@ export function BookingDialog({
                   rows={3}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
+                  className="rounded-md"
                 />
               </div>
 
               {/* Actions */}
-              <div className="flex justify-end gap-2 pt-2 border-t border-border/60">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-border/70">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setOpen(false)}
                   disabled={submitting}
-                  className="rounded-full"
+                  className="rounded-full h-9 px-4 text-xs cursor-pointer"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-full px-6 shadow-xs"
+                  className="rounded-full h-9 px-6 text-xs shadow-xs cursor-pointer"
                 >
                   {submitting ? (
                     <>

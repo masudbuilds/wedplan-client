@@ -665,31 +665,32 @@ function AdminServicesContent() {
                                   <span>Change Status</span>
                                   <MoreHorizontal className="w-3.5 h-3.5 ml-1" />
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="text-xs">
-                                  <DropdownMenuLabel className="text-[11px] text-muted-foreground">
-                                    Set Status to:
+                                <DropdownMenuContent align="end" className="w-52 p-1.5 rounded-xl">
+                                  <DropdownMenuLabel className="px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground">
+                                    Set Status to
                                   </DropdownMenuLabel>
-                                  <DropdownMenuSeparator />
+                                  <DropdownMenuSeparator className="my-1" />
                                   {s.status !== "approved" && (
                                     <DropdownMenuItem
                                       onClick={() =>
                                         setStatusTarget({ service: s, status: "approved" })
                                       }
-                                      className="text-emerald-700 cursor-pointer"
+                                      className="whitespace-nowrap text-xs font-medium text-foreground focus:bg-sage/60 focus:text-sage-foreground"
                                     >
-                                      <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
-                                      Set as Approved
+                                      <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                                      <span>Set as Approved</span>
                                     </DropdownMenuItem>
                                   )}
                                   {s.status !== "rejected" && (
                                     <DropdownMenuItem
+                                      variant="destructive"
                                       onClick={() =>
                                         setStatusTarget({ service: s, status: "rejected" })
                                       }
-                                      className="text-destructive cursor-pointer"
+                                      className="whitespace-nowrap text-xs font-medium"
                                     >
-                                      <XCircle className="w-3.5 h-3.5 mr-1.5" />
-                                      Set as Rejected
+                                      <XCircle className="w-4 h-4 shrink-0" />
+                                      <span>Set as Rejected</span>
                                     </DropdownMenuItem>
                                   )}
                                   {s.status !== "pending" && (
@@ -697,10 +698,10 @@ function AdminServicesContent() {
                                       onClick={() =>
                                         setStatusTarget({ service: s, status: "pending" })
                                       }
-                                      className="text-amber-700 cursor-pointer"
+                                      className="whitespace-nowrap text-xs font-medium text-foreground focus:bg-[#C9A66B]/15"
                                     >
-                                      <Clock className="w-3.5 h-3.5 mr-1.5" />
-                                      Set as Pending Review
+                                      <Clock className="w-4 h-4 text-gold-text shrink-0" />
+                                      <span>Set as Pending Review</span>
                                     </DropdownMenuItem>
                                   )}
                                 </DropdownMenuContent>
@@ -847,23 +848,32 @@ function AdminServicesContent() {
                             >
                               <span>Status</span>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="text-xs">
+                            <DropdownMenuContent align="end" className="w-52 p-1.5 rounded-xl">
+                              <DropdownMenuLabel className="px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground">
+                                Set Status to
+                              </DropdownMenuLabel>
+                              <DropdownMenuSeparator className="my-1" />
                               {s.status !== "approved" && (
                                 <DropdownMenuItem
                                   onClick={() =>
                                     setStatusTarget({ service: s, status: "approved" })
                                   }
+                                  className="whitespace-nowrap text-xs font-medium text-foreground focus:bg-sage/60 focus:text-sage-foreground"
                                 >
-                                  Set Approved
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                                  <span>Set as Approved</span>
                                 </DropdownMenuItem>
                               )}
                               {s.status !== "rejected" && (
                                 <DropdownMenuItem
+                                  variant="destructive"
                                   onClick={() =>
                                     setStatusTarget({ service: s, status: "rejected" })
                                   }
+                                  className="whitespace-nowrap text-xs font-medium"
                                 >
-                                  Set Rejected
+                                  <XCircle className="w-4 h-4 shrink-0" />
+                                  <span>Set as Rejected</span>
                                 </DropdownMenuItem>
                               )}
                               {s.status !== "pending" && (
@@ -871,8 +881,10 @@ function AdminServicesContent() {
                                   onClick={() =>
                                     setStatusTarget({ service: s, status: "pending" })
                                   }
+                                  className="whitespace-nowrap text-xs font-medium text-foreground focus:bg-[#C9A66B]/15"
                                 >
-                                  Set Pending
+                                  <Clock className="w-4 h-4 text-gold-text shrink-0" />
+                                  <span>Set as Pending Review</span>
                                 </DropdownMenuItem>
                               )}
                             </DropdownMenuContent>
