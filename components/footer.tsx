@@ -156,15 +156,15 @@ export function Footer() {
             <div className="space-y-2.5 text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary shrink-0" />
-                <span>concierge@wedplan.com</span>
+                <span>contact@wedplan.com</span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
-                <span>+1 (212) 555-0199</span>
+                <span>+880 1752*****</span>
               </p>
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <span>450 Lexington Avenue, Suite 1400, New York, NY 10017</span>
+                <span>Dhaka, Bangladesh</span>
               </p>
             </div>
           </div>

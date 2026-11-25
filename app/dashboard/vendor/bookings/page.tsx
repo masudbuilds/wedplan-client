@@ -228,7 +228,7 @@ export default function VendorBookingsPage() {
 
             <div className="flex items-center gap-2 text-xs text-muted-foreground self-start lg:self-auto px-1">
               <span>Pending Action:</span>
-              <span className="inline-flex items-center justify-center min-w-[22px] px-2 py-0.5 rounded-full bg-[#C9A66B]/15 text-gold-text font-semibold tabular-nums">
+              <span className="inline-flex items-center justify-center min-w-5.5 px-2 py-0.5 rounded-full bg-[#C9A66B]/15 text-gold-text font-semibold tabular-nums">
                 {pendingCount}
               </span>
             </div>
@@ -297,10 +297,10 @@ export default function VendorBookingsPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent border-border">
-                    <TableHead className="px-5 py-3.5 w-[240px] text-xs font-medium text-muted-foreground">
+                    <TableHead className="px-5 py-3.5 w-60 text-xs font-medium text-muted-foreground">
                       Customer
                     </TableHead>
-                    <TableHead className="px-5 py-3.5 w-[220px] text-xs font-medium text-muted-foreground">
+                    <TableHead className="px-5 py-3.5 w-55 text-xs font-medium text-muted-foreground">
                       Requested Package
                     </TableHead>
                     <TableHead className="px-5 py-3.5 text-xs font-medium text-muted-foreground">
@@ -393,7 +393,7 @@ export default function VendorBookingsPage() {
                               <Calendar className="w-3.5 h-3.5 text-primary-text" />
                               {b.eventDate}
                             </p>
-                            <p className="text-muted-foreground flex items-center gap-1.5 text-[11px] truncate max-w-[170px]">
+                            <p className="text-muted-foreground flex items-center gap-1.5 text-[11px] truncate max-w-42.5">
                               <MapPin className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                               <span className="truncate">{b.eventLocation}</span>
                             </p>
