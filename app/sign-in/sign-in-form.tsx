@@ -15,12 +15,18 @@ export function SignInForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectParam = searchParams.get("redirect")
+  const errorParam = searchParams.get("error")
 
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
   const [showPassword, setShowPassword] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
-  const [errorMsg, setErrorMsg] = React.useState("")
+  const [errorMsg, setErrorMsg] = React.useState(() => {
+    if (!errorParam) return ""
+    return errorParam === "access_denied"
+      ? "Google sign-in was cancelled or denied."
+      : "Authentication failed. Please try again."
+  })
 
   const getSafeRedirectUrl = (role?: string) => {
     // Open redirect guard: must strictly start with "/" and not "//"

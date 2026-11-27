@@ -1,28 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB limit
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
 
 export async function POST(req: NextRequest) {
   try {
-    // 0. Verify user is authenticated before processing uploads
-    const reqHeaders = await headers()
-    const session = await auth.api.getSession({
-      headers: reqHeaders,
-    })
-
-    if (!session) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Unauthorized. Please sign in to upload images.",
-        },
-        { status: 401 }
-      )
-    }
-
     const formData = await req.formData()
     const file = formData.get("file") as File | null
 
@@ -70,9 +52,12 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 3. Upload to ImgBB via multipart FormData
+    // 3. Upload to ImgBB via base64 FormData (works reliably across Node/serverless runtimes)
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const base64Image = buffer.toString("base64")
+
     const imgbbForm = new FormData()
-    imgbbForm.append("image", file)
+    imgbbForm.append("image", base64Image)
 
     const response = await fetch(
       `https://api.imgbb.com/1/upload?key=${encodeURIComponent(apiKey)}`,
@@ -85,12 +70,16 @@ export async function POST(req: NextRequest) {
     const result = await response.json()
 
     if (!response.ok || !result.success) {
+      const apiErrorMessage = result?.error?.message
+      const errorMsg =
+        result?.error?.code === 103
+          ? "ImgBB API key was rejected (code 103). Please update IMGBB_API_KEY."
+          : apiErrorMessage || "Failed to upload image to ImgBB hosting service."
+
       return NextResponse.json(
         {
           success: false,
-          error:
-            result?.error?.message ||
-            "Failed to upload image to ImgBB hosting service.",
+          error: errorMsg,
         },
         { status: 500 }
       )

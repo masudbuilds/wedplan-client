@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth"
 import { mongodbAdapter } from "better-auth/adapters/mongodb"
 import { jwt } from "better-auth/plugins"
 import { APIError } from "better-auth/api"
+import { ObjectId } from "mongodb"
 import { client, db } from "@/lib/mongodb"
 
 // Better Auth Server Instance Configuration
@@ -145,9 +146,13 @@ export const auth = betterAuth({
         before: async (session) => {
           // Security Rule: Blocked users must not be able to sign in or obtain a session
           try {
+            const idConditions: Record<string, unknown>[] = [{ id: session.userId }]
+            if (ObjectId.isValid(session.userId)) {
+              idConditions.push({ _id: new ObjectId(session.userId) })
+            }
             const userRecord = await db
               .collection("users")
-              .findOne({ id: session.userId })
+              .findOne({ $or: idConditions })
 
             if (userRecord?.isBlocked) {
               throw new APIError("UNAUTHORIZED", {
